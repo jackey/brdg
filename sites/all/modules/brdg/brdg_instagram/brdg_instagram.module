@@ -1,0 +1,77 @@
+<?php
+/*
+ * @file
+ */
+
+
+/**
+ * Implements hook_menu().
+ */
+function brdg_instagram_menu() {
+	$items['instagram_test'] = array(
+		'page callback' => 'instagram_test_fetch',
+		'access callback' => TRUE,
+	);
+
+	return $items;
+}
+
+// Memu callback
+function instagram_test_fetch() {
+	$node_type = 'content_from_source';
+ 	module_load_include('inc', 'drupagram');
+ 	$settings = brdg_instagram_get_app_settings();
+ 	$instagram_uid = $settings['instagram_uid'];
+	// Load object of API
+	$drupagram = drupagram_connect(drupagram_account_load($instagram_uid));
+	$results = $drupagram->fetch('tags_recent', array('!tag_name' => 'snowy'));
+	
+	foreach ($results as $result) {
+		if (brdg_core_media_is_inserted($result->id)) {
+			continue;
+		}
+		// Save user profile image media.
+		$user_profile_image = add_image_from_url($result->images['standard_resolution']['url'], 'instagram');
+		// Save shared image media.
+		$media_profile_image = add_image_from_url($result->user->profile_picture, 'instagram');
+		$node = (Object)null;
+		$node->type = $node_type;
+		node_object_prepare($node);
+		$node->title = 'from twitter';
+		$node->language = 'en';
+		$node->uid = 1;
+		$node->status = 1;
+		$node->comment = 2;
+		// Sometimes it has "Incorrect string value" error from mysql;
+		$node->field_source_id[LANGUAGE_NONE][0]['value'] = $result->id;
+		$node->field_from_user_id[LANGUAGE_NONE][0]['value'] = $result->user->id;
+		$node->field_from_user_name[LANGUAGE_NONE][0]['value'] = $result->user->username;
+		$node->field_from_user_profile_image[LANGUAGE_NONE][0] = (array)$user_profile_image;
+		$node->field_post_date[LANGUAGE_NONE][0] = array(
+			'value' => date('Y-m-d H:i:s', $result->created_time),
+		);
+		$node->field_media_image[LANGUAGE_NONE][] = (array)$media_profile_image;
+		// set media source type
+		if ($source = brdg_instagbram_source_type()) {
+			$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
+		}
+
+		node_save($node);
+	}
+	return 'hello world';
+}
+
+// Load instagram settings.
+function brdg_instagram_get_app_settings() {
+	static $settings;
+	if ($settings) return $settings;
+	$settings = require_once(drupal_get_path('module', 'brdg_instagram').'/brdg_instagram.settings.php');
+	return $settings;
+}
+
+function brdg_instagbram_source_type() {
+	// Load settings
+	$twitter_settings = brdg_twitter_get_app_settings();
+	$source_name = $twitter_settings['source_type'];
+	return brdg_core_get_source_with_name($source_name);
+}
