@@ -1,0 +1,5 @@
+name = BRDG Core
+description = Provide core function for brdg.
+package = brdg
+core = 7.x
+

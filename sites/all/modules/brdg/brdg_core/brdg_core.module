@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ */
+
+// Load source type.
+function brdg_core_get_source_with_name($name) {
+	$vocabulary_name = 'data_source';
+    $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name);
+    $query = new EntityFieldQuery;
+    $query->entityCondition('entity_type', 'taxonomy_term')
+    	->propertyCondition('vid', $vocabulary->vid)
+    	->propertyCondition('name', $name, 'LIKE');
+    $result = $query->execute();
+
+    if ($result) {
+    	$term = array_shift($result['taxonomy_term']);
+    	return taxonomy_term_load($term->tid);
+    }
+    return NULL;
+}
+
+// Logger function
+function brdg_core_log_cron($source_type, $query_ret) {
+	//TODO
+}

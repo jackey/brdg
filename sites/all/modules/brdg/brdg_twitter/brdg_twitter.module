@@ -1,0 +1,197 @@
+<?php
+/**
+ * @file
+ */
+// brdg_twitter
+
+define("TWITTER_SEARCH_URL", "http://search.twitter.com/search.json");
+
+function brdg_twitter_get_app_settings() {
+	static $settings;
+	if ($settings) return $settings;
+	return require_once(drupal_get_path('module', 'brdg_twitter').'/brdg_twitter.settings.php');
+}
+
+function brdg_twitter_menu() {
+	$items['test_fetch'] = array(
+		'page callback' => 'test_fetch_twitter',
+		'access callback' => TRUE,
+	);
+
+	return $items;
+}
+
+//not support pager.
+function test_fetch_twitter() {
+	$twitter_settings = brdg_twitter_get_app_settings();
+	$query_keywords = $twitter_settings['search_tag'];
+	foreach ($query_keywords as $keyword) {
+		$query_ret = brdg_twitter_query_entity($keyword);
+	    $results = $query_ret['results'];
+	    foreach($results as $item) {
+	    	save_twitter_into_node($item);
+	    }
+	}
+	return 'hello world';
+}
+
+/**
+ * @reference https://dev.twitter.com/docs/api/1.1/get/search/tweets
+ * @reference https://dev.twitter.com/docs/api/1/get/search
+ * @twitter entity document https://dev.twitter.com/docs/tweet-entities
+ */
+function brdg_twitter_query_entity($q = '') {
+	if ($q == '') return;
+	// Load twitter include file.
+	module_load_include('inc', 'twitter');
+	// Load settings
+	$twitter_settings = brdg_twitter_get_app_settings();
+	$twitter_account = $twitter_account = twitter_account_load($twitter_settings['twitter_uid']);
+
+	// get new twitter object.
+	$twitter = twitter_connect($twitter_account);
+	$params = array(
+		'q' => urlencode($q),
+		'rpp' => $twitter_settings['max_num'],
+		'include_entities' => TRUE,
+		'with_twitter_user_id' => TRUE,
+	);
+	$query_params = http_build_query($params);
+	$url = TWITTER_SEARCH_URL.'?'.$query_params;
+	//$url = 'http://search.twitter.com/search.json?q=blue%20angels&rpp=5&include_entities=true&with_twitter_user_id=true&result_type=mixed';
+	$headers['Content-type'] = 'application/x-www-form-urlencoded';
+
+   	$response = drupal_http_request($url, array('headers' => $headers, 'method' => 'GET'));
+   	if ($response->code == '200') {
+	    // http://drupal.org/node/985544 - json_decode large integer issue
+	    $length = strlen(PHP_INT_MAX);
+	    $data = preg_replace('/"(id|in_reply_to_status_id)":(\d{' . $length . ',})/', '"\1":"\2"', $response->data);
+	    $data = json_decode($response->data, TRUE);
+
+	    // Log twitter response.
+	    brdg_core_log_cron($data);
+	    return $data;
+   	}
+}
+
+/**
+ * Helper function to insert twitters tweets into drupal content_from_source.
+ */
+function save_twitter_into_node($twitter_entity) {
+	$node_type = 'content_from_source';
+	$id = $twitter_entity['id'];
+	$query = new EntityFieldQuery();
+	$result = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', $node_type)
+		->fieldCondition('field_source_id', 'value', $id)
+		->execute();
+	if ($result) {
+		return NULL;
+	}
+	$twitter_user_profile_image = add_image_from_url($twitter_entity['profile_image_url']);
+	$node = (Object)null;
+	$node->type = $node_type;
+	node_object_prepare($node);
+	$node->title = 'from twitter';
+	$node->language = 'en';
+	$node->uid = 1;
+	$node->status = 1;
+	$node->comment = 2;
+	// Sometimes it has "Incorrect string value" error from mysql;
+	$node->body[LANGUAGE_NONE][0]['value'] = remove_non_utf8_string($twitter_entity['text']);
+	$node->body[LANGUAGE_NONE][0]['summary'] = remove_non_utf8_string($twitter_entity['text']);
+	$node->body[LANGUAGE_NONE][0]['format'] = 'full_html';
+	$node->field_source_id[LANGUAGE_NONE][0]['value'] = $twitter_entity['id_str'];
+	$node->field_from_user_id[LANGUAGE_NONE][0]['value'] = $twitter_entity['from_user_id'];
+	$node->field_from_user_name[LANGUAGE_NONE][0]['value'] = $twitter_entity['from_user_name'];
+	$node->field_from_user_profile_image[LANGUAGE_NONE][0] = (array)$twitter_user_profile_image;
+	$node->field_post_date[LANGUAGE_NONE][0] = array(
+		'value' => date('Y-m-d H:i:s', strtotime($twitter_entity['created_at'])),
+	);
+	$has_media = FALSE;
+	// Image
+	if (isset($twitter_entity['entities']['media'])) {
+		$media_array = $twitter_entity['entities']['media'];
+		foreach ($media_array as $media) {
+			$media_url = $media['media_url'];
+			$media_file = add_image_from_url($media_url);
+			if ($media_file) {
+				$has_media = TRUE;
+				$node->field_media_image[LANGUAGE_NONE][] = (array)$media_file;
+			}
+		}
+	}
+	// Video url
+	if (isset($twitter_entity['entities']['urls'])) {
+		$urls = $twitter_entity['entities']['urls'];
+		foreach ($urls as $url) {
+			if (brdg_twitter_check_video($url['expanded_url'])) {
+				$has_media = TRUE;
+				$node->field_video[LANGUAGE_NONE][] = array('value' => $url['expanded_url']);
+			}
+		}
+	}
+	// set media source type
+	if ($source = brdg_twitter_source_type()) {
+		$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
+	}
+	// If doesn't include any media, we don't need insert into our system.
+	if ($has_media) {
+		dpm($node);
+		node_save($node);
+	}
+}
+
+// Helper function to load source of twitter.
+function brdg_twitter_source_type() {
+	// Load settings
+	$twitter_settings = brdg_twitter_get_app_settings();
+	$source_name = $twitter_settings['source_type'];
+	return brdg_core_get_source_with_name($source_name);
+}
+
+function add_image_from_url($image_url) {
+	$directory = file_build_uri('twitter_image');
+	if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY)) {
+		$directory = NULL;
+	}
+	$file = system_retrieve_file($image_url, $directory, TRUE);
+	return $file;
+}
+
+function remove_non_utf8_string($string) {
+	$string = preg_replace('/'.
+	 '[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
+	 '|[\x00-\x7F][\x80-\xBF]+'.
+	 '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
+	 '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
+	 '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|'.
+	 '(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})'.
+	 '/S',
+	 '?', $string);
+	 
+	//reject overly long 3 byte sequences
+	//and UTF-16 surrogates and replace with ?
+	$string = preg_replace('/'.
+	 '\xE0[\x80-\x9F][\x80-\xBF]'.
+	 '|\xED[\xA0-\xBF][\x80-\xBF]'.
+	 '/S',
+	 '?', $string);
+
+	return $string;
+}
+
+// Helper function to check url is video.
+function brdg_twitter_check_video($url) {
+	$allow_video_urls = array(
+		'youtube.com',
+		'	youtu.be'
+	);
+	$is_video = FALSE;
+	foreach ($allow_video_urls as $allow_video_url) {
+		if (strpos($url, $allow_video_url) !== FALSE) {
+			$is_video = TRUE;
+		}
+	}
+	return $is_video;
+}
