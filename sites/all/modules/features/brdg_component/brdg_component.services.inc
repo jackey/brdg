@@ -51,8 +51,22 @@ function brdg_component_default_services_endpoint() {
         ),
       ),
     ),
+    'services_picture' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'services_video' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
   );
-  $endpoint->debug = 0;
+  $endpoint->debug = 1;
   $export['third_content'] = $endpoint;
 
   return $export;
