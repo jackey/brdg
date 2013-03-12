@@ -112,7 +112,7 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_media_image']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_media_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_media_image']['settings'] = array(
-    'image_style' => 'home_slideshow',
+    'image_style' => '',
     'image_link' => '',
   );
   $handler->display->display_options['fields']['field_media_image']['group_rows'] = FALSE;
@@ -259,18 +259,6 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'content_from_source' => 'content_from_source',
   );
-  /* Filter criterion: Content: Video (field_video) */
-  $handler->display->display_options['filters']['field_video_value']['id'] = 'field_video_value';
-  $handler->display->display_options['filters']['field_video_value']['table'] = 'field_data_field_video';
-  $handler->display->display_options['filters']['field_video_value']['field'] = 'field_video_value';
-  $handler->display->display_options['filters']['field_video_value']['operator'] = '!=';
-  $handler->display->display_options['filters']['field_video_value']['value'] = '\'\'';
-  /* Filter criterion: Content: From User Profile Image (field_from_user_profile_image:fid) */
-  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['id'] = 'field_from_user_profile_image_fid';
-  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['table'] = 'field_data_field_from_user_profile_image';
-  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['field'] = 'field_from_user_profile_image_fid';
-  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['operator'] = '!=';
-  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['value']['value'] = '0';
   $handler->display->display_options['path'] = 'all_resources';
   $export['pictures'] = $view;
 
