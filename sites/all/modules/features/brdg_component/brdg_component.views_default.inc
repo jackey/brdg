@@ -66,12 +66,6 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'content_from_source' => 'content_from_source',
   );
-  /* Filter criterion: Content: Media Image (field_media_image:fid) */
-  $handler->display->display_options['filters']['field_media_image_fid']['id'] = 'field_media_image_fid';
-  $handler->display->display_options['filters']['field_media_image_fid']['table'] = 'field_data_field_media_image';
-  $handler->display->display_options['filters']['field_media_image_fid']['field'] = 'field_media_image_fid';
-  $handler->display->display_options['filters']['field_media_image_fid']['operator'] = '!=';
-  $handler->display->display_options['filters']['field_media_image_fid']['value']['value'] = '0';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -118,11 +112,38 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_media_image']['element_default_classes'] = FALSE;
   $handler->display->display_options['fields']['field_media_image']['click_sort_column'] = 'fid';
   $handler->display->display_options['fields']['field_media_image']['settings'] = array(
-    'image_style' => 'medium',
+    'image_style' => 'home_slideshow',
     'image_link' => '',
   );
   $handler->display->display_options['fields']['field_media_image']['group_rows'] = FALSE;
   $handler->display->display_options['fields']['field_media_image']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'content_from_source' => 'content_from_source',
+  );
+  /* Filter criterion: Content: Media Image (field_media_image:fid) */
+  $handler->display->display_options['filters']['field_media_image_fid']['id'] = 'field_media_image_fid';
+  $handler->display->display_options['filters']['field_media_image_fid']['table'] = 'field_data_field_media_image';
+  $handler->display->display_options['filters']['field_media_image_fid']['field'] = 'field_media_image_fid';
+  $handler->display->display_options['filters']['field_media_image_fid']['operator'] = '!=';
+  $handler->display->display_options['filters']['field_media_image_fid']['value']['value'] = '0';
   $handler->display->display_options['path'] = 'services_picture';
 
   /* Display: Video Services */
@@ -146,6 +167,11 @@ function brdg_component_views_default_views() {
     'skip_empty_values' => 0,
   );
   $handler->display->display_options['fields']['field_video']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -168,6 +194,84 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['filters']['field_video_value']['field'] = 'field_video_value';
   $handler->display->display_options['filters']['field_video_value']['operator'] = '!=';
   $handler->display->display_options['path'] = 'services_video';
+
+  /* Display: Video/Picture Services */
+  $handler = $view->new_display('services', 'Video/Picture Services', 'services_3');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['pager'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['row_options']['default_field_elements'] = FALSE;
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Video */
+  $handler->display->display_options['fields']['field_video']['id'] = 'field_video';
+  $handler->display->display_options['fields']['field_video']['table'] = 'field_data_field_video';
+  $handler->display->display_options['fields']['field_video']['field'] = 'field_video';
+  $handler->display->display_options['fields']['field_video']['label'] = 'field_video';
+  $handler->display->display_options['fields']['field_video']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  $handler->display->display_options['fields']['field_video']['delta_offset'] = '0';
+  /* Field: Content: Media Image */
+  $handler->display->display_options['fields']['field_media_image']['id'] = 'field_media_image';
+  $handler->display->display_options['fields']['field_media_image']['table'] = 'field_data_field_media_image';
+  $handler->display->display_options['fields']['field_media_image']['field'] = 'field_media_image';
+  $handler->display->display_options['fields']['field_media_image']['label'] = 'field_media_image';
+  $handler->display->display_options['fields']['field_media_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_media_image']['settings'] = array(
+    'image_style' => 'home_slideshow',
+    'image_link' => '',
+  );
+  $handler->display->display_options['fields']['field_media_image']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  $handler->display->display_options['defaults']['sorts'] = FALSE;
+  /* Sort criterion: Content: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'node';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Type */
+  $handler->display->display_options['filters']['type']['id'] = 'type';
+  $handler->display->display_options['filters']['type']['table'] = 'node';
+  $handler->display->display_options['filters']['type']['field'] = 'type';
+  $handler->display->display_options['filters']['type']['value'] = array(
+    'content_from_source' => 'content_from_source',
+  );
+  /* Filter criterion: Content: Video (field_video) */
+  $handler->display->display_options['filters']['field_video_value']['id'] = 'field_video_value';
+  $handler->display->display_options['filters']['field_video_value']['table'] = 'field_data_field_video';
+  $handler->display->display_options['filters']['field_video_value']['field'] = 'field_video_value';
+  $handler->display->display_options['filters']['field_video_value']['operator'] = '!=';
+  $handler->display->display_options['filters']['field_video_value']['value'] = '\'\'';
+  /* Filter criterion: Content: From User Profile Image (field_from_user_profile_image:fid) */
+  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['id'] = 'field_from_user_profile_image_fid';
+  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['table'] = 'field_data_field_from_user_profile_image';
+  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['field'] = 'field_from_user_profile_image_fid';
+  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['operator'] = '!=';
+  $handler->display->display_options['filters']['field_from_user_profile_image_fid']['value']['value'] = '0';
+  $handler->display->display_options['path'] = 'all_resources';
   $export['pictures'] = $view;
 
   return $export;

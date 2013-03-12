@@ -25,6 +25,7 @@ features[field][] = node-content_from_source-field_sound
 features[field][] = node-content_from_source-field_source_id
 features[field][] = node-content_from_source-field_source_type
 features[field][] = node-content_from_source-field_video
+features[image][] = home_slideshow
 features[node][] = content_from_source
 features[services_endpoint][] = third_content
 features[taxonomy][] = data_source

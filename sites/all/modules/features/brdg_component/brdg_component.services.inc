@@ -65,6 +65,13 @@ function brdg_component_default_services_endpoint() {
         ),
       ),
     ),
+    'all_resources' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
   );
   $endpoint->debug = 1;
   $export['third_content'] = $endpoint;
