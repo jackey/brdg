@@ -98,6 +98,7 @@ function services_views_retrieve($view_name, $display_id = 'default', $args = ar
     // We want to keep the result an array.
     $result[] = $view->preview($display_id);
   }
+
   return $result;
 }
 
@@ -115,11 +116,6 @@ function services_views_execute_view($view_info) {
 
   // Execute a view.
   $output = $view->render($display_id);
-
-  // Load entity;
-  // foreach ($output as $key => $obj) {
-  //   $output[$key] = node_load($obj->nid);
-  // }
 
   // Add support for Services Raw formatter.
   foreach ($view->result as $index => $row) {
@@ -175,6 +171,7 @@ function services_views_execute_view($view_info) {
       }
     }
   }
+  drupal_alter('services_view', $output, $view);
 
   $view->destroy();
   return $output;

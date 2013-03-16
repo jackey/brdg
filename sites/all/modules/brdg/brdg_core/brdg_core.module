@@ -72,8 +72,18 @@ function add_image_from_url($image_url, $location = 'third_content') {
 function brdg_core_media_is_inserted($id) {
   $query = new EntityFieldQuery();
   $result = $query->entityCondition('entity_type', 'node')
-    ->entityCondition('bundle', 'content_from_source')
-    ->fieldCondition('field_source_id', 'value', $id)
-    ->execute();
+  ->entityCondition('bundle', 'content_from_source')
+  ->fieldCondition('field_source_id', 'value', $id)
+  ->execute();
   return !!$result;
 }
+
+/**
+ * Implements hook_views_query_alter()
+ */
+function brdg_core_views_query_alter(&$view, &$query) {
+    if ($view->name == 'pictures') {
+        //dpm($query);
+    }
+}
+

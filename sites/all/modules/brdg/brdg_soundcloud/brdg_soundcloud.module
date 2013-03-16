@@ -20,18 +20,20 @@ function test_soundcloud_page_calback() {
 	// $permalink_url = $soundcloud_obj->permalink_url;
 	// $embed_info = json_decode($soundcloud->get('oembed', array('url' => $permalink_url)));
 	// print $embed_info->html;
+	$settings = brdg_soundcloud_get_app_settings();
 	global $user;
 	$soundcloud = soundcloud_create_soundcloud($user->uid);
 	$soundcloud->setCurlOptions(array(CURLOPT_FOLLOWLOCATION => 1));
 	try {
-		$search_tag_ret = json_decode($soundcloud->get('tracks', array('q' => 'hip', 'limit' => 2)), TRUE);
-		foreach($search_tag_ret as $tag_ret) {
-			// Get the soundcloud user profile from search object.
-			$soundcloud_user = json_decode($soundcloud->get('users/'.$tag_ret['user_id']), TRUE);
-			
-			$tag_ret['soundcloud_user'] = $soundcloud_user;
-			// Insert it into our entity system.
-			brdg_soundcloud_insert_node($tag_ret);
+		foreach ($settings['search_tag'] as $tag) {
+			$search_tag_ret = json_decode($soundcloud->get('tracks', array('q' => $tag, 'limit' => $settings['max_num'])), TRUE);
+			foreach($search_tag_ret as $tag_ret) {
+				// Get the soundcloud user profile from search object.
+				$soundcloud_user = json_decode($soundcloud->get('users/'.$tag_ret['user_id']), TRUE);
+				$tag_ret['soundcloud_user'] = $soundcloud_user;
+				// Insert it into our entity system.
+				brdg_soundcloud_insert_node($tag_ret);
+			}
 		}
 	} catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
 		exit($e->getMessage());

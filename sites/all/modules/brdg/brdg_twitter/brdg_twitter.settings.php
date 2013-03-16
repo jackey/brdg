@@ -10,7 +10,8 @@ $settings = array(
 		'video'
 	),
 	'source_type' => 'Twitter Tweets',
-	'max_num' => 100,
+	'max_num' => 10,
+	'youtobei_thumbnail_size' => '0'
 );
 
 return $settings;

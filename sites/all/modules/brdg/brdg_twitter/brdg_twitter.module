@@ -29,6 +29,8 @@ function test_fetch_twitter() {
 	$query_keywords = $twitter_settings['search_tag'];
 	foreach ($query_keywords as $keyword) {
 		$query_ret = brdg_twitter_query_entity($keyword);
+		dpm($query_ret);
+		return '';
 	    $results = $query_ret['results'];
 	    foreach($results as $item) {
 	    	save_twitter_into_node($item);
@@ -71,7 +73,7 @@ function brdg_twitter_query_entity($q = '') {
 	    $data = json_decode($response->data, TRUE);
 
 	    // Log twitter response.
-	    brdg_core_log_cron($data);
+	    brdg_core_log_cron('', $data);
 	    return $data;
    	}
 }
@@ -164,4 +166,24 @@ function brdg_twitter_check_video($url) {
 		}
 	}
 	return $is_video;
+}
+
+/**
+ * Implements hook_services_view_alter()
+ */
+function brdg_twitter_services_view_alter(&$output, $views) {
+	$settings = brdg_twitter_get_app_settings();
+	if ($views->name == 'pictures' && $views->current_display == 'services_3') {
+		foreach ($output as $output_item) {
+			if (count($output_item->field_video)) {
+				$output->field_video_thumbnail = array();
+				foreach ($output_item->field_video as $url) {
+					$params = drupal_parse_url($url);
+					if (isset($params['query']) && isset($params['query']['v'])) {
+						$output_item->field_video_thumbnail[] = 'http://img.youtube.com/vi/'.$params['query']['v'].'/'.$settings['youtobei_thumbnail_size'].'.jpg';
+					}
+				}
+			}
+		}
+	}
 }
