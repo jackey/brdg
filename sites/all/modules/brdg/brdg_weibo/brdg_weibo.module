@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ */
+
+// Load settings for weibo fetching.
+function brdg_weibo_get_app_settings() {
+	static $settings;
+	if ($settings) return $settings;
+	$settings = require_once(drupal_get_path('module', 'brdg_weibo').'/brdg_weibo.settings.php'
+		);
+	return $settings;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function brdg_weibo_menu() {
+	$items['test_weibo'] = array(
+		'page callback' => 'brdg_weibo_test_page_callback',
+		'access callback' => TRUE,
+	);
+
+	return $items;
+}
+
+// Menu callback.
+function brdg_weibo_test_page_callback() {
+	$weibo_account = brdg_weibo_load_account();
+	$access_token = $weibo_account['oauth_token'];
+	$api = brdg_weibo_client($access_token);
+	$params = array();
+	$params['a'] = urlencode("上海");
+	$params['count'] = 50;
+	$params['page'] = 1;
+	$search_ret = $api->oauth->get('search/topics', $params);
+	dpm($search_ret);
+	return date('Y-m-d');
+}
+
+// Helper function to load weibo account from uid.
+function brdg_weibo_load_account($uid = 0) {
+	if (!$uid) {
+		global $user;
+		$uid = $user->uid;
+	}
+	$weibo_account = db_select('weibo_account')
+		->fields('weibo_account')
+		->condition('uid', $uid)
+		->execute()
+		->fetchAssoc();
+	return $weibo_account;
+}
+
+// Helper function to load weibo API client.
+function brdg_weibo_client($access_token) {
+    module_load_include('php', 'sinaweibo', 'saetv2.ex.class');
+	$key = variable_get('weibo_consumer_key', '');
+	$secret = variable_get('weibo_consumer_secret', '');
+	$token = $_SESSION['weibooauth_token']['access_token'];
+	return new SaeTClientV2($key , $secret , $token);
+}

@@ -16,6 +16,7 @@ features[ctools][] = services:services:3
 features[ctools][] = views:views_default:3.0
 features[features_api][] = api:1
 features[field][] = node-content_from_source-body
+features[field][] = node-content_from_source-field_extra
 features[field][] = node-content_from_source-field_from_user_id
 features[field][] = node-content_from_source-field_from_user_name
 features[field][] = node-content_from_source-field_from_user_profile_image
