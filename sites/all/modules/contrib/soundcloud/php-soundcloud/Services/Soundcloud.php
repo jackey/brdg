@@ -679,12 +679,14 @@ class Services_Soundcloud
      * @access public
      * @see Soundcloud::_request()
      */
+
+    function _updatePlaylist_callback($track) {
+        return 'playlist[tracks][][id]=' . $track;
+    }
     public function updatePlaylist($playlistId, $trackIds, $optionalPostData = null)
     {
         $url = $this->_buildUrl('playlists/' . $playlistId);
-        $postData = array_map(function ($track) {
-            return 'playlist[tracks][][id]=' . $track;
-        }, $trackIds);
+        $postData = array_map('_updatePlaylist_callback', $trackIds);
 
         if (is_array($optionalPostData)) {
             foreach ($optionalPostData as $key => $val) {
