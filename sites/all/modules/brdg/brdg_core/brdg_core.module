@@ -78,12 +78,17 @@ function brdg_core_media_is_inserted($id) {
   return !!$result;
 }
 
-/**
- * Implements hook_views_query_alter()
- */
-function brdg_core_views_query_alter(&$view, &$query) {
-    if ($view->name == 'pictures') {
-        //dpm($query);
+// Alter node that been inserted system.
+function brdg_core_node_save($node) {
+    $modules = module_list();
+    $filters = array();
+    foreach ($modules as $module) {
+        $func = $module.'_brdg_core_filter';
+        if (function_exists($func) && !$func($node)) {
+            return;
+        }
     }
+
+    node_save($node);
 }
 

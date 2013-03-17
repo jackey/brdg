@@ -1,0 +1,65 @@
+<?php
+
+/**
+ * @file
+ */
+
+/**
+ * Implements hook_form_alter()
+ */
+function brdg_user_block_form_alter(&$form, &$form_state, $form_id) {
+	if ($form_id == 'user_admin_account') {
+		$account_options = &$form['accounts']['#options'];
+		foreach ($account_options as &$account_option) {
+			$data = $account_option['operations']['data'];
+			$href = explode('/', $data['#href']);
+			$uid = $href[1];
+			$blacklist = array(
+				'#type' => 'link',
+				'#title' => t('Add into blacklist'),
+				'#href' => 'admin/people/'.$uid.'/black',
+				'#options' => array('query' => array('destination' => 'admin/people'))
+			);
+			$account_option['operations'] = array('data' => array($data, $blacklist));
+		}
+	}
+}
+
+/**
+ * Implements hook_menu()
+ */
+function brdg_user_block_menu() {
+	$items['admin/people/%user/black'] = array(
+		'page callback' => 'brdg_user_block_append_user',
+		'page arguments' => array(2),
+		'access arguments' => array('add black user'),
+	);
+	return $items;
+}
+
+// append user into blackuser list
+function brdg_user_block_append_user($user) {
+	$black_user = variable_get('brdg_black_user', array());
+	if (!in_array($user->uid, $black_user)) {
+		$black_user[] = $user->uid;
+		variable_set('brdg_black_user', $black_user);
+	}
+	drupal_goto(drupal_get_destination());
+}
+
+/**
+ * Implements hook_permission()
+ */
+function brdg_user_block_permission() {
+	return array(
+			'add block user' => array(
+			'title' => t('Append user into blackuser list'),
+		),
+	);
+}
+
+// Helper function to load black user.
+function brdg_user_block_list() {
+	$black_user = variable_get('brdg_black_user', array());
+	return user_load_multiple($black_user);
+}

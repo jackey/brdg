@@ -56,7 +56,6 @@ function drupagram_admin_form($form, &$form_state) {
  * @see http://drupal.org/node/1354
  */
 function drupagram_user_settings($account) {
-  dpm($account);
   module_load_include('inc', 'drupagram');
 
   $output = array();

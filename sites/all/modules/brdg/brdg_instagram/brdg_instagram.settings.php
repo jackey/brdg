@@ -10,7 +10,7 @@ $settings = array(
 		'loganneitzel'
 	),
 	'source_type' => 'Instagram',
-	'max_num' => 100,
+	'max_num' => 1,
 );
 
 return $settings;

@@ -56,7 +56,7 @@ function instagram_test_fetch() {
 			$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
 		}
 
-		node_save($node);
+		brdg_core_node_save($node, 'brdg_instagram');
 	}
 	return 'hello world';
 }
@@ -74,4 +74,24 @@ function brdg_instagbram_source_type() {
 	$twitter_settings = brdg_twitter_get_app_settings();
 	$source_name = $twitter_settings['source_type'];
 	return brdg_core_get_source_with_name($source_name);
+}
+
+// Filter to handler blackuser list.
+function brdg_instagram_brdg_core_filter(&$node) {
+	$blackusers = brdg_user_block_list();
+	$instagram_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
+	$instagram_account = drupagram_account_load($instagram_uid);
+	if ($instagram_account) {
+		foreach ($blackusers as $blackuser) {
+			foreach ($blackuser->drupagram_accounts as $drupagram_account) {
+				if ($drupagram_account->id == $instagram_uid) {
+					return FALSE;
+				}
+			}
+		}
+		return TRUE;
+	}
+	else {
+		return FALSE;
+	}
 }
