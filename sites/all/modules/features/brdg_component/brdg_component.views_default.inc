@@ -238,6 +238,27 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  $handler->display->display_options['fields']['nid']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['nid']['alter']['text'] = 'hello[nid]';
+  /* Field: Content: Source Type */
+  $handler->display->display_options['fields']['field_source_type']['id'] = 'field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['table'] = 'field_data_field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['field'] = 'field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['label'] = 'source_type';
+  $handler->display->display_options['fields']['field_source_type']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Post Date */
+  $handler->display->display_options['fields']['field_post_date']['id'] = 'field_post_date';
+  $handler->display->display_options['fields']['field_post_date']['table'] = 'field_data_field_post_date';
+  $handler->display->display_options['fields']['field_post_date']['field'] = 'field_post_date';
+  $handler->display->display_options['fields']['field_post_date']['label'] = 'post_date';
+  $handler->display->display_options['fields']['field_post_date']['type'] = 'date_plain';
+  $handler->display->display_options['fields']['field_post_date']['settings'] = array(
+    'format_type' => 'long',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+  );
   $handler->display->display_options['defaults']['sorts'] = FALSE;
   /* Sort criterion: Content: Post date */
   $handler->display->display_options['sorts']['created']['id'] = 'created';
@@ -260,6 +281,11 @@ function brdg_component_views_default_views() {
     'content_from_source' => 'content_from_source',
   );
   $handler->display->display_options['path'] = 'all_resources';
+
+  /* Display: Services 4 */
+  $handler = $view->new_display('services', 'Services 4', 'services_4');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['path'] = 'test_service';
   $export['pictures'] = $view;
 
   return $export;

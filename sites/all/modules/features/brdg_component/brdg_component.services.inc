@@ -16,7 +16,9 @@ function brdg_component_default_services_endpoint() {
   $endpoint->name = 'third_content';
   $endpoint->server = 'rest_server';
   $endpoint->path = 'third_content';
-  $endpoint->authentication = array();
+  $endpoint->authentication = array(
+    'services' => 'services',
+  );
   $endpoint->server_settings = array();
   $endpoint->resources = array(
     'node' => array(
@@ -73,7 +75,7 @@ function brdg_component_default_services_endpoint() {
       ),
     ),
   );
-  $endpoint->debug = 1;
+  $endpoint->debug = 0;
   $export['third_content'] = $endpoint;
 
   return $export;
