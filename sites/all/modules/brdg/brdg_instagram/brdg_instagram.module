@@ -77,21 +77,23 @@ function brdg_instagbram_source_type() {
 }
 
 // Filter to handler blackuser list.
-function brdg_instagram_brdg_core_filter(&$node) {
-	$blackusers = brdg_user_block_list();
-	$instagram_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
-	$instagram_account = drupagram_account_load($instagram_uid);
-	if ($instagram_account) {
-		foreach ($blackusers as $blackuser) {
-			foreach ($blackuser->drupagram_accounts as $drupagram_account) {
-				if ($drupagram_account->id == $instagram_uid) {
-					return FALSE;
+function brdg_instagram_brdg_core_filter(&$node, $from) {
+	if ($from == 'brdg_instagram') {
+		$blackusers = brdg_user_block_list();
+		$instagram_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
+		$instagram_account = drupagram_account_load($instagram_uid);
+		if ($instagram_account) {
+			foreach ($blackusers as $blackuser) {
+				foreach ($blackuser->drupagram_accounts as $drupagram_account) {
+					if ($drupagram_account->id == $instagram_uid) {
+						return FALSE;
+					}
 				}
 			}
+			return TRUE;
 		}
-		return TRUE;
-	}
-	else {
-		return FALSE;
+		else {
+			return FALSE;
+		}
 	}
 }

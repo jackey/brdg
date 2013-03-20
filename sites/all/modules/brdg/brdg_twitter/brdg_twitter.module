@@ -143,9 +143,6 @@ function save_twitter_into_node($twitter_entity) {
 	if ($has_media) {
 		brdg_core_node_save($node, 'brdg_twitter');
 	}
-
-	// Let other module to alter node that be inserted with fetch.
-
 }
 
 // Helper function to load source of twitter.
@@ -178,7 +175,7 @@ function brdg_twitter_services_view_alter(&$output, $views) {
 	$settings = brdg_twitter_get_app_settings();
 	if ($views->name == 'pictures' && $views->current_display == 'services_3') {
 		foreach ($output as $output_item) {
-			if (count($output_item->field_video)) {
+			if (isset($output_item->field_video) && count($output_item->field_video)) {
 				$output->field_video_thumbnail = array();
 				foreach ($output_item->field_video as $url) {
 					$params = drupal_parse_url($url);
@@ -192,19 +189,21 @@ function brdg_twitter_services_view_alter(&$output, $views) {
 }
 
 // Filter to handler blackuser list.
-function brdg_twitter_brdg_core_filter(&$node) {
-	$blackusers = brdg_user_block_list();
-	$twitter_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
-	$twitter_account = twitter_account_load($twitter_uid);
-	if ($twitter_account) {
-		foreach ($blackusers as $blackuser) {
-			if ($blackuser->uid == $twitter_account->uid) {
-				return FALSE;
+function brdg_twitter_brdg_core_filter(&$node, $from) {
+	if ($from == 'brdg_twitter') {
+		$blackusers = brdg_user_block_list();
+		$twitter_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
+		$twitter_account = twitter_account_load($twitter_uid);
+		if ($twitter_account) {
+			foreach ($blackusers as $blackuser) {
+				if ($blackuser->uid == $twitter_account->uid) {
+					return FALSE;
+				}
 			}
+			return TRUE;
 		}
-		return TRUE;
-	}
-	else {
-		return FALSE;
+		else {
+			return FALSE;
+		}
 	}
 }

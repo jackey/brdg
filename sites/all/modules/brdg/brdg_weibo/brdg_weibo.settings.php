@@ -10,7 +10,7 @@ $settings = array(
 		'video'
 	),
 	'source_type' => 'Weibo',
-	'max_num' => 100,
+	'max_num' => 1,
 );
 
 return $settings;

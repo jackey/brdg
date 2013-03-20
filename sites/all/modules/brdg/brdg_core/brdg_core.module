@@ -79,16 +79,15 @@ function brdg_core_media_is_inserted($id) {
 }
 
 // Alter node that been inserted system.
-function brdg_core_node_save($node) {
+function brdg_core_node_save($node, $from) {
     $modules = module_list();
     $filters = array();
     foreach ($modules as $module) {
         $func = $module.'_brdg_core_filter';
-        if (function_exists($func) && !$func($node)) {
+        if (function_exists($func) && $func($node, $from) === FALSE) {
             return;
         }
     }
-
     node_save($node);
 }
 
