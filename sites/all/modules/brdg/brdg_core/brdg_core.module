@@ -95,12 +95,13 @@ function brdg_core_node_save($node, $from) {
  * Implements hook_services_view_alter()
  */
 function brdg_core_services_view_alter(&$output, $views) {
+  dpm($output);
   foreach ($output as &$output_item) {
-    if (isset($output_item->field_user_profile_image) && is_array($output_item->field_user_profile_image)) {
+    if (isset($output_item->field_user_profile_image) && !empty($output_item->field_user_profile_image)) {
       $output_item->field_user_profile_image = file_create_url($output_item->field_user_profile_image['uri']);
     }
 
-    if (isset($output_item->field_media_image) && is_array($output_item->field_media_image)) {
+    if (isset($output_item->field_media_image) && !empty($output_item->field_media_image)) {
       $output_item->field_media_image = file_create_url($output_item->field_media_image['uri']);
     }
   }
