@@ -38,6 +38,7 @@ function brdg_weibo_test_page_callback() {
 	$search_ret = $api->oauth->get('statuses/public_timeline', $params);
 
 	$statuses = $search_ret['statuses'];
+	dpm($statuses);
 
 	// Insert it into node
 	foreach ($statuses as $status) {
@@ -111,8 +112,7 @@ function brdg_weibo_client($access_token) {
     module_load_include('php', 'sinaweibo', 'saetv2.ex.class');
 	$key = variable_get('weibo_consumer_key', '');
 	$secret = variable_get('weibo_consumer_secret', '');
-	$token = $_SESSION['weibooauth_token']['access_token'];
-	return new SaeTClientV2($key , $secret , $token);
+	return new SaeTClientV2($key , $secret , $access_token);
 }
 
 function brdg_weibo_source_type() {
@@ -122,6 +122,9 @@ function brdg_weibo_source_type() {
 	return brdg_core_get_source_with_name($source_name);
 }
 
+/**
+ * Implements hook_brdg_core_filter()
+ */
 function brdg_weibo_brdg_core_filter(&$node, $from) {
 	if ($from == 'brdg_weibo') {
 		$blackusers = brdg_user_block_list();
