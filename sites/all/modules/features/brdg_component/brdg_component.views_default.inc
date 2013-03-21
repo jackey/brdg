@@ -47,11 +47,11 @@ function brdg_component_views_default_views() {
     'skip_empty_values' => 0,
   );
   $handler->display->display_options['fields']['field_media_image']['delta_offset'] = '0';
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
-  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Sort criterion: Content: Post Date (field_post_date) */
+  $handler->display->display_options['sorts']['field_post_date_value']['id'] = 'field_post_date_value';
+  $handler->display->display_options['sorts']['field_post_date_value']['table'] = 'field_data_field_post_date';
+  $handler->display->display_options['sorts']['field_post_date_value']['field'] = 'field_post_date_value';
+  $handler->display->display_options['sorts']['field_post_date_value']['order'] = 'DESC';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -228,9 +228,10 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_media_image']['field'] = 'field_media_image';
   $handler->display->display_options['fields']['field_media_image']['label'] = 'field_media_image';
   $handler->display->display_options['fields']['field_media_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_media_image']['type'] = 'services';
   $handler->display->display_options['fields']['field_media_image']['settings'] = array(
-    'image_style' => 'home_slideshow',
-    'image_link' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
   );
   $handler->display->display_options['fields']['field_media_image']['delta_offset'] = '0';
   /* Field: Content: Nid */
@@ -259,11 +260,27 @@ function brdg_component_views_default_views() {
     'multiple_from' => '',
     'multiple_to' => '',
   );
-  $handler->display->display_options['defaults']['sorts'] = FALSE;
-  /* Sort criterion: Content: Post date */
-  $handler->display->display_options['sorts']['created']['id'] = 'created';
-  $handler->display->display_options['sorts']['created']['table'] = 'node';
-  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  /* Field: Content: From User Name */
+  $handler->display->display_options['fields']['field_from_user_name']['id'] = 'field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['table'] = 'field_data_field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['field'] = 'field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['label'] = 'field_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['element_label_colon'] = FALSE;
+  $handler->display->display_options['fields']['field_from_user_name']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Field: Content: From User Profile Image */
+  $handler->display->display_options['fields']['field_from_user_profile_image']['id'] = 'field_from_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['table'] = 'field_data_field_from_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['field'] = 'field_from_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['label'] = 'field_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['type'] = 'services';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
