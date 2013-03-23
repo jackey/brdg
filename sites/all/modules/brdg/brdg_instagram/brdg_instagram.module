@@ -31,10 +31,11 @@ function instagram_test_fetch() {
 			continue;
 		}
 		// Save user profile image media.
-		$user_profile_image = add_image_from_url($result->images['standard_resolution']['url'], 'instagram');
+		$media_image = add_image_from_url($result->images['standard_resolution']['url'], 'instagram');
 		// Save shared image media.	
-		$media_profile_image = add_image_from_url($result->user->profile_picture, 'instagram');
-		if (!$media_profile_image || !$user_profile_image) {
+		$user_profile_image = add_image_from_url($result->user->profile_picture, 'instagram');
+		if (!$media_image || !$user_profile_image) {
+			dpm('hello');
 			continue;
 		}
 		$node = (Object)null;
@@ -53,7 +54,7 @@ function instagram_test_fetch() {
 		$node->field_post_date[LANGUAGE_NONE][0] = array(
 			'value' => date('Y-m-d H:i:s', $result->created_time),
 		);
-		$node->field_media_image[LANGUAGE_NONE][] = (array)$media_profile_image;
+		$node->field_media_image[LANGUAGE_NONE][] = (array)$media_image;
 		// set media source type
 		if ($source = brdg_instagbram_source_type()) {
 			$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
@@ -81,6 +82,7 @@ function brdg_instagbram_source_type() {
 
 // Filter to handler blackuser list.
 function brdg_instagram_brdg_core_filter(&$node, $from) {
+	return TRUE;
 	if ($from == 'brdg_instagram') {
 		$blackusers = brdg_user_block_list();
 		$instagram_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
