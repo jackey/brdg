@@ -106,3 +106,12 @@ function brdg_core_services_view_alter(&$output, $views) {
     }
   }
 }
+
+/**
+ * Implements hook_node_presave()
+ */
+function brdg_core_node_presave($node) {
+  if ($node->type == 'content_from_source') {
+    dpm($node);
+  }
+}
