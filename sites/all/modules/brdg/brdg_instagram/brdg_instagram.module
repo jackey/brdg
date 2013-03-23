@@ -27,9 +27,6 @@ function instagram_test_fetch() {
 	$results = $drupagram->fetch('tags_recent', array('!tag_name' => 'snowy'));
 	
 	foreach ($results as $result) {
-		if (brdg_core_media_is_inserted($result->id)) {
-			continue;
-		}
 		// Save user profile image media.
 		$media_image = add_image_from_url($result->images['standard_resolution']['url'], 'instagram');
 		// Save shared image media.	
@@ -41,7 +38,7 @@ function instagram_test_fetch() {
 		$node = (Object)null;
 		$node->type = $node_type;
 		node_object_prepare($node);
-		$node->title = 'from twitter';
+		$node->title = 'from instagram';
 		$node->language = 'en';
 		$node->uid = 1;
 		$node->status = 1;
@@ -75,8 +72,8 @@ function brdg_instagram_get_app_settings() {
 
 function brdg_instagbram_source_type() {
 	// Load settings
-	$twitter_settings = brdg_twitter_get_app_settings();
-	$source_name = $twitter_settings['source_type'];
+	$instagram_settings = brdg_instagram_get_app_settings();
+	$source_name = $instagram_settings['source_type'];
 	return brdg_core_get_source_with_name($source_name);
 }
 
