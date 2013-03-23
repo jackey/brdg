@@ -32,8 +32,11 @@ function instagram_test_fetch() {
 		}
 		// Save user profile image media.
 		$user_profile_image = add_image_from_url($result->images['standard_resolution']['url'], 'instagram');
-		// Save shared image media.
+		// Save shared image media.	
 		$media_profile_image = add_image_from_url($result->user->profile_picture, 'instagram');
+		if (!$media_profile_image) {
+			continue;
+		}
 		$node = (Object)null;
 		$node->type = $node_type;
 		node_object_prepare($node);
