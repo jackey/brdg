@@ -34,7 +34,7 @@ function instagram_test_fetch() {
 		$user_profile_image = add_image_from_url($result->images['standard_resolution']['url'], 'instagram');
 		// Save shared image media.	
 		$media_profile_image = add_image_from_url($result->user->profile_picture, 'instagram');
-		if (!$media_profile_image) {
+		if (!$media_profile_image || !$user_profile_image) {
 			continue;
 		}
 		$node = (Object)null;
