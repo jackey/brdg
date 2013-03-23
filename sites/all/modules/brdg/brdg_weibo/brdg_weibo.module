@@ -38,8 +38,6 @@ function brdg_weibo_test_page_callback() {
 	$search_ret = $api->oauth->get('statuses/public_timeline', $params);
 
 	$statuses = $search_ret['statuses'];
-	dpm($statuses);
-
 	// Insert it into node
 	foreach ($statuses as $status) {
 		$node_type = 'content_from_source';
@@ -53,6 +51,7 @@ function brdg_weibo_test_page_callback() {
 			return NULL;
 		}
 		$user_profile_image = add_image_from_url($status['user']['profile_image_url']);
+		if (!$user_profile_image) continue;
 		$node = (Object)null;
 		$node->type = $node_type;
 		node_object_prepare($node);
@@ -130,9 +129,10 @@ function brdg_weibo_brdg_core_filter(&$node, $from) {
 		$blackusers = brdg_user_block_list();
 		$weibo_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
 		$weibo_account = brdg_weibo_load_account_with_weibo_uid($weibo_uid);
+		return TRUE;
 		if ($weibo_account) {
 			foreach ($blackusers as $blackuser) {
-				if ($blackuser->uid == $twitter_account->uid) {
+				if ($blackuser->uid == $weibo_account->uid) {
 					return FALSE;
 				}
 			}
@@ -140,6 +140,19 @@ function brdg_weibo_brdg_core_filter(&$node, $from) {
 		}
 		else {
 			return FALSE;
+		}
+	}
+}
+
+/**
+ * Implements hook_node_presave()
+ */
+function brdg_weibo_node_presave(&$node) {
+	if ($node->type == 'content_from_source') {
+		$weibo_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
+		if ($weibo_uid && $weibo_account = brdg_weibo_load_account_with_weibo_uid($weibo_uid)) {
+			$user = user_load($weibo_account->uid);
+			$node->field_post_owed_user[LANGUAGE_NONE][0]['value'] = $user->uid;
 		}
 	}
 }
