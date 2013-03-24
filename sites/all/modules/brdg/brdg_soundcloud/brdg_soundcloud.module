@@ -23,6 +23,9 @@ function test_soundcloud_page_calback() {
 	$settings = brdg_soundcloud_get_app_settings();
 	global $user;
 	$soundcloud = soundcloud_create_soundcloud($user->uid);
+	if (!$soundcloud) {
+		return 'failed';
+	}
 	$soundcloud->setCurlOptions(array(CURLOPT_FOLLOWLOCATION => 1));
 	try {
 		foreach ($settings['search_tag'] as $tag) {
@@ -77,6 +80,14 @@ function brdg_soundcloud_insert_node($soundcloud_object) {
 	if (isset($soundcloud_object['permalink_url'])) {
 		$urls = array($soundcloud_object['permalink_url']);
 		foreach ($urls as $url) {
+			$artwork_url = $soundcloud_object['artwork_url'];
+			if ($artwork_url) {
+				$artwork_url = preg_replace("/large/", "t500x500", $artwork_url);
+			}
+			$sound_thumbnail = add_image_from_url($artwork_url);
+			if ($sound_thumbnail) {
+				$node->field_sound_thumbnail[LANGUAGE_NONE][] = (array)$sound_thumbnail;
+			}
 			$node->field_sound[LANGUAGE_NONE][] = array('value' => $url);
 		}
 	}

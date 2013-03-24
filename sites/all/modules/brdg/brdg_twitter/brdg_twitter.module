@@ -15,7 +15,7 @@ function brdg_twitter_get_app_settings() {
 }
 
 function brdg_twitter_menu() {
-	$items['test_fetch'] = array(
+	$items['test_twitter'] = array(
 		'page callback' => 'test_fetch_twitter',
 		'access callback' => TRUE,
 	);
@@ -29,8 +29,6 @@ function test_fetch_twitter() {
 	$query_keywords = $twitter_settings['search_tag'];
 	foreach ($query_keywords as $keyword) {
 		$query_ret = brdg_twitter_query_entity($keyword);
-		dpm($query_ret);
-		return '';
 	    $results = $query_ret['results'];
 	    foreach($results as $item) {
 	    	save_twitter_into_node($item);
@@ -132,6 +130,12 @@ function save_twitter_into_node($twitter_entity) {
 			if (brdg_twitter_check_video($url['expanded_url'])) {
 				$has_media = TRUE;
 				$node->field_video[LANGUAGE_NONE][] = array('value' => $url['expanded_url']);
+				$thumbnail_file_url = youtobe_thumbnail_from_video($url['expanded_url']);
+				dpm($thumbnail_file_url);
+				$thumbnail_file = add_image_from_url($thumbnail_file_url, 'youtube_thumbnail');
+				if ($thumbnail_file) {
+					$node->field_video_thumbnail[LANGUAGE_NONE][] = (array)$thumbnail_file;
+				}
 			}
 		}
 	}
@@ -170,26 +174,39 @@ function brdg_twitter_check_video($url) {
 
 /**
  * Implements hook_services_view_alter()
+ * Youtube video thumbnail
  */
 function brdg_twitter_services_view_alter(&$output, $views) {
 	$settings = brdg_twitter_get_app_settings();
-	if ($views->name == 'pictures' && $views->current_display == 'services_3') {
+	if ($views->name == 'pictures' && ($views->current_display == 'services_3' || $views->current_display == 'services_2')) {
 		foreach ($output as $output_item) {
 			if (isset($output_item->field_video) && count($output_item->field_video)) {
 				$output->field_video_thumbnail = array();
 				foreach ($output_item->field_video as $url) {
-					$params = drupal_parse_url($url);
-					if (isset($params['query']) && isset($params['query']['v'])) {
-						$output_item->field_video_thumbnail[] = 'http://img.youtube.com/vi/'.$params['query']['v'].'/'.$settings['youtobei_thumbnail_size'].'.jpg';
-					}
+					$output_item->field_video_thumbnail[] = youtobe_thumbnail_from_video($url);
 				}
 			}
 		}
 	}
 }
 
+/**
+ * Get thumbnail URL from video url
+ */
+function youtobe_thumbnail_from_video($video_url, $size = 0) {
+	$settings = brdg_twitter_get_app_settings();
+	$params = drupal_parse_url($video_url);
+	$url = FALSE;
+	if (isset($params['query']) && isset($params['query']['v'])) {
+		$url = 'http://img.youtube.com/vi/'.$params['query']['v'].'/'.$settings['youtobei_thumbnail_size'].'.jpg';
+	}
+
+	return $url;
+}
+
 // Filter to handler blackuser list.
 function brdg_twitter_brdg_core_filter(&$node, $from) {
+	return TRUE;
 	if ($from == 'brdg_twitter') {
 		$blackusers = brdg_user_block_list();
 		$twitter_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
