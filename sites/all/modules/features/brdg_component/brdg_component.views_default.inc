@@ -145,9 +145,10 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_post_date']['table'] = 'field_data_field_post_date';
   $handler->display->display_options['fields']['field_post_date']['field'] = 'field_post_date';
   $handler->display->display_options['fields']['field_post_date']['label'] = 'post_date';
+  $handler->display->display_options['fields']['field_post_date']['type'] = 'date_plain';
   $handler->display->display_options['fields']['field_post_date']['settings'] = array(
     'format_type' => 'long',
-    'fromto' => 'both',
+    'fromto' => '',
     'multiple_number' => '',
     'multiple_from' => '',
     'multiple_to' => '',
