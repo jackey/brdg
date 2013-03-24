@@ -80,6 +80,10 @@ function brdg_core_media_is_inserted($id) {
 
 // Alter node that been inserted system.
 function brdg_core_node_save($node, $from) {
+    $source_id = $node->field_source_id[LANGUAGE_NONE][0]['value'];
+    if ($source_id && brdg_core_media_is_inserted($source_id)) {
+        return FALSE;
+    } 
     $modules = module_list();
     $filters = array();
     foreach ($modules as $module) {
@@ -100,7 +104,7 @@ function brdg_core_services_view_alter(&$output, $views) {
       $output_item->field_user_profile_image = file_create_url($output_item->field_user_profile_image['uri']);
     }
     if (isset($output_item->field_media_image) && !empty($output_item->field_media_image)) {
-      $output_item->field_media_image = file_create_url($output_item->field_media_image['uri']);
+      $output_item->field_media_image = file_create_url($output_item->field_media_image[0]['uri']);
     }
   }
 }
