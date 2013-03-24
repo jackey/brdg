@@ -32,7 +32,7 @@ function brdg_weibo_test_page_callback() {
 	$access_token = $weibo_account['oauth_token'];
 	$api = brdg_weibo_client($access_token);
 	$params = array();
-	$params['a'] = urlencode("上海");
+	$params['a'] = urlencode($settings['search_tag'][0]);
 	$params['count'] = $settings['max_num'];
 	$params['page'] = 1;
 	$search_ret = $api->oauth->get('statuses/public_timeline', $params);
@@ -154,7 +154,7 @@ function brdg_weibo_brdg_core_filter(&$node, $from) {
 /**
  * Implements hook_node_presave()
  */
-function brdg_weibo_node_presave(&$node) {
+function brdg_weibo_node_presave($node) {
 	if ($node->type == 'content_from_source') {
 		$weibo_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
 		if ($weibo_uid && $weibo_account = brdg_weibo_load_account_with_weibo_uid($weibo_uid)) {
