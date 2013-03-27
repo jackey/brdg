@@ -35,9 +35,20 @@ function brdg_weibo_test_page_callback() {
 	$params['a'] = urlencode($settings['search_tag'][0]);
 	$params['count'] = $settings['max_num'];
 	$params['page'] = 1;
-	$search_ret = $api->oauth->get('statuses/public_timeline', $params);
+	$search_ret = $api->oauth->get('statuses/user_timeline', $params);
 
 	$statuses = $search_ret['statuses'];
+	// Before insert into node, we should check the URL of text.
+	foreach ($statuses as $status) {
+		$text = $status['text'];
+		$url = array();
+		preg_match_all("/(http:\/\/[\w]+\.[\w\/]+)/", $text, $url);
+		$short_url = $url[1];
+		$long_url = $api->oauth->get('short_url/expand', array('url_short' => $short_url));
+		dpm($long_url);
+	}
+
+	return '';
 	// Insert it into node
 	foreach ($statuses as $status) {
 		if (!isset($status['original_pic'])) {

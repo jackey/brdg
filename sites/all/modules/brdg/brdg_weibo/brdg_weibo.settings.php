@@ -10,7 +10,7 @@ $settings = array(
 		'上海'
 	),
 	'source_type' => 'Weibo',
-	'max_num' => 100,
+	'max_num' => 10,
 );
 
 return $settings;
