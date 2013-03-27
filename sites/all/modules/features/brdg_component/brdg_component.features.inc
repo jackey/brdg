@@ -27,6 +27,50 @@ function brdg_component_views_api() {
 function brdg_component_image_default_styles() {
   $styles = array();
 
+  // Exported image style: 300_300.
+  $styles['300_300'] = array(
+    'name' => '300_300',
+    'effects' => array(
+      1 => array(
+        'label' => 'Resize',
+        'help' => 'Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.',
+        'effect callback' => 'image_resize_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_resize',
+        'data' => array(
+          'width' => '300',
+          'height' => '300',
+        ),
+        'weight' => '1',
+      ),
+    ),
+  );
+
+  // Exported image style: 400_400.
+  $styles['400_400'] = array(
+    'name' => '400_400',
+    'effects' => array(
+      2 => array(
+        'label' => 'Resize',
+        'help' => 'Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.',
+        'effect callback' => 'image_resize_effect',
+        'dimensions callback' => 'image_resize_dimensions',
+        'form callback' => 'image_resize_form',
+        'summary theme' => 'image_resize_summary',
+        'module' => 'image',
+        'name' => 'image_resize',
+        'data' => array(
+          'width' => '400',
+          'height' => '400',
+        ),
+        'weight' => '1',
+      ),
+    ),
+  );
+
   // Exported image style: home_slideshow.
   $styles['home_slideshow'] = array(
     'name' => 'home_slideshow',
