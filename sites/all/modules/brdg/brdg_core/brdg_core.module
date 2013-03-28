@@ -89,7 +89,7 @@ function brdg_core_node_save($node, $from) {
     foreach ($modules as $module) {
         $func = $module.'_brdg_core_filter';
         if (function_exists($func) && $func($node, $from) === FALSE) {
-            return;
+            //return;
         }
     }
     node_save($node);
@@ -116,4 +116,11 @@ function brdg_core_services_view_alter(&$output, $views) {
  */
 function brdg_core_init() {
     drupal_add_js(drupal_get_path('module', 'brdg_core').'/js.example.js');
+}
+
+function brdg_core_is_youku_link($url) {
+  if (strpos($url, 'youku.com') !== FALSE) {
+    return TRUE;
+  }
+  return FALSE;
 }

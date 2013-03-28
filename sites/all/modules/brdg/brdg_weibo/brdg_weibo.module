@@ -39,19 +39,22 @@ function brdg_weibo_test_page_callback() {
 
 	$statuses = $search_ret['statuses'];
 	// Before insert into node, we should check the URL of text.
-	foreach ($statuses as $status) {
+	foreach ($statuses as &$status) {
 		$text = $status['text'];
 		$url = array();
 		preg_match_all("/(http:\/\/[\w]+\.[\w\/]+)/", $text, $url);
-		$short_url = $url[1];
-		$long_url = $api->oauth->get('short_url/expand', array('url_short' => $short_url));
-		dpm($long_url);
+		$short_url = @$url[1][0];
+		if ($short_url) {
+			$ret_data = $api->oauth->get('short_url/expand', array('url_short' => $short_url));
+			$long_url = array_shift($ret_data['urls']);
+			if ($long_url['type'] == 1 && brdg_core_is_youku_link($long_url['url_long'])) {
+				$status['youku_video'] = $long_url;
+			}
+		}
 	}
-
-	return '';
 	// Insert it into node
 	foreach ($statuses as $status) {
-		if (!isset($status['original_pic'])) {
+		if (!isset($status['original_pic']) && !isset($status['youku_video'])) {
 			continue;
 		}
 		$node_type = 'content_from_source';
@@ -62,10 +65,10 @@ function brdg_weibo_test_page_callback() {
 			->fieldCondition('field_source_id', 'value', $id)
 			->execute();
 		if ($result) {
-			return NULL;
+			return "";
 		}
 		$user_profile_image = add_image_from_url($status['user']['profile_image_url']);
-		if (!$user_profile_image) continue;
+		//if (!$user_profile_image) continue;
 		$node = (Object)null;
 		$node->type = $node_type;
 		node_object_prepare($node);
@@ -92,6 +95,11 @@ function brdg_weibo_test_page_callback() {
 		if ($media_image = add_image_from_url($status['original_pic'])) {
 			// set image madia 
 			$node->field_media_image[LANGUAGE_NONE][0] = (array)$media_image;
+		}
+
+		// Set youku video
+		if (isset($status['youku_video'])) {
+			$node->field_video[LANGUAGE_NONE][0]['value'] = $status['youku_video']['url_long'];
 		}
 		// If doesn't include any media, we don't need insert into our system.
 		brdg_core_node_save($node, 'brdg_weibo');
@@ -143,6 +151,7 @@ function brdg_weibo_source_type() {
  * Implements hook_brdg_core_filter()
  */
 function brdg_weibo_brdg_core_filter(&$node, $from) {
+	return TRUE;
 	if ($from == 'brdg_weibo') {
 		$blackusers = brdg_user_block_list();
 		$weibo_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
@@ -166,6 +175,7 @@ function brdg_weibo_brdg_core_filter(&$node, $from) {
  * Implements hook_node_presave()
  */
 function brdg_weibo_node_presave($node) {
+	return '';
 	if ($node->type == 'content_from_source') {
 		$weibo_uid = $node->field_from_user_id[LANGUAGE_NONE][0]['value'];
 		if ($weibo_uid && $weibo_account = brdg_weibo_load_account_with_weibo_uid($weibo_uid)) {
@@ -173,4 +183,8 @@ function brdg_weibo_node_presave($node) {
 			$node->field_post_owed_user[LANGUAGE_NONE][0]['value'] = $user->uid;
 		}
 	}
+}
+
+function brdg_weibo_get_youku_thumbnail_from_url() {
+
 }

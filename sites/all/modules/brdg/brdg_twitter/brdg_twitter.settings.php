@@ -7,10 +7,10 @@ $settings = array(
 	'access_token_secret' => '',
 	'twitter_uid' => '568873580',
 	'search_tag' => array(
-		'video'
+		'sweet'
 	),
 	'source_type' => 'Twitter Tweets',
-	'max_num' => 50,
+	'max_num' => 20,
 	'youtobei_thumbnail_size' => '0'
 );
 
