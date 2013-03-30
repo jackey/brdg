@@ -128,3 +128,22 @@ function brdg_soundcloud_get_app_settings() {
 		);
 	return $settings;
 }
+
+/**
+ * Implements hook_services_view_alter()
+ * Youtube video thumbnail
+ */
+function brdg_soundcloud_services_view_alter(&$output, $views) {
+	$settings = brdg_soundcloud_get_app_settings();
+	if ($views->name == 'pictures' && ($views->current_display == 'services_3' || $views->current_display == 'services_4')) {
+		foreach ($output as &$output_item) {
+			if (isset($output_item->field_sould) && count($output_item->field_sould)) {
+				$html =$output_item->field_sound_thumbnail;
+				if (is_string($html)) {
+					preg_match( '@src="([^"]+)"@' , $html , $match);
+					$output_item->field_sound_thumbnail = $match[1];
+				}
+			}
+		}
+	}
+}
