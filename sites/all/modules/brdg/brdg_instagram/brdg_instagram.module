@@ -16,15 +16,42 @@ function brdg_instagram_menu() {
 	return $items;
 }
 
+/**
+ * Get entity from instagram searched
+ */
+function brdg_instagram_entity($sort = 'field_source_id', $order = "ASC") {
+	$source = brdg_instagbram_source_type();
+	$query = new EntityFieldQuery;
+	$ret = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'content_from_source')
+		->propertyCondition('status', 1)
+		->fieldCondition('field_source_type', 'tid', $source->tid)
+		->fieldOrderBy($sort, 'value', $order)
+		->execute();
+	return array_keys($ret['node']);
+}
+
 // Memu callback
 function instagram_test_fetch() {
+	$nids = brdg_instagram_entity();
+	$min_nid = array_shift($nids);
+	$min_node = node_load($min_nid);
+	if ($min_node) {
+		$min_tag_id = $min_node->field_source_id[LANGUAGE_NONE][0]['value'];
+	}
+	else {
+		$min_tag_id = 0;
+	}
 	$node_type = 'content_from_source';
  	module_load_include('inc', 'drupagram');
  	$settings = brdg_instagram_get_app_settings();
  	$instagram_uid = $settings['instagram_uid'];
 	// Load object of API
 	$drupagram = drupagram_connect(drupagram_account_load($instagram_uid));
-	$results = $drupagram->fetch('tags_recent', array('!tag_name' => 'snowy'));
+	$results = $drupagram->fetch('tags_recent', 
+		array('!tag_name' => $settings['search_tag'][0], 
+			'!count' => $settings['max_num'])
+	);
 
 	foreach ($results as $result) {
 		// Save user profile image media.
@@ -32,7 +59,6 @@ function instagram_test_fetch() {
 		// Save shared image media.	
 		$user_profile_image = add_image_from_url($result->user->profile_picture, 'instagram');
 		if (!$media_image || !$user_profile_image) {
-			dpm('hello');
 			continue;
 		}
 		$node = (Object)null;

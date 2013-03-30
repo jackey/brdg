@@ -219,6 +219,66 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['nid']['table'] = 'node';
   $handler->display->display_options['fields']['nid']['field'] = 'nid';
   $handler->display->display_options['fields']['nid']['label'] = 'nid';
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['label'] = 'field_body';
+  $handler->display->display_options['fields']['body']['type'] = 'services';
+  $handler->display->display_options['fields']['body']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Field: Content: From User Name */
+  $handler->display->display_options['fields']['field_from_user_name']['id'] = 'field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['table'] = 'field_data_field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['field'] = 'field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['label'] = 'field_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['type'] = 'text_plain';
+  $handler->display->display_options['fields']['field_from_user_name']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Field: Content: From User Profile Image */
+  $handler->display->display_options['fields']['field_from_user_profile_image']['id'] = 'field_from_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['table'] = 'field_data_field_from_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['field'] = 'field_from_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['label'] = 'field_user_profile_image';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['type'] = 'services';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
+  /* Field: Content: Post Date */
+  $handler->display->display_options['fields']['field_post_date']['id'] = 'field_post_date';
+  $handler->display->display_options['fields']['field_post_date']['table'] = 'field_data_field_post_date';
+  $handler->display->display_options['fields']['field_post_date']['field'] = 'field_post_date';
+  $handler->display->display_options['fields']['field_post_date']['label'] = 'post_date';
+  $handler->display->display_options['fields']['field_post_date']['type'] = 'date_plain';
+  $handler->display->display_options['fields']['field_post_date']['settings'] = array(
+    'format_type' => 'long',
+    'fromto' => 'both',
+    'multiple_number' => '',
+    'multiple_from' => '',
+    'multiple_to' => '',
+  );
+  /* Field: Content: Source Type */
+  $handler->display->display_options['fields']['field_source_type']['id'] = 'field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['table'] = 'field_data_field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['field'] = 'field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['label'] = 'source_type';
+  $handler->display->display_options['fields']['field_source_type']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Video Thumbnail */
+  $handler->display->display_options['fields']['field_video_thumbnail']['id'] = 'field_video_thumbnail';
+  $handler->display->display_options['fields']['field_video_thumbnail']['table'] = 'field_data_field_video_thumbnail';
+  $handler->display->display_options['fields']['field_video_thumbnail']['field'] = 'field_video_thumbnail';
+  $handler->display->display_options['fields']['field_video_thumbnail']['label'] = 'field_video_thumbnail';
+  $handler->display->display_options['fields']['field_video_thumbnail']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_video_thumbnail']['settings'] = array(
+    'image_style' => '400_400',
+    'image_link' => '',
+  );
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */

@@ -139,7 +139,7 @@ class Instagram {
     'post_like' => 'v1/media/%d/likes',
     'remove_like' => 'v1/media/%d/likes?access_token=!access_token',
     'tags' => 'v1/tags/%s?access_token=!access_token',
-    'tags_recent' => 'v1/tags/!tag_name/media/recent?max_id=!max_id&min_id=!min_id&access_token=!access_token',
+    'tags_recent' => 'v1/tags/!tag_name/media/recent?max_id=!max_id&min_id=!min_id&access_token=!access_token&count=!count',
     'tags_search' => 'v1/tags/search?q=!q&access_token=!access_token',
     'locations' => 'v1/locations/%d?access_token=!access_token',
     'locations_recent' => 'v1/locations/%d/media/recent/?max_id=%d&min_id=%d&max_timestamp=%d&min_timestamp=%d&access_token=!access_token',
@@ -391,9 +391,7 @@ class Instagram {
       }
     }
 
-    $headers = array();
-    // @TODO: implement headers when $use_auth == TRUE
-
+    $headers = array();    // @TODO: implement headers when $use_auth == TRUE
     $response = drupal_http_request($url, array(
       'headers' => $headers,
       'method' => $method,

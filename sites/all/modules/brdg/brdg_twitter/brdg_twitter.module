@@ -32,6 +32,7 @@ function test_fetch_twitter() {
 	foreach ($query_keywords as $keyword) {
 		$query_ret = brdg_twitter_query_entity($keyword, $page);
 	    $results = $query_ret['results'];
+	    dpm($results);
 	    foreach($results as $item) {
 	    	save_twitter_into_node($item);
 	    }
@@ -188,12 +189,11 @@ function brdg_twitter_check_video($url) {
 function brdg_twitter_services_view_alter(&$output, $views) {
 	$settings = brdg_twitter_get_app_settings();
 	if ($views->name == 'pictures' && ($views->current_display == 'services_3' || $views->current_display == 'services_2')) {
-		foreach ($output as $output_item) {
+		foreach ($output as &$output_item) {
 			if (isset($output_item->field_video) && count($output_item->field_video)) {
-				$output->field_video_thumbnail = array();
-				foreach ($output_item->field_video as $url) {
-					$output_item->field_video_thumbnail[] = youtobe_thumbnail_from_video($url);
-				}
+				$html =$output_item->field_video_thumbnail;
+				preg_match( '@src="([^"]+)"@' , $html , $match);
+				$output_item->field_video_thumbnail = $match[1];
 			}
 		}
 	}

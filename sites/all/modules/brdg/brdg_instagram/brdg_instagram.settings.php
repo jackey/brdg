@@ -7,10 +7,10 @@ $settings = array(
 	'access_token_secret' => '',
 	'instagram_uid' => '323113616',
 	'search_tag' => array(
-		'loganneitzel'
+		'9263'
 	),
 	'source_type' => 'Instagram',
-	'max_num' => 1,
+	'max_num' => -1,
 );
 
 return $settings;
