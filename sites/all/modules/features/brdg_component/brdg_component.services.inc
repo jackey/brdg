@@ -39,6 +39,11 @@ function brdg_component_default_services_endpoint() {
           'enabled' => '1',
         ),
       ),
+      'actions' => array(
+        'pre_next_node' => array(
+          'enabled' => '1',
+        ),
+      ),
       'relationships' => array(
         'files' => array(
           'enabled' => '1',

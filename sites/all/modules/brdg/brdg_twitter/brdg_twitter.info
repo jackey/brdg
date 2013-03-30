@@ -4,4 +4,5 @@ package = brdg
 core = 7.x
 dependencies[] = twitter
 dependencies[] = brdg_core
+dependencies[] = brdg_soundcloud
 

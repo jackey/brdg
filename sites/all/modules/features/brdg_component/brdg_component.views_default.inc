@@ -34,19 +34,10 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'node';
   $handler->display->display_options['row_options']['view_mode'] = 'full';
   $handler->display->display_options['row_options']['links'] = FALSE;
-  /* Field: Content: Media Image */
-  $handler->display->display_options['fields']['field_media_image']['id'] = 'field_media_image';
-  $handler->display->display_options['fields']['field_media_image']['table'] = 'field_data_field_media_image';
-  $handler->display->display_options['fields']['field_media_image']['field'] = 'field_media_image';
-  $handler->display->display_options['fields']['field_media_image']['label'] = '';
-  $handler->display->display_options['fields']['field_media_image']['element_label_colon'] = FALSE;
-  $handler->display->display_options['fields']['field_media_image']['click_sort_column'] = 'fid';
-  $handler->display->display_options['fields']['field_media_image']['type'] = 'services';
-  $handler->display->display_options['fields']['field_media_image']['settings'] = array(
-    'skip_safe' => 0,
-    'skip_empty_values' => 0,
-  );
-  $handler->display->display_options['fields']['field_media_image']['delta_offset'] = '0';
+  /* Relationship: Content: Author */
+  $handler->display->display_options['relationships']['uid']['id'] = 'uid';
+  $handler->display->display_options['relationships']['uid']['table'] = 'node';
+  $handler->display->display_options['relationships']['uid']['field'] = 'uid';
   /* Sort criterion: Content: Post Date (field_post_date) */
   $handler->display->display_options['sorts']['field_post_date_value']['id'] = 'field_post_date_value';
   $handler->display->display_options['sorts']['field_post_date_value']['table'] = 'field_data_field_post_date';
@@ -90,6 +81,11 @@ function brdg_component_views_default_views() {
     'image_link' => '',
   );
   $handler->display->display_options['fields']['field_media_image']['delta_offset'] = '0';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
   $handler->display->display_options['path'] = 'pictures';
 
   /* Display: Pictures Services */
@@ -169,6 +165,12 @@ function brdg_component_views_default_views() {
     'skip_safe' => 0,
     'skip_empty_values' => 0,
   );
+  /* Field: User: User City */
+  $handler->display->display_options['fields']['field_user_city']['id'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['field'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_user_city']['label'] = 'field_user_city';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -279,6 +281,12 @@ function brdg_component_views_default_views() {
     'image_style' => '400_400',
     'image_link' => '',
   );
+  /* Field: User: User City */
+  $handler->display->display_options['fields']['field_user_city']['id'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['field'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_user_city']['label'] = 'field_user_city';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -397,6 +405,12 @@ function brdg_component_views_default_views() {
     'skip_safe' => 0,
     'skip_empty_values' => 0,
   );
+  /* Field: User: User City */
+  $handler->display->display_options['fields']['field_user_city']['id'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['field'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city']['relationship'] = 'uid';
+  $handler->display->display_options['fields']['field_user_city']['label'] = 'field_user_city';
   $handler->display->display_options['defaults']['filter_groups'] = FALSE;
   $handler->display->display_options['defaults']['filters'] = FALSE;
   /* Filter criterion: Content: Published */
@@ -415,9 +429,21 @@ function brdg_component_views_default_views() {
   );
   $handler->display->display_options['path'] = 'all_resources';
 
-  /* Display: Services 4 */
-  $handler = $view->new_display('services', 'Services 4', 'services_4');
+  /* Display: Sound Services */
+  $handler = $view->new_display('services', 'Sound Services', 'services_4');
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['style_plugin'] = FALSE;
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['defaults']['style_options'] = FALSE;
+  $handler->display->display_options['defaults']['row_plugin'] = FALSE;
+  $handler->display->display_options['row_plugin'] = 'fields';
+  $handler->display->display_options['defaults']['row_options'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'nid';
   $handler->display->display_options['path'] = 'test_service';
   $export['pictures'] = $view;
 

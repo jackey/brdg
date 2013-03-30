@@ -32,7 +32,6 @@ function test_fetch_twitter() {
 	foreach ($query_keywords as $keyword) {
 		$query_ret = brdg_twitter_query_entity($keyword, $page);
 	    $results = $query_ret['results'];
-	    dpm($results);
 	    foreach($results as $item) {
 	    	save_twitter_into_node($item);
 	    }
@@ -146,6 +145,21 @@ function save_twitter_into_node($twitter_entity) {
 			}
 		}
 	}
+
+	// Soundclound URL
+	if (isset($twitter_entity['entities']['urls'])) {
+		$urls = $twitter_entity['entities']['urls'];
+		foreach ($urls as $url) {
+			if (brdg_twitter_check_soundcloud($url['expanded_url'])) {
+				$has_media = TRUE;
+				$node->field_sound[LANGUAGE_NONE][] = array('value' => $url['expanded_url']);
+				$sound_thumbnail = brdg_twitter_soundcloud_thumbnail_from_url($url['expanded_url']);
+				if ($sound_thumbnail) {
+					$node->field_sound_thumbnail[LANGUAGE_NONE][] = (array)$sound_thumbnail;
+				}
+			}
+		}
+	}
 	// set media source type
 	if ($source = brdg_twitter_source_type()) {
 		$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
@@ -180,6 +194,39 @@ function brdg_twitter_check_video($url) {
 		}
 	}
 	return $is_video;
+}
+
+// Helper function to get thumbnail from soundcloud URL
+// Check: http://developers.soundcloud.com/docs/api/reference#resolve
+// for more details.
+function brdg_twitter_soundcloud_thumbnail_from_url($url) {
+	global $user;
+	$soundcloud = soundcloud_create_soundcloud($user->uid);
+	if (!$soundcloud) {
+		return NULL;
+	}
+	else {
+		$soundcloud->setCurlOptions(array(CURLOPT_FOLLOWLOCATION => 1));
+		try {
+			$resolve_ret = $soundcloud->get('resolve', array('url' => $url));
+		}
+		catch (Exception $e) {
+			//empty
+		}
+		if (isset($resolve_ret)) {
+			$soundcloud_object = json_decode($resolve_ret);
+			return brdg_soundcloud_thumbnail($soundcloud_object);
+		}
+	}
+}
+
+// Helper function to check url is soundcloud
+function brdg_twitter_check_soundcloud($url) {
+	$is_sound = FALSE;
+	if (strpos($url, "soundcloud.com") !== FALSE) {
+		$is_sound = TRUE;
+	}
+	return $is_sound;
 }
 
 /**
