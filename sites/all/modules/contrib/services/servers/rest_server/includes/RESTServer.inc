@@ -593,7 +593,7 @@ class RESTServer {
     }
   }
 
-  protected function resolveController($resource, $method, $path, $endpoint, $resource_name) {
+  protected function resolveController($resource, $method, $path, $endpoint, $resource_name) {    
     $pc = count($path);
     $class = NULL;
     $operation = NULL;

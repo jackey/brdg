@@ -1,0 +1,84 @@
+<?php
+/**
+ * @file
+ */
+
+define('RESOURCE_PICTURE', 1);
+define('RESOURCE_SOUND', 2);
+define('RESOURCE_VIDEO', 3);
+
+/**
+ * Implements hook_services_resources().
+ */
+function brdg_services_services_resources() {
+	$definitions = array(
+		'node' => array(
+			'actions' => array(
+				'pre_next_node' => array(
+					'help' => t('Get list of nodes that pre and next current node with nid'),
+					'callback' => '_node_pre_next_index_node',
+					'access callback' => 'static_true',
+					'args' => array(
+						array(
+							'name' => 'nid',
+							'type' => 'int',
+							'optional' => FALSE,
+							'source' => 'data'
+						),
+						array(
+							'name' => 'resource_type',
+							'type' => 'int',
+							'optional' => TRUE,
+							'source' => 'data',
+						),
+						array(
+							'name' => 'number',
+							'type' => 'int',
+							'optional' => TRUE,
+							'source' => 'data',
+							'default value' => 10,
+						),
+					),
+				),
+			),
+		),
+	);
+
+	return $definitions;
+}
+
+/**
+ * Services resource callback for "pre_next_node"
+ */
+function _node_pre_next_index_node($data) {
+	$nid = $data['nid'];
+	$number = isset($data['number']) ? $data['number'] :10;
+	$resource_type = isset($data['resource_type']) ? $data['resource_type'] : NULL;
+	// Pre
+	$query = new EntityFieldQuery();
+	$query_results = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'content_from_source')
+		->propertyCondition('nid', $nid, '<')
+		->propertyOrderBy('nid', 'DESC')
+		->range(0, $number)
+		->execute();
+	$pre_nids =  array_keys($query_results['node']);
+	$pre_nodes = node_load_multiple($pre_nids);
+	
+	// Next
+	$query = new EntityFieldQuery();
+	$query_results = $query->entityCondition('entity_type', 'node')
+		->entityCondition('bundle', 'content_from_source')
+		->propertyCondition('nid', $nid, '>')
+		->propertyOrderBy('nid', 'ASC')
+		->range(0, $number)
+		->execute();
+	$next_nids =  array_keys($query_results['node']);
+	$next_nodes = node_load_multiple($next_nids);
+
+	return array('pre' => $pre_nodes, 'next' => $next_nodes);
+}
+
+function static_true() {
+	return TRUE;
+}
