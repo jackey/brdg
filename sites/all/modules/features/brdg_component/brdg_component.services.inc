@@ -58,6 +58,41 @@ function brdg_component_default_services_endpoint() {
         ),
       ),
     ),
+    'user' => array(
+      'operations' => array(
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'actions' => array(
+        'login' => array(
+          'enabled' => '1',
+        ),
+        'logout' => array(
+          'enabled' => '1',
+          'settings' => array(
+            'services' => array(
+              'resource_api_version' => '1.0',
+            ),
+          ),
+        ),
+        'register' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
     'services_picture' => array(
       'operations' => array(
         'index' => array(
@@ -73,6 +108,13 @@ function brdg_component_default_services_endpoint() {
       ),
     ),
     'all_resources' => array(
+      'operations' => array(
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
+    'services_sould' => array(
       'operations' => array(
         'index' => array(
           'enabled' => '1',

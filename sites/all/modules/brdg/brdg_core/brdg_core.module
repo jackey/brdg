@@ -124,3 +124,4 @@ function brdg_core_is_youku_link($url) {
   }
   return FALSE;
 }
+
