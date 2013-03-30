@@ -2,7 +2,7 @@
 
 $base_url = 'http://brdg.local:81/third_content';
 
-function json_post($url, $data, $files = array()) {
+function json_post($url, $data, $files = array(), $method = "POST") {
 	$content_type = 'Content-Type:application/json';
 	if (!empty($files) && is_array($files)) {
 		$data = array_merge($data, $files);
@@ -14,7 +14,14 @@ function json_post($url, $data, $files = array()) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
-	curl_setopt($ch, CURLOPT_POST, TRUE);
+	switch ($method) {
+		case "POST":
+			curl_setopt($ch, CURLOPT_POST, TRUE);
+			break;
+		case "PUT":
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			break;
+	}
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array($content_type));
@@ -29,12 +36,27 @@ function json_post($url, $data, $files = array()) {
 	return $ret_data;
 }
 
-// pre_next_node test
-$api = 'node/pre_next_node';
 function get_url($api) {
 	global $base_url;
 	return $base_url.'/'.$api;
 }
-$response = json_post(get_url($api), array('nid' => 698));
+
+// pre_next_node test
+// $api = 'node/pre_next_node';
+
+// $response = json_post(get_url($api), array('nid' => 698));
+
+// print_r($response);
+
+// Update user object
+$api = 'user/update'. '/1';
+$account = array(
+	'uid' => 1,
+	'name' => 'admin',
+	'mail' => '123@abc.com',
+);
+$url = get_url($api);
+
+$response = json_post($url, array('data' =>$account), array(), 'PUT');
 
 print_r($response);

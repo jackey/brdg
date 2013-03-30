@@ -82,3 +82,64 @@ function _node_pre_next_index_node($data) {
 function static_true() {
 	return TRUE;
 }
+
+// add test js
+function brdg_services_init() {
+	drupal_add_js(drupal_get_path('module','brdg_services').'/brdg_services.test.js');
+}
+
+/**
+ * Implements hook_menu()
+ */
+function brdg_services_menu() {
+	$items = array();
+	$items['test_brdg_update_user'] = array(
+		'page callback' => 'test_brdg_update_user_page',
+		'access callback' => TRUE,
+	);
+	$items['brdg_services_update_user_picture'] = array(
+		'page callback' => 'update_user_picture',
+		'access callback' => 'brdg_user_edit_access',
+	);
+
+	return $items;
+}
+
+// Services callback for update user picture
+function brdg_services_update_user_picture() {
+	$uid = $_POST['uid'];
+
+  	$validators = array(
+    	'file_validate_extensions' =>  array('jpg', 'jpeg', 'png'),
+    	'file_validate_size' => array(0 => parse_size(variable_get('user_picture_file_size', '30'))),
+  	);
+
+	// Let the file module handle the upload and moving.
+	if (!$file = file_save_upload('picture_upload', $validators, FALSE, FILE_EXISTS_RENAME) ) {  	
+		return bm_services_error(t('Failed to upload file. @upload', array('@upload' => $field_name)), 406);
+	}
+	else {
+		$edit_user = user_load($uid);
+		$edit_user->picture = $file;
+		user_save($edit_user);
+
+		print json_encode(array('user' => $edit_user, 'uri' => file_create_url($edit_user->picture->uri)));
+	}
+	die();
+}
+
+// Menu access callback for user edit services
+function brdg_user_edit_access() {
+  $uid = $_POST['uid'];
+  if (user_edit_access($uid)) {
+  	return TRUE;
+  }
+  return FALSE;
+}
+
+// Callback for update user page
+function test_brdg_update_user_page() {
+    drupal_add_js('misc/jquery.form.js');
+	$html = file_get_contents(drupal_get_path('module', 'brdg_services').'/brdg_services.update_user.html');
+	return $html;
+}
