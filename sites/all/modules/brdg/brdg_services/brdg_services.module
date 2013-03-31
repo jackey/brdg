@@ -44,6 +44,8 @@ function brdg_services_services_resources() {
 		),
 	);
 
+	$definitions['comment'] = array();
+
 	return $definitions;
 }
 

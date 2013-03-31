@@ -58,6 +58,33 @@ function brdg_component_default_services_endpoint() {
         ),
       ),
     ),
+    'comment' => array(
+      'operations' => array(
+        'create' => array(
+          'enabled' => '1',
+        ),
+        'retrieve' => array(
+          'enabled' => '1',
+        ),
+        'update' => array(
+          'enabled' => '1',
+        ),
+        'delete' => array(
+          'enabled' => '1',
+        ),
+        'index' => array(
+          'enabled' => '1',
+        ),
+      ),
+      'actions' => array(
+        'countAll' => array(
+          'enabled' => '1',
+        ),
+        'countNew' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
     'flag' => array(
       'actions' => array(
         'is_flagged' => array(
