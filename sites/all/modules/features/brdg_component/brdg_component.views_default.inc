@@ -155,6 +155,12 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['filters']['type']['value'] = array(
     'content_from_source' => 'content_from_source',
   );
+  /* Filter criterion: Content: Sound (field_sound) */
+  $handler->display->display_options['filters']['field_sound_value']['id'] = 'field_sound_value';
+  $handler->display->display_options['filters']['field_sound_value']['table'] = 'field_data_field_sound';
+  $handler->display->display_options['filters']['field_sound_value']['field'] = 'field_sound_value';
+  $handler->display->display_options['filters']['field_sound_value']['operator'] = '!=';
+  $handler->display->display_options['filters']['field_sound_value']['value'] = '0';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');

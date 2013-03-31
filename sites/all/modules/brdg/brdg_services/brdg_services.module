@@ -52,13 +52,14 @@ function brdg_services_services_resources() {
  */
 function _node_pre_next_index_node($data) {
 	$nid = $data['nid'];
+	$node = node_load($nid);
 	$number = isset($data['number']) ? $data['number'] :10;
 	$resource_type = isset($data['resource_type']) ? $data['resource_type'] : NULL;
 	// Pre
 	$query = new EntityFieldQuery();
 	$query_results = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
-		->propertyCondition('nid', $nid, '<')
+		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '<')
 		->fieldOrderBy('field_post_date', 'value', 'DESC')
 		->range(0, $number)
 		->execute();
@@ -69,7 +70,7 @@ function _node_pre_next_index_node($data) {
 	$query = new EntityFieldQuery();
 	$query_results = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
-		->propertyCondition('nid', $nid, '>')
+		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '>')
 		->fieldOrderBy('field_post_date', 'value', 'ASC')
 		->range(0, $number)
 		->execute();

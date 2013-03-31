@@ -58,6 +58,19 @@ function brdg_component_default_services_endpoint() {
         ),
       ),
     ),
+    'flag' => array(
+      'actions' => array(
+        'is_flagged' => array(
+          'enabled' => '1',
+        ),
+        'flag' => array(
+          'enabled' => '1',
+        ),
+        'countall' => array(
+          'enabled' => '1',
+        ),
+      ),
+    ),
     'user' => array(
       'operations' => array(
         'retrieve' => array(
@@ -89,34 +102,6 @@ function brdg_component_default_services_endpoint() {
           ),
         ),
         'register' => array(
-          'enabled' => '1',
-        ),
-      ),
-    ),
-    'services_picture' => array(
-      'operations' => array(
-        'index' => array(
-          'enabled' => '1',
-        ),
-      ),
-    ),
-    'services_video' => array(
-      'operations' => array(
-        'index' => array(
-          'enabled' => '1',
-        ),
-      ),
-    ),
-    'all_resources' => array(
-      'operations' => array(
-        'index' => array(
-          'enabled' => '1',
-        ),
-      ),
-    ),
-    'services_sould' => array(
-      'operations' => array(
-        'index' => array(
           'enabled' => '1',
         ),
       ),

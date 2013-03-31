@@ -53,15 +53,15 @@ function brdg_component_flag_default_flags() {
     'weight' => 0,
     'show_on_form' => 0,
     'access_author' => '',
-    'show_on_page' => 0,
+    'show_on_page' => 1,
     'show_on_teaser' => 0,
     'show_contextual_link' => 0,
     'i18n' => 0,
-    'api_version' => 2,
     'module' => 'brdg_component',
     'locked' => array(
       0 => 'name',
     ),
+    'api_version' => 2,
   );
   return $flags;
 
