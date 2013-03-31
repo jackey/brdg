@@ -29,7 +29,10 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['query']['type'] = 'views_query';
   $handler->display->display_options['exposed_form']['type'] = 'basic';
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '100';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['pager']['options']['id'] = '0';
+  $handler->display->display_options['pager']['options']['quantity'] = '9';
   $handler->display->display_options['style_plugin'] = 'default';
   $handler->display->display_options['row_plugin'] = 'node';
   $handler->display->display_options['row_options']['view_mode'] = 'full';
@@ -61,9 +64,10 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_from_user_profile_image']['field'] = 'field_from_user_profile_image';
   $handler->display->display_options['fields']['field_from_user_profile_image']['label'] = 'field_user_profile_image';
   $handler->display->display_options['fields']['field_from_user_profile_image']['click_sort_column'] = 'fid';
+  $handler->display->display_options['fields']['field_from_user_profile_image']['type'] = 'services';
   $handler->display->display_options['fields']['field_from_user_profile_image']['settings'] = array(
-    'image_style' => '',
-    'image_link' => '',
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
   );
   /* Field: Content: Media Image */
   $handler->display->display_options['fields']['field_media_image']['id'] = 'field_media_image';
