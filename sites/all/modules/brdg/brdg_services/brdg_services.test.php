@@ -42,21 +42,21 @@ function get_url($api) {
 }
 
 // pre_next_node test
-// $api = 'node/pre_next_node';
+$api = 'node/pre_next_node';
 
-// $response = json_post(get_url($api), array('nid' => 698));
-
-// print_r($response);
-
-// Update user object
-$api = 'user/update'. '/1';
-$account = array(
-	'uid' => 1,
-	'name' => 'admin',
-	'mail' => '123@abc.com',
-);
-$url = get_url($api);
-
-$response = json_post($url, array('data' =>$account), array(), 'PUT');
+$response = json_post(get_url($api), array('nid' => 698));
 
 print_r($response);
+
+// // Update user object
+// $api = 'user/update'. '/1';
+// $account = array(
+// 	'uid' => 1,
+// 	'name' => 'admin',
+// 	'mail' => '123@abc.com',
+// );
+// $url = get_url($api);
+
+// $response = json_post($url, array('data' =>$account), array(), 'PUT');
+
+// print_r($response);
