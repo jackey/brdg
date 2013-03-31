@@ -59,7 +59,7 @@ function _node_pre_next_index_node($data) {
 	$query_results = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
 		->propertyCondition('nid', $nid, '<')
-		->propertyOrderBy('nid', 'DESC')
+		->fieldOrderBy('field_post_date', 'value', 'DESC')
 		->range(0, $number)
 		->execute();
 	$pre_nids =  array_keys($query_results['node']);
@@ -70,7 +70,7 @@ function _node_pre_next_index_node($data) {
 	$query_results = $query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
 		->propertyCondition('nid', $nid, '>')
-		->propertyOrderBy('nid', 'ASC')
+		->fieldOrderBy('field_post_date', 'value', 'ASC')
 		->range(0, $number)
 		->execute();
 	$next_nids =  array_keys($query_results['node']);
