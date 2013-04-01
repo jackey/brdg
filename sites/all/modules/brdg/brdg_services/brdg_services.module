@@ -7,6 +7,9 @@ define('RESOURCE_PICTURE', 1);
 define('RESOURCE_SOUND', 2);
 define('RESOURCE_VIDEO', 3);
 
+// Email template name
+define("EMAIL_COMMENT_APPROVE", 'comment_approve_email');
+
 /**
  * Implements hook_services_resources().
  */
@@ -105,7 +108,23 @@ function brdg_services_menu() {
 		'access callback' => 'brdg_user_edit_access',
 	);
 
+	$items['brdg_comment/approve/%comment'] = array(
+		'page callback' => 'update_comment_status',
+		'page arguments' => array(2),
+		'access callback' => TRUE,
+	);
+
 	return $items;
+}
+
+/**
+ * Menu callback
+ */
+function update_comment_status($comment, $token = '') {
+	$comment->field_published[LANGUAGE_NONE][0]['value'] = 1;
+	comment_save($comment);
+	return 'hello world';
+	//drupal_goto('<front>');
 }
 
 // Services callback for update user picture
@@ -133,8 +152,8 @@ function brdg_services_update_user_picture() {
 
 // Menu access callback for user edit services
 function brdg_user_edit_access() {
-  $uid = $_POST['uid'];
-  if (user_edit_access($uid)) {
+  $uid = isset($_POST['uid']) ? $_POST['uid'] : 0;
+  if (user_edit_access(user_load($uid))) {
   	return TRUE;
   }
   return FALSE;
@@ -145,4 +164,46 @@ function test_brdg_update_user_page() {
     drupal_add_js('misc/jquery.form.js');
 	$html = file_get_contents(drupal_get_path('module', 'brdg_services').'/brdg_services.update_user.html');
 	return $html;
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function brdg_services_form_alter(&$form, $form_state, $form_id) {
+	if ($form_id == 'comment_node_content_from_source_form') {
+		$form['#validate'][] = 'brdg_services_validate_comment';
+		$form['field_published']['#access'] = FALSE;
+	}
+}
+
+//Comment validator of  content_from_source node comment form
+function brdg_services_validate_comment($form, &$form_state) {
+	// $email = $form_state['values']['field_email'][LANGUAGE_NONE][0]['value'];
+ 	
+	// if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	// 	form_set_error('field_email', t("Email is wrong"));
+	// }
+}
+
+/**
+ * Implements hook_comment_insert()
+ */
+function brdg_services_comment_insert($comment) {
+	$email = $comment->field_email[LANGUAGE_NONE][0]['value'];
+	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		// send email to poster to prevent spam
+		pet_send_mail(EMAIL_COMMENT_APPROVE, 
+			array('uid' => 0, 'mail' => $email, 'cid' => $comment->cid), 
+			array(
+			'nid' => $comment->nid,
+			'cid' => $comment->cid)
+		);
+	}
+}
+
+/**
+ * Implements hook_pet_substitutions_alter()
+ */
+function brdg_services_pet_substitutions_alter(&$substitutions, $params) {
+	$substitutions['comment'] = comment_load($params['pet_recipients']['cid']);
 }

@@ -73,6 +73,67 @@ function brdg_component_field_default_fields() {
     ),
   );
 
+  // Exported field: 'comment-comment_node_content_from_source-field_published'.
+  $fields['comment-comment_node_content_from_source-field_published'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_published',
+      'foreign keys' => array(),
+      'indexes' => array(
+        'value' => array(
+          0 => 'value',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'list',
+      'settings' => array(
+        'allowed_values' => array(
+          1 => 'publish',
+          0 => 'unpublish',
+        ),
+        'allowed_values_function' => '',
+      ),
+      'translatable' => '0',
+      'type' => 'list_integer',
+    ),
+    'field_instance' => array(
+      'bundle' => 'comment_node_content_from_source',
+      'default_value' => array(
+        0 => array(
+          'value' => '1',
+        ),
+      ),
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'list',
+          'settings' => array(),
+          'type' => 'list_default',
+          'weight' => 2,
+        ),
+      ),
+      'entity_type' => 'comment',
+      'field_name' => 'field_published',
+      'label' => 'Published',
+      'required' => 1,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'options',
+        'settings' => array(),
+        'type' => 'options_buttons',
+        'weight' => '2',
+      ),
+    ),
+  );
+
   // Exported field: 'node-content_from_source-body'.
   $fields['node-content_from_source-body'] = array(
     'field_config' => array(
@@ -1123,6 +1184,7 @@ function brdg_component_field_default_fields() {
   t('Media Image');
   t('Post Date');
   t('Post Owed User');
+  t('Published');
   t('Sound');
   t('Sound Thumbnail');
   t('Source ID');

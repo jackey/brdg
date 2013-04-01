@@ -41,6 +41,11 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['relationships']['uid']['id'] = 'uid';
   $handler->display->display_options['relationships']['uid']['table'] = 'node';
   $handler->display->display_options['relationships']['uid']['field'] = 'uid';
+  /* Relationship: Flags: like counter */
+  $handler->display->display_options['relationships']['flag_count_rel']['id'] = 'flag_count_rel';
+  $handler->display->display_options['relationships']['flag_count_rel']['table'] = 'node';
+  $handler->display->display_options['relationships']['flag_count_rel']['field'] = 'flag_count_rel';
+  $handler->display->display_options['relationships']['flag_count_rel']['flag'] = 'like';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
   $handler->display->display_options['fields']['nid']['table'] = 'node';
@@ -140,6 +145,13 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_user_city']['relationship'] = 'uid';
   $handler->display->display_options['fields']['field_user_city']['label'] = 'field_user_city';
   $handler->display->display_options['fields']['field_user_city']['type'] = 'list_key';
+  /* Field: Flags: Flag counter */
+  $handler->display->display_options['fields']['count']['id'] = 'count';
+  $handler->display->display_options['fields']['count']['table'] = 'flag_counts';
+  $handler->display->display_options['fields']['count']['field'] = 'count';
+  $handler->display->display_options['fields']['count']['relationship'] = 'flag_count_rel';
+  $handler->display->display_options['fields']['count']['label'] = 'field_flag_counter';
+  $handler->display->display_options['fields']['count']['separator'] = '';
   /* Sort criterion: Content: Post Date (field_post_date) */
   $handler->display->display_options['sorts']['field_post_date_value']['id'] = 'field_post_date_value';
   $handler->display->display_options['sorts']['field_post_date_value']['table'] = 'field_data_field_post_date';
@@ -228,6 +240,11 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['filters']['field_media_image_fid']['field'] = 'field_media_image_fid';
   $handler->display->display_options['filters']['field_media_image_fid']['operator'] = '!=';
   $handler->display->display_options['filters']['field_media_image_fid']['value']['value'] = '0';
+  /* Filter criterion: Content: Video (field_video) */
+  $handler->display->display_options['filters']['field_video_value']['id'] = 'field_video_value';
+  $handler->display->display_options['filters']['field_video_value']['table'] = 'field_data_field_video';
+  $handler->display->display_options['filters']['field_video_value']['field'] = 'field_video_value';
+  $handler->display->display_options['filters']['field_video_value']['operator'] = 'empty';
   $handler->display->display_options['path'] = 'services_picture';
 
   /* Display: Video Services */

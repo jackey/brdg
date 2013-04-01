@@ -9,6 +9,10 @@
  */
 function brdg_component_ctools_plugin_api() {
   list($module, $api) = func_get_args();
+  if ($module == "field_validation" && $api == "default_field_validation_rules") {
+    return array("version" => "2");
+  }
+  list($module, $api) = func_get_args();
   if ($module == "services" && $api == "services") {
     return array("version" => "3");
   }
@@ -156,5 +160,26 @@ function brdg_component_node_info() {
       'help' => '',
     ),
   );
+  return $items;
+}
+
+/**
+ * Implements hook_default_pet().
+ */
+function brdg_component_default_pet() {
+  $items = array();
+  $items['comment_approve_email'] = entity_import('pet', '{
+    "name" : "comment_approve_email",
+    "title" : "comment approve email",
+    "subject" : "Approve Your Email",
+    "mail_body" : "Approve your email \\r\\n\\r\\n\\r\\n\\r\\n\\u003Ca href=\\u0022[site:url]\\/brdg_comment\\/approve\\/[comment:cid]\\u0022\\u003EApprove It by clicking me\\u003C\\/a\\u003E\\r\\n",
+    "mail_body_plain" : null,
+    "send_plain" : "0",
+    "from_override" : "",
+    "cc_default" : "",
+    "bcc_default" : "",
+    "recipient_callback" : "",
+    "rdf_mapping" : []
+  }');
   return $items;
 }
