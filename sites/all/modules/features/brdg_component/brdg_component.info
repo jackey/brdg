@@ -48,6 +48,7 @@ features[node][] = content_from_source
 features[pet][] = comment_approve_email
 features[services_endpoint][] = third_content
 features[taxonomy][] = data_source
+features[views_view][] = comments
 features[views_view][] = pictures
 features_exclude[dependencies][entity] = entity
 features_exclude[dependencies][list] = list
