@@ -8,6 +8,7 @@ dependencies[] = date
 dependencies[] = entityreference
 dependencies[] = features
 dependencies[] = field_validation
+dependencies[] = field_validation_ui
 dependencies[] = flag
 dependencies[] = htmlmail
 dependencies[] = image
