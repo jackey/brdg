@@ -152,7 +152,7 @@ Drupal.behaviors.RestServicesTest = {
 			url: apipath + "/source_content_comments",
 			dataType: "JSON",
 			method: 'GET',
-			data: {nid: 721},
+			data: {nid: 718},
 			contentType: "application/json",
 			success: function(data) {
 				console.log(data);

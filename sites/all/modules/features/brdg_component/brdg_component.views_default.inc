@@ -125,6 +125,7 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['relationships']['flag_count_rel']['id'] = 'flag_count_rel';
   $handler->display->display_options['relationships']['flag_count_rel']['table'] = 'node';
   $handler->display->display_options['relationships']['flag_count_rel']['field'] = 'flag_count_rel';
+  $handler->display->display_options['relationships']['flag_count_rel']['required'] = 0;
   $handler->display->display_options['relationships']['flag_count_rel']['flag'] = 'like';
   /* Field: Content: Nid */
   $handler->display->display_options['fields']['nid']['id'] = 'nid';
@@ -365,7 +366,7 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $handler->display->display_options['defaults']['pager'] = FALSE;
   $handler->display->display_options['pager']['type'] = 'full';
-  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '100';
   $handler->display->display_options['pager']['options']['offset'] = '0';
   $handler->display->display_options['pager']['options']['id'] = '0';
   $handler->display->display_options['pager']['options']['quantity'] = '9';
