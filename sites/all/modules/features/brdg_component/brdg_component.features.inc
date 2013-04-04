@@ -48,10 +48,12 @@ function brdg_component_flag_default_flags() {
     'link_type' => 'normal',
     'roles' => array(
       'flag' => array(
-        0 => '2',
+        0 => '1',
+        1 => '2',
       ),
       'unflag' => array(
-        0 => '2',
+        0 => '1',
+        1 => '2',
       ),
     ),
     'weight' => 0,

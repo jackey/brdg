@@ -219,13 +219,6 @@ function brdg_component_views_default_views() {
     'image_style' => '',
     'image_link' => '',
   );
-  /* Field: Field: User City */
-  $handler->display->display_options['fields']['field_user_city']['id'] = 'field_user_city';
-  $handler->display->display_options['fields']['field_user_city']['table'] = 'field_data_field_user_city';
-  $handler->display->display_options['fields']['field_user_city']['field'] = 'field_user_city';
-  $handler->display->display_options['fields']['field_user_city']['relationship'] = 'uid';
-  $handler->display->display_options['fields']['field_user_city']['label'] = 'field_user_city';
-  $handler->display->display_options['fields']['field_user_city']['type'] = 'list_key';
   /* Field: Flags: Flag counter */
   $handler->display->display_options['fields']['count']['id'] = 'count';
   $handler->display->display_options['fields']['count']['table'] = 'flag_counts';
@@ -242,6 +235,16 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['field_user_city_1']['settings'] = array(
     'skip_safe' => 0,
     'skip_empty_values' => 0,
+  );
+  /* Field: Content: Anonymous Flaged */
+  $handler->display->display_options['fields']['field_anonymous_flaged']['id'] = 'field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['table'] = 'field_data_field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['field'] = 'field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['label'] = 'field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['type'] = 'number_unformatted';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['settings'] = array(
+    'thousand_separator' => ' ',
+    'prefix_suffix' => 1,
   );
   /* Sort criterion: Content: Post Date (field_post_date) */
   $handler->display->display_options['sorts']['field_post_date_value']['id'] = 'field_post_date_value';
