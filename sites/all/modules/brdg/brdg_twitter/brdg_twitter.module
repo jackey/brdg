@@ -26,6 +26,9 @@ function brdg_twitter_menu() {
 
 //not support pager.
 function test_fetch_twitter() {
+	// $user = brdg_twitter_load_drupal_user_with_screen_name('rsarver', 'twitter');
+	// dpm($user);
+	// return 'hello world';
 	$page = $_GET['page'];
 	$twitter_settings = brdg_twitter_get_app_settings();
 	$query_keywords = $twitter_settings['search_tag'];
@@ -39,6 +42,15 @@ function test_fetch_twitter() {
 	return 'hello world';
 }
 
+// Help function to load twitter api class instance.
+function brdg_twitter_connect() {
+	module_load_include('inc', 'twitter');
+	$twitter_settings = brdg_twitter_get_app_settings();
+	$twitter_account =  twitter_account_load($twitter_settings['twitter_uid']);
+	// get new twitter object.
+	return twitter_connect($twitter_account);
+}
+
 /**
  * @reference https://dev.twitter.com/docs/api/1.1/get/search/tweets
  * @reference https://dev.twitter.com/docs/api/1/get/search
@@ -50,10 +62,9 @@ function brdg_twitter_query_entity($q = '', $page = 1) {
 	module_load_include('inc', 'twitter');
 	// Load settings
 	$twitter_settings = brdg_twitter_get_app_settings();
-	$twitter_account = $twitter_account = twitter_account_load($twitter_settings['twitter_uid']);
-
 	// get new twitter object.
-	$twitter = twitter_connect($twitter_account);
+	$twitter = brdg_twitter_connect();
+
 	$max_page = MAX_NUM_CAN_GET / $twitter_settings['max_num'];
 	if ($page > $max_page) {
 		$page = $max_page;
@@ -164,9 +175,22 @@ function save_twitter_into_node($twitter_entity) {
 	if ($source = brdg_twitter_source_type()) {
 		$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
 	}
+
+	// Set node location that associated with drupal user that associated with twitter account.
+	// node location --> drupal user --> twitter account
+	$drupal_account = 
+		brdg_core_load_drupal_user_with_screen_name($twitter_entity['from_user'], 'twitter');
+	if ($drupal_account) {
+		$node->field_user_city[LANGUAGE_NONE][0]['value'] = 
+			$drupal_account->field_user_city[LANGUAGE_NONE][0]['value'];
+	}
+	else {
+		//TODO:: If not found drupal account then we ignore this twitter entity.
+		return;
+	}
 	// If doesn't include any media, we don't need insert into our system.
-	if ($has_media) {
-		brdg_core_node_save($node, 'brdg_twitter');
+	if ($has_media || TRUE) {
+		brdg_core_node_save($node, 'brdg_twitter', $twitter_entity);
 	}
 	else {
 		// nothing to do 
@@ -278,5 +302,54 @@ function brdg_twitter_brdg_core_filter(&$node, $from) {
 		else {
 			return FALSE;
 		}
+	}
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function brdg_twitter_form_alter(&$form, $form_state, $form_id) {
+	if ($form_id) {
+		$form['#validate'][] = 'brdg_twitter_check_screen_name';
+	}
+}
+
+// When user submit screen name, we should make sure 
+// only one user can have screen name
+function brdg_twitter_check_screen_name($form, $form_state) {
+	$screen_name = $form_state['values']['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'];
+	$drupal_account = brdg_core_load_drupal_user_with_screen_name($screen_name, 'twitter');
+	// Update account
+	if (isset($form_state['user']) && $form_state['user']->uid) {
+		$user = $form_state['user'];
+		if ($drupal_account && $user->uid != $drupal_account->uid) {
+			form_set_error('field_twitter_screen_name', t("Your screen_name is be registered already"));
+		}
+	}
+	// Insert new account
+	else {
+		if ($drupal_account) {
+			form_set_error('field_twitter_screen_name', t("Your screen_name is be registered already"));
+		}
+	}
+}
+
+/**
+ * Implements hook_user_update().
+ * Update third content profiles with drupal account
+ */
+function brdg_twitter_user_update($edit, $account) {
+	$screen_name = $edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'];
+	$api = brdg_twitter_connect();
+	$twitter_account = $api->users_show($screen_name);
+	if ($twitter_account->id != NULL) {
+		// Save the new Twitter account and set the user's uid who added it.
+		// global $user;
+		// $twitter_account->uid = $user->uid;
+		$twitter_account->uid = $account->uid;
+		twitter_account_save($twitter_account, TRUE);
+	}
+	else {
+		drupal_set_message(t("Your twitter screen name maybe wrong."), 'warning');
 	}
 }

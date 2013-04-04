@@ -11,7 +11,7 @@ function brdg_weibo_get_app_settings() {
 	$settings = require_once(drupal_get_path('module', 'brdg_weibo').'/brdg_weibo.settings.php'
 		);
 	return $settings;
-}
+}												
 
 /**
  * Implements hook_menu().
@@ -23,6 +23,17 @@ function brdg_weibo_menu() {
 	);
 
 	return $items;
+}
+
+// Get weibo API client object
+// Helper function 
+function brdg_weibo_connect() {
+	$settings = brdg_weibo_get_app_settings();
+	$user = brdg_weibo_load_account_with_weibo_uid($settings['weibo_uid']);
+	if ($user) {
+		$weibo_account = brdg_weibo_load_account($user->uid);
+		return brdg_weibo_client($weibo_account['oauth_token']);
+	}
 }
 
 // Menu callback.
@@ -38,6 +49,7 @@ function brdg_weibo_test_page_callback() {
 	$search_ret = $api->oauth->get('statuses/user_timeline', $params);
 
 	$statuses = $search_ret['statuses'];
+
 	// Before insert into node, we should check the URL of text.
 	foreach ($statuses as &$status) {
 		$text = $status['text'];
@@ -101,6 +113,17 @@ function brdg_weibo_test_page_callback() {
 		if (isset($status['youku_video'])) {
 			$node->field_video[LANGUAGE_NONE][0]['value'] = $status['youku_video']['url_long'];
 		}
+
+		// set location of node
+		$screen_name = $status['user']['screen_name'];
+		$account = brdg_core_load_drupal_user_with_screen_name($screen_name, 'weibo');
+		if ($account) {
+			$node->field_user_city[LANGUAGE_NONE][0]['value'] = 
+				$account->field_user_city[LANGUAGE_NONE][0]['value'];
+		}
+		else {
+			//TODO:: when user not in our system, we should process this issue.
+		}
 		// If doesn't include any media, we don't need insert into our system.
 		brdg_core_node_save($node, 'brdg_weibo');
 	}
@@ -128,13 +151,13 @@ function brdg_weibo_load_account_with_weibo_uid($weibo_uid) {
 		->execute()
 		->fetchAssoc();
 	if ($weibo_account) {
-		return user_load($weibo_account->uid);
+		return user_load($weibo_account['uid']);
 	}
 }
 
 // Helper function to load weibo API client.
 function brdg_weibo_client($access_token) {
-    module_load_include('php', 'sinaweibo', 'saetv2.ex.class');
+  	module_load_include('php', 'sinaweibo', 'saetv2.ex.class');
 	$key = variable_get('weibo_consumer_key', '');
 	$secret = variable_get('weibo_consumer_secret', '');
 	return new SaeTClientV2($key , $secret , $access_token);
@@ -187,4 +210,52 @@ function brdg_weibo_node_presave($node) {
 
 function brdg_weibo_get_youku_thumbnail_from_url() {
 
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function brdg_weibo_form_alter(&$form, $form_state, $form_id) {
+	if ($form_id) {
+		$form['#validate'][] = 'brdg_weibo_check_screen_name';
+	}
+}
+
+// Validate screen name unique for weibo.
+function brdg_weibo_check_screen_name($form, $form_state) {
+	$screen_name = $form_state['values']['field_weibo_screen_name'][LANGUAGE_NONE][0]['value'];
+	$drupal_account = brdg_core_load_drupal_user_with_screen_name($screen_name, 'weibo');
+	// Update account
+	if (isset($form_state['user']) && $form_state['user']->uid) {
+		$user = $form_state['user'];
+		if ($drupal_account && $user->uid != $drupal_account->uid) {
+			form_set_error('field_weibo_screen_name', t("Your screen_name is be registered already"));
+		}
+	}
+	// Insert new account
+	else {
+		if ($drupal_account) {
+			form_set_error('field_weibo_screen_name', t("Your screen_name is be registered already"));
+		}
+	}
+}
+
+/**
+ * Add weibo profiles data when user update profile
+ */
+function brdg_weibo_user_update($edit, $account) {
+	$screen_name = $edit['field_weibo_screen_name'][LANGUAGE_NONE][0]['value'];
+	$api = brdg_weibo_connect();
+	$ret = $api->show_user_by_name($screen_name);
+	if (!brdg_weibo_load_account_with_weibo_uid($ret['idstr'])) {
+		db_insert('weibo_account')
+			->fields(array(
+				'weibo_uid' => $ret['idstr'],
+				'uid' => $account->uid,
+				'screen_name' => $screen_name,
+				'oauth_token' => '',
+				'name' => $ret['name'],
+			))
+			->execute();
+	}
 }

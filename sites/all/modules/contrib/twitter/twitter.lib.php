@@ -183,7 +183,7 @@ class Twitter {
   /**
    * Get an array of TwitterStatus objects from an API endpoint
    */
-  public function get_statuses($path, $params = array()) {
+  protected function get_statuses($path, $params = array()) {
     $values = $this->call($path, $params, 'GET');
     // Check on successfull call
     if ($values) {
@@ -1204,6 +1204,7 @@ class Twitter {
    */
   public function call($path, $params = array(), $method = 'GET') {
     $url = $this->create_url($path);
+
     try {
       $response = $this->auth_request($url, $params, $method);
     }

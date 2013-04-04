@@ -79,7 +79,7 @@ function brdg_core_media_is_inserted($id) {
 }
 
 // Alter node that been inserted system.
-function brdg_core_node_save($node, $from) {
+function brdg_core_node_save($node, $from, $entity = NULL) {
     $source_id = $node->field_source_id[LANGUAGE_NONE][0]['value'];
     if ($source_id && brdg_core_media_is_inserted($source_id)) {
         return FALSE;
@@ -88,7 +88,7 @@ function brdg_core_node_save($node, $from) {
     $filters = array();
     foreach ($modules as $module) {
         $func = $module.'_brdg_core_filter';
-        if (function_exists($func) && $func($node, $from) === FALSE) {
+        if (function_exists($func) && $func($node, $from, $entity) === FALSE) {
             //return;
         }
     }
@@ -133,4 +133,56 @@ function brdg_core_comment_insert($comment) {
   $comment->status = 0;
   comment_save($comment);
 }
+
+// Helper function to load drupal user from twitter screen name
+function brdg_core_load_drupal_user_with_screen_name($screen_name, $source_type) {
+  $allowed_third_type = array('twitter', 'weibo', 'instagram');
+  if (!in_array($source_type, $allowed_third_type)) {
+    return;
+  }
+///////////// would be deleted later
+  // // First check screen name in DB
+  // $query = db_select("twitter", 't')
+  //  ->fields('t', array('twitter_id'))
+  //  ->condition('t.screen_name', $screen_name);
+  // $twitter_id = $query->execute()->fetchCol();
+
+  // // If user not already in twitter table,
+  // // Then we fetch it from twitter site and add it into our system
+  // if (!$twitter_id) {
+  //  $api = brdg_twitter_connect();
+  //  try {
+  //    $twitter_account = $api->users_show($screen_name);
+  //  } catch (TwitterException $e) {
+  //    form_set_error('screen_name', t('Request failed: @message.', array('@message' => $e->getMessage())));
+  //    return;
+  //  }
+  //  // Save the new Twitter account and set the user's uid who added it.
+  //  // global $user;
+  //  // $twitter_account->uid = $user->uid;
+  //  twitter_account_save($twitter_account, TRUE);
+  // }
+//////////////////////////////////////////////////////
+  $query = new EntityFieldQuery();
+  if ($source_type == 'twitter') {
+    $field = 'field_twitter_screen_name';
+  }
+  elseif ($source_type == 'instagram') {
+    $field = 'field_instagram_screen_name';
+  }
+  elseif ($source_type == 'weibo') {
+    $field = 'field_weibo_screen_name';
+  }
+  $ret = $query->entityCondition('entity_type', 'user')
+    ->fieldCondition($field, 'value', $screen_name)
+    ->execute();
+  if (!isset($ret['user'])) {
+    return;
+  }
+  $uid = array_shift($ret['user']);
+  return user_load($uid->uid);
+}
+
+
+
 

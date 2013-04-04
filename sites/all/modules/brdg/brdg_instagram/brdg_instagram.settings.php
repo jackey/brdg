@@ -10,7 +10,7 @@ $settings = array(
 		'9263'
 	),
 	'source_type' => 'Instagram',
-	'max_num' => -1,
+	'max_num' => 50,
 );
 
 return $settings;
