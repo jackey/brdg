@@ -122,6 +122,7 @@ function brdg_services_menu() {
  */
 function update_comment_status($comment, $token = '') {
 	$comment->field_published[LANGUAGE_NONE][0]['value'] = 1;
+	$comment->status = 1; // publish this comment.
 	comment_save($comment);
 	return 'hello world';
 	//drupal_goto('<front>');

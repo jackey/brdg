@@ -66,54 +66,68 @@ Drupal.behaviors.RestServicesTest = {
 			
 			// Test like services example
 			// Test like
-			// function FlagAPI(flag_name) {
-			// 	var api_path = "/third_content/flag/";
-			// 	var interface = function (flag_name) {
-			// 		this.flag_name = flag_name;
-			// 	}
+			function FlagAPI(flag_name) {
+				var api_path = "/third_content/flag/";
+				var interface = function (flag_name) {
+					this.flag_name = flag_name;
+				}
 
-			// 	interface.prototype.isFlaged = function (nid, uid, callback) {
-			// 		var data = {content_id: nid, flag_name: this.flag_name, uid: uid};
-			// 		var url = api_path + "is_flagged";
-			// 		this._request(url, data, "POST", callback);
-			// 	}
+				interface.prototype.isFlaged = function (nid, uid, callback) {
+					var data = {content_id: nid, flag_name: this.flag_name, uid: uid};
+					var url = api_path + "is_flagged";
+					this._request(url, data, "POST", callback);
+				}
 
-			// 	interface.prototype._request = function (url, data, method, callback) {
-			// 		Array.prototype.insert = function (index, item) {
-			// 		  this.splice(index, 0, item);
-			// 		};
-			// 		$.ajax({
-			// 			type: method,
-			// 			url: url,
-			// 			dataType: "json",
-			// 			data: JSON.stringify(data),
-			// 			contentType: "application/json",
-			// 			success: function (ret) {
-			// 				var args = Array.prototype.slice.call(arguments, 0);
-			// 				args.insert(0, 'success');
-			// 				callback.apply(this, args);
-			// 			}
-			// 		});
-			// 	}
+				interface.prototype.flag = function (nid, uid, callback) {
+					var data = {content_id: nid, flag_name: this.flag_name, uid: uid, action: "flag"};
+					var url = api_path + "flag";
+					this._request(url, data, "POST", callback);
+				}
 
-			// 	return new interface(flag_name);
-			// }
-			// $("#test_like").click(function () {
-			// 	var api = FlagAPI('like');
-			// 	api.isFlaged(722, 1, function(status) {
-			// 		var args = Array.prototype.slice.call(arguments, 0);
-			// 		if (status == 'success') {
-			// 			var data = JSON.parse(args[1]);
-			// 			console.log(data);
-			// 			if (!data) {
-			// 				alert('not flag yet');
-			// 			}
-			// 			else {
-			// 				alert('flagged');
-			// 			}
-			// 		}
-			// 	});
-			// });
+				interface.prototype._request = function (url, data, method, callback) {
+					Array.prototype.insert = function (index, item) {
+					  this.splice(index, 0, item);
+					};
+					$.ajax({
+						type: method,
+						url: url,
+						dataType: "json",
+						data: JSON.stringify(data),
+						contentType: "application/json",
+						success: function (ret) {
+							var args = Array.prototype.slice.call(arguments, 0);
+							args.insert(0, 'success');
+							callback.apply(this, args);
+						}
+					});
+				}
+
+				return new interface(flag_name);
+			}
+			$("#test_like").click(function () {
+				var api = FlagAPI('like');
+				// api.isFlaged(722, 1, function(status) {
+				// 	var args = Array.prototype.slice.call(arguments, 0);
+				// 	if (status == 'success') {
+				// 		var data = JSON.parse(args[1]);
+				// 		console.log(data);
+				// 		if (!data) {
+				// 			alert('not flag yet');
+				// 		}
+				// 		else {
+				// 			alert('flagged');
+				// 		}
+				// 	}
+				// });
+
+				api.flag(676, 1, function(status) {
+					var args = Array.prototype.slice.call(arguments, 0);
+					if (status == 'success') {
+						var data = JSON.parse(args[1]);
+						console.log(data);
+					}
+				} );
+			});
 
 			// Test comment services
       // 'subject' => $this->randomString(),
@@ -148,16 +162,16 @@ Drupal.behaviors.RestServicesTest = {
 			// });
 
 		// test comment list
-		$.ajax({
-			url: apipath + "/source_content_comments",
-			dataType: "JSON",
-			method: 'GET',
-			data: {nid: 718},
-			contentType: "application/json",
-			success: function(data) {
-				console.log(data);
-			}
-		});
+		// $.ajax({
+		// 	url: apipath + "/source_content_comments",
+		// 	dataType: "JSON",
+		// 	method: 'GET',
+		// 	data: {nid: 718},
+		// 	contentType: "application/json",
+		// 	success: function(data) {
+		// 		console.log(data);
+		// 	}
+		// });
 		})(jQuery);
 	}
 }

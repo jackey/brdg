@@ -125,3 +125,12 @@ function brdg_core_is_youku_link($url) {
   return FALSE;
 }
 
+/**
+ * Implements hook_comment_insert()
+ * The comment is unpublish as default
+ */
+function brdg_core_comment_insert($comment) {
+  $comment->status = 0;
+  comment_save($comment);
+}
+
