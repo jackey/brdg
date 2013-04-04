@@ -309,7 +309,7 @@ function brdg_twitter_brdg_core_filter(&$node, $from) {
  * Implements hook_form_alter()
  */
 function brdg_twitter_form_alter(&$form, $form_state, $form_id) {
-	if ($form_id) {
+	if ($form_id == 'user_profile_form') {
 		$form['#validate'][] = 'brdg_twitter_check_screen_name';
 	}
 }

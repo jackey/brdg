@@ -216,7 +216,7 @@ function brdg_weibo_get_youku_thumbnail_from_url() {
  * Implements hook_form_alter()
  */
 function brdg_weibo_form_alter(&$form, $form_state, $form_id) {
-	if ($form_id) {
+	if ($form_id == 'user_profile_form') {
 		$form['#validate'][] = 'brdg_weibo_check_screen_name';
 	}
 }
