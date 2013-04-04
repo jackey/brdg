@@ -219,7 +219,7 @@ function brdg_component_views_default_views() {
     'image_style' => '',
     'image_link' => '',
   );
-  /* Field: User: User City */
+  /* Field: Field: User City */
   $handler->display->display_options['fields']['field_user_city']['id'] = 'field_user_city';
   $handler->display->display_options['fields']['field_user_city']['table'] = 'field_data_field_user_city';
   $handler->display->display_options['fields']['field_user_city']['field'] = 'field_user_city';
@@ -233,11 +233,31 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['fields']['count']['relationship'] = 'flag_count_rel';
   $handler->display->display_options['fields']['count']['label'] = 'field_flag_counter';
   $handler->display->display_options['fields']['count']['separator'] = '';
+  /* Field: Field: User City */
+  $handler->display->display_options['fields']['field_user_city_1']['id'] = 'field_user_city_1';
+  $handler->display->display_options['fields']['field_user_city_1']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['fields']['field_user_city_1']['field'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city_1']['label'] = 'field_user_city';
+  $handler->display->display_options['fields']['field_user_city_1']['type'] = 'list_key';
+  $handler->display->display_options['fields']['field_user_city_1']['settings'] = array(
+    'skip_safe' => 0,
+    'skip_empty_values' => 0,
+  );
   /* Sort criterion: Content: Post Date (field_post_date) */
   $handler->display->display_options['sorts']['field_post_date_value']['id'] = 'field_post_date_value';
   $handler->display->display_options['sorts']['field_post_date_value']['table'] = 'field_data_field_post_date';
   $handler->display->display_options['sorts']['field_post_date_value']['field'] = 'field_post_date_value';
   $handler->display->display_options['sorts']['field_post_date_value']['order'] = 'DESC';
+  /* Contextual filter: Field: User City (field_user_city) */
+  $handler->display->display_options['arguments']['field_user_city_value']['id'] = 'field_user_city_value';
+  $handler->display->display_options['arguments']['field_user_city_value']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['arguments']['field_user_city_value']['field'] = 'field_user_city_value';
+  $handler->display->display_options['arguments']['field_user_city_value']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_user_city_value']['default_argument_type'] = 'php';
+  $handler->display->display_options['arguments']['field_user_city_value']['default_argument_options']['code'] = 'return isset($_GET[\'city_id\']) ? $_GET[\'city_id\'] : \'all\';';
+  $handler->display->display_options['arguments']['field_user_city_value']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['field_user_city_value']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_user_city_value']['summary_options']['items_per_page'] = '25';
   /* Filter criterion: Content: Published */
   $handler->display->display_options['filters']['status']['id'] = 'status';
   $handler->display->display_options['filters']['status']['table'] = 'node';
@@ -405,10 +425,6 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['row_plugin'] = 'fields';
   $handler->display->display_options['defaults']['row_options'] = FALSE;
   $handler->display->display_options['path'] = 'services_sould';
-
-  /* Display: Services 5 */
-  $handler = $view->new_display('services', 'Services 5', 'services_5');
-  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
   $export['pictures'] = $view;
 
   return $export;
