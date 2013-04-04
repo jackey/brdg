@@ -215,3 +215,19 @@ function brdg_core_flag($op, $flag, $content_id, $account, $fcid) {
   }
 }
 
+/**
+ * Implements  hook_views_pre_build()
+ */
+function brdg_core_views_pre_build(&$view) {
+    if ($_GET["perpage"]) {
+        $perpage = intval(check_plain($_GET["perpage"]));
+        if ($perpage > 1) {
+          $view->display_handler->options['pager']['options']["items_per_page"] = $perpage;
+        }
+        // else if ($perpage == "all") {
+        //   $view->pager["use_pager"] = false;
+        //   $view->pager["items_per_page"] = 0;
+        // }
+    }
+}
+
