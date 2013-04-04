@@ -120,7 +120,7 @@ Drupal.behaviors.RestServicesTest = {
 				// 	}
 				// });
 
-				api.flag(676, 1, function(status) {
+				api.flag(802, 0, function(status) {
 					var args = Array.prototype.slice.call(arguments, 0);
 					if (status == 'success') {
 						var data = JSON.parse(args[1]);

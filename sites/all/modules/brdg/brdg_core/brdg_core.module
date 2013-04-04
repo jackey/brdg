@@ -183,6 +183,35 @@ function brdg_core_load_drupal_user_with_screen_name($screen_name, $source_type)
   return user_load($uid->uid);
 }
 
-
-
+/**
+ * Act on a flagging.
+ *
+ * @param $op
+ *  The operation being performed: one of 'flag' or 'unflag'.
+ * @param $flag
+ *  The flag object.
+ * @param $content_id
+ *  The id of the content (aka entity) the flag is on.
+ * @param $account
+ *  The user account performing the action.
+ * @param $fcid
+ *  The id of the flagging in the {flag_content} table.
+ */
+function brdg_core_flag($op, $flag, $content_id, $account, $fcid) {
+  if ($op =='flag' && $account->uid == 0) {
+    $node = $flag->_load_content($content_id);
+    if ($flag->content_type == 'node') {
+      $node->field_anonymous_flaged[LANGUAGE_NONE][0]['value'] += 1;
+      node_save($node);
+    }
+  }
+  elseif ($op == 'unflag' && $account->uid == 0) {
+    $node = $flag->_load_content($content_id);
+    if ($flag->content_type == 'node') {
+      $node->field_anonymous_flaged[LANGUAGE_NONE][0]['value'] < 1 ? 
+      "":   $node->field_anonymous_flaged[LANGUAGE_NONE][0]['value'] -= 1;
+      node_save($node);
+    }
+  }
+}
 
