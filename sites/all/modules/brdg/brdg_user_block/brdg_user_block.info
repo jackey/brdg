@@ -4,4 +4,3 @@ package = brdg
 core = 7.x
 dependencies[] = brdg_core
 dependencies[] = user
-

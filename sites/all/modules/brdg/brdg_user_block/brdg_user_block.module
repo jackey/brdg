@@ -23,6 +23,22 @@ function brdg_user_block_form_alter(&$form, &$form_state, $form_id) {
 			$account_option['operations'] = array('data' => array($data, $blacklist));
 		}
 	}
+	if ($form_id == 'user_register_form' || $form_id == "user_profile_form") {
+		$form['#validate'][] = 'brgd_user_block_validate_email';
+	}
+}
+
+// Validate user email
+function brgd_user_block_validate_email($form, $form_state) {
+	$mail = $form_state['values']['mail'];
+	$allowed_email = variable_get('allowed_email', "");
+	$allowed_emailes = explode("\r\n", $allowed_email);
+	foreach ($allowed_emailes as $allowed_email) {
+		if (strpos($mail, $allowed_email) !== FALSE) {
+			return;
+		}
+	}
+	form_set_error("mail", "Your email is not allowed by system");
 }
 
 /**
@@ -34,7 +50,24 @@ function brdg_user_block_menu() {
 		'page arguments' => array(2),
 		'access arguments' => array('add black user'),
 	);
+	$items['admin/config/system/user_allowed_email'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('brdg_user_allowed_email_page'),
+		'access arguments' => array('admin allowed email'),
+	);
 	return $items;
+}
+
+// Allowed email
+function brdg_user_allowed_email_page() {
+	$form['allowed_email'] = array(
+		'#type' => 'textarea',
+		'#title' => t('Allowed Email'),
+		'#description' => t(" .."),
+		'#default_value' => variable_get('allowed_email', ""),
+	);
+
+	return system_settings_form($form);
 }
 
 // append user into blackuser list
@@ -53,7 +86,10 @@ function brdg_user_block_append_user($user) {
 function brdg_user_block_permission() {
 	return array(
 			'add block user' => array(
-			'title' => t('Append user into blackuser list'),
+				'title' => t('Append user into blackuser list'),
+			'admin allowed email' => array(
+				'title' => t('Allowed Email'),
+			),
 		),
 	);
 }

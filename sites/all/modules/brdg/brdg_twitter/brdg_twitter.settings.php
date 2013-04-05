@@ -7,7 +7,7 @@ $settings = array(
 	'access_token_secret' => '',
 	'twitter_uid' => '568873580',
 	'search_tag' => array(
-		'badword'
+		'dailymotion'
 	),
 	'source_type' => 'Twitter Tweets',
 	'max_num' => 10,

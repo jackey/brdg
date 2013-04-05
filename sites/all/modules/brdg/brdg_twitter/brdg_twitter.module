@@ -154,6 +154,24 @@ function save_twitter_into_node($twitter_entity) {
 					$node->field_video_thumbnail[LANGUAGE_NONE][] = (array)$thumbnail_file;
 				}
 			}
+			elseif (brdg_twitter_is_vimeo($url['expanded_url'])) {
+				$has_media = TRUE;
+				$node->field_video[LANGUAGE_NONE][] = array('value' => $url['expanded_url']);
+				$thumbnail_file_url =  brdg_twitter_get_vimeo_thumb($url['expanded_url']);
+				$thumbnail_file = add_image_from_url($thumbnail_file_url, 'vimeo_thumbnail');
+				if ($thumbnail_file) {
+					$node->field_video_thumbnail[LANGUAGE_NONE][] = (array)$thumbnail_file;
+				}
+			}
+			elseif (brdg_twitter_is_dallymotion($url['expanded_url'])) {
+				$has_media = TRUE;
+				$node->field_video[LANGUAGE_NONE][] = array('value' => $url['expanded_url']);
+				$thumbnail_file_url =  brdg_twitter_get_dallymotion_thumb($url['expanded_url']);
+				$thumbnail_file = add_image_from_url($thumbnail_file_url, 'vimeo_thumbnail');
+				if ($thumbnail_file) {
+					$node->field_video_thumbnail[LANGUAGE_NONE][] = (array)$thumbnail_file;
+				}
+			}
 		}
 	}
 
@@ -186,14 +204,84 @@ function save_twitter_into_node($twitter_entity) {
 	}
 	else {
 		//TODO:: If not found drupal account then we ignore this twitter entity.
-		return;
+		//return;
 	}
 	// If doesn't include any media, we don't need insert into our system.
-	if ($has_media || TRUE) {
+	if ($has_media) {
 		brdg_core_node_save($node, 'brdg_twitter', $twitter_entity);
 	}
 	else {
 		// nothing to do 
+	}
+}
+
+function brdg_twitter_is_dallymotion($url) {
+	$allow_video_urls = array(
+		'dailymotion.com',
+	);
+	$is_video = FALSE;
+	foreach ($allow_video_urls as $allow_video_url) {
+		if (strpos($url, $allow_video_url) !== FALSE) {
+			$is_video = TRUE;
+		}
+	}
+	// Maybe short url
+	if (!$is_video) {
+		if (strpos($url, "goo.gl") !== FALSE) {
+			$req_url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=$url";
+			$file = file_get_contents($req_url);
+			dpm($file);
+			$ret = drupal_http_request($req_url);
+			dpm($ret);
+			if ($ret->code == 200) {
+				$data = json_decode($ret->data, TRUE);
+				$url = $data['longUrl'];
+				return brdg_twitter_is_dallymotion($url);
+			}
+		}
+	}
+	return $is_video;
+}
+
+function brdg_twitter_get_dallymotion_thumb($url) {
+	if (strpos($url, "goo.gl") !== FALSE) {
+		$req_url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=$url";
+		$ret = drupal_http_request($req_url);
+		if ($ret->code == 200) {
+			$data = json_decode($ret->data, TRUE);
+			$url = $data['longUrl'];
+			$id = strtok(basename($url), '_');
+			//TODO:
+		}
+	}
+}
+
+// Check video link is vimeo video
+function brdg_twitter_is_vimeo($url) {
+	$allow_video_urls = array(
+		'vimeo.com',
+	);
+	$is_video = FALSE;
+	foreach ($allow_video_urls as $allow_video_url) {
+		if (strpos($url, $allow_video_url) !== FALSE) {
+			$is_video = TRUE;
+		}
+	}
+	return $is_video;
+}
+
+// Get thumbnail of vimeo
+function brdg_twitter_get_vimeo_thumb($url){
+	preg_match("/http:\/\/vimeo\.com\/([\d]+)/i", $url, $matches);
+	$id = $matches[1];
+	if ($id) {
+		$url = "http://vimeo.com/api/v2/video/{$id}.json";
+		$ret = drupal_http_request($url);
+		if ($ret->code == '200') {
+			$data = json_decode($ret->data);
+			$vimeo = array_shift($data);
+			return $vimeo->thumbnail_large;
+		}
 	}
 }
 

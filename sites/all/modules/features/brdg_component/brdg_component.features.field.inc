@@ -1348,10 +1348,10 @@ function brdg_component_field_default_fields() {
       'entity_type' => 'user',
       'field_name' => 'field_instagram_screen_name',
       'label' => 'Instagram Screen Name',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'text_processing' => '0',
-        'user_register_form' => 1,
+        'user_register_form' => 0,
       ),
       'widget' => array(
         'active' => 1,
@@ -1411,10 +1411,10 @@ function brdg_component_field_default_fields() {
       'entity_type' => 'user',
       'field_name' => 'field_twitter_screen_name',
       'label' => 'Twitter Screen Name',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'text_processing' => '0',
-        'user_register_form' => 1,
+        'user_register_form' => 0,
       ),
       'widget' => array(
         'active' => 1,
@@ -1474,10 +1474,10 @@ function brdg_component_field_default_fields() {
       'entity_type' => 'user',
       'field_name' => 'field_weibo_screen_name',
       'label' => 'Weibo Screen Name',
-      'required' => 1,
+      'required' => 0,
       'settings' => array(
         'text_processing' => '0',
-        'user_register_form' => 1,
+        'user_register_form' => 0,
       ),
       'widget' => array(
         'active' => 1,
