@@ -39,9 +39,7 @@ function brdg_weibo_connect() {
 // Menu callback.
 function brdg_weibo_test_page_callback() {
 	$settings = brdg_weibo_get_app_settings();
-	$weibo_account = brdg_weibo_load_account();
-	$access_token = $weibo_account['oauth_token'];
-	$api = brdg_weibo_client($access_token);
+	$api = brdg_weibo_connect();
 	$params = array();
 	$params['a'] = urlencode($settings['search_tag'][0]);
 	$params['count'] = $settings['max_num'];
@@ -77,7 +75,7 @@ function brdg_weibo_test_page_callback() {
 			->fieldCondition('field_source_id', 'value', $id)
 			->execute();
 		if ($result) {
-			return "";
+			continue;
 		}
 		$user_profile_image = add_image_from_url($status['user']['profile_image_url']);
 		//if (!$user_profile_image) continue;
@@ -111,7 +109,11 @@ function brdg_weibo_test_page_callback() {
 
 		// Set youku video
 		if (isset($status['youku_video'])) {
-			$node->field_video[LANGUAGE_NONE][0]['value'] = $status['youku_video']['url_long'];
+			$node->field_video[LANGUAGE_NONE][]['value'] = $status['youku_video']['url_long'];
+			$url = $status['youku_video']['url_long'];
+			$thumb = get_youku_thumb($url);
+			$thumb_file = add_image_from_url($thumb);
+			$node->field_video_thumbnail[LANGUAGE_NONE][] = (array)$thumb_file;
 		}
 
 		// set location of node
@@ -257,5 +259,18 @@ function brdg_weibo_user_update($edit, $account) {
 				'name' => $ret['name'],
 			))
 			->execute();
+	}
+}
+
+// Get youku thumbnail image URL
+function get_youku_thumb($url) {
+	preg_match_all("/id\_(\w+)[\=|.html]/", $url, $matches);
+	if(!empty($matches[1][0])) {
+		$id = $matches[1][0];
+		$u = 'http://v.youku.com/player/getPlayList/VideoIDS/'.$id.'/version/5/source/out';
+		$json_str = file_get_contents($u);
+		$json = json_decode($json_str);
+		$image_url = $json->data[0]->logo;
+		return $image_url;
 	}
 }

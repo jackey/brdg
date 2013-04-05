@@ -7,13 +7,9 @@ $root = dirname(__FILE__);
 
 $uris = $argv;
 
-$output = '';
-
 foreach ($uris as $uri) {
 	 exec("$root/drupal.sh $uri", $o);
-	 $output[] = $o;
+	 print_r(implode("\r\n", $o));
 }
 
-$string = print_r($output, TRUE);
-print $string;
 

@@ -145,21 +145,22 @@ Drupal.behaviors.RestServicesTest = {
       // 'uid' => $this->privileged_user->uid,
       // 'cid' => NULL,
       // 'pid' => 0,
-			// var comment = {
-			// 	nid: 722,
-			// 	comment_body: {und: [{value: "body from js", summary: "summary from js"}]},
-			// 	field_email: {und: [{value: "hello from js email"}]}
-			// };
-			// $.ajax({
-			// 	url: apipath + "/comment",
-			// 	dataType: "JSON",
-			// 	type: "POST",
-			// 	data: JSON.stringify(comment),
-			// 	contentType: "application/json",
-			// 	success: function (data) {
-			// 		console.log(data);
-			// 	}
-			// });
+      		apipath = "/brdg/data/"+ apipath;
+			var comment = {
+				nid: 581,
+				comment_body: {und: [{value: "body from js", summary: "summary from js"}]},
+				field_email: {und: [{value: "jziwenchen@gmail.com"}]}
+			};
+			$.ajax({
+				url: apipath + "/comment",
+				dataType: "JSON",
+				type: "POST",
+				data: JSON.stringify(comment),
+				contentType: "application/json",
+				success: function (data) {
+					console.log(data);
+				}
+			});
 
 		// test comment list
 		// $.ajax({
