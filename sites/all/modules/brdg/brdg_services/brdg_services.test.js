@@ -67,7 +67,7 @@ Drupal.behaviors.RestServicesTest = {
 			// Test like services example
 			// Test like
 			function FlagAPI(flag_name) {
-				var api_path = "third_content/flag/";
+				var api_path = "/third_content/flag/";
 				var interface = function (flag_name) {
 					this.flag_name = flag_name;
 				}
@@ -130,22 +130,6 @@ Drupal.behaviors.RestServicesTest = {
 			});
 
 			// Test comment services
-      // 'subject' => $this->randomString(),
-      // 'comment_body' => array(
-      //   LANGUAGE_NONE => array(
-      //     array(
-      //       'value' => $this->randomString(),
-      //       'format' => filter_default_format(),
-      //     )
-      //   )
-      // ),
-      // 'name' => $this->privileged_user->name,
-      // 'language' => LANGUAGE_NONE,
-      // 'nid' => $nid,
-      // 'uid' => $this->privileged_user->uid,
-      // 'cid' => NULL,
-      // 'pid' => 0,
-      		apipath = "/brdg/data/"+ apipath;
 			var comment = {
 				nid: 581,
 				comment_body: {und: [{value: "body from js", summary: "summary from js"}]},
@@ -156,6 +140,17 @@ Drupal.behaviors.RestServicesTest = {
 				dataType: "JSON",
 				type: "POST",
 				data: JSON.stringify(comment),
+				contentType: "application/json",
+				success: function (data) {
+					console.log(data);
+				}
+			});
+
+			$.ajax({
+				url: apipath + "/node/pre_next_node",
+				dataType: "JSON",
+				type: "POST",
+				data: JSON.stringify({nid: 847}),
 				contentType: "application/json",
 				success: function (data) {
 					console.log(data);

@@ -60,12 +60,28 @@ function _node_pre_next_index_node($data) {
 	$node = node_load($nid);
 	$number = isset($data['number']) ? $data['number'] :10;
 	$resource_type = isset($data['resource_type']) ? $data['resource_type'] : NULL;
+	if ($resource_type == RESOURCE_PICTURE) {
+		$allowed_media = "Image";
+	}
+	elseif ($resource_type == RESOURCE_VIDEO) {
+		$allowed_media = "Video";
+	}
+	elseif ($resource_type == RESOURCE_SOUND) {
+		$allowed_media = "Sound";
+	}
+	if (isset($allowed_media)) {
+		$media_type = brdg_core_get_media_type($allowed_media);
+	}
 	// Pre
 	$query = new EntityFieldQuery();
-	$query_results = $query->entityCondition('entity_type', 'node')
+	$query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
 		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '<')
-		->fieldOrderBy('field_post_date', 'value', 'DESC')
+		->fieldOrderBy('field_post_date', 'value', 'DESC');
+	if (isset($allowed_media)) {
+		$query->fieldCondition("field_media_type", 'tid', $media_type->tid);
+	}
+	$query_results = $query
 		->range(0, $number)
 		->execute();
 	$pre_nids =  array_keys($query_results['node']);
@@ -73,10 +89,14 @@ function _node_pre_next_index_node($data) {
 	
 	// Next
 	$query = new EntityFieldQuery();
-	$query_results = $query->entityCondition('entity_type', 'node')
+	$query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
 		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '>')
-		->fieldOrderBy('field_post_date', 'value', 'ASC')
+		->fieldOrderBy('field_post_date', 'value', 'ASC');
+	if (isset($allowed_media)) {
+		$query->fieldCondition("field_media_type", 'tid', $media_type->tid);
+	}
+	$query_results = $query
 		->range(0, $number)
 		->execute();
 	$next_nids =  array_keys($query_results['node']);
