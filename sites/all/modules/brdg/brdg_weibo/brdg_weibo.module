@@ -62,6 +62,7 @@ function brdg_weibo_test_page_callback() {
 			}
 		}
 	}
+	
 	// Insert it into node
 	foreach ($statuses as $status) {
 		if (!isset($status['original_pic']) && !isset($status['youku_video'])) {

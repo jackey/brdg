@@ -26,9 +26,6 @@ function brdg_twitter_menu() {
 
 //not support pager.
 function test_fetch_twitter() {
-	$url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=http://goo.gl/T4R3X";
-	
-	return 'hello world';
 	// $user = brdg_twitter_load_drupal_user_with_screen_name('rsarver', 'twitter');
 	// dpm($user);
 	// return 'hello world';
@@ -167,12 +164,16 @@ function save_twitter_into_node($twitter_entity) {
 				}
 			}
 			elseif (brdg_twitter_is_dallymotion($url['expanded_url'])) {
-				$has_media = TRUE;
-				$node->field_video[LANGUAGE_NONE][] = array('value' => $url['expanded_url']);
-				$thumbnail_file_url =  brdg_twitter_get_dallymotion_thumb($url['expanded_url']);
-				$thumbnail_file = add_image_from_url($thumbnail_file_url, 'vimeo_thumbnail');
-				if ($thumbnail_file) {
-					$node->field_video_thumbnail[LANGUAGE_NONE][] = (array)$thumbnail_file;
+				$long_url = expand_googl_short_url($url['expanded_url']);
+				if ($long_url) {
+					$has_media = TRUE;
+					$node->field_video[LANGUAGE_NONE][] = array('value' => $long_url);
+					$thumbnail_file_url = brdg_twitter_get_dallymotion_thumb($long_url);
+					$thumbnail_file = add_image_from_url($thumbnail_file_url, 'dallymotion_thumbnail');
+					if ($thumbnail_file) {
+						$node->field_video_thumbnail[LANGUAGE_NONE][] = 
+							(array)$thumbnail_file;
+					}
 				}
 			}
 		}
@@ -222,7 +223,6 @@ function save_twitter_into_node($twitter_entity) {
 function expand_googl_short_url($url) {
 	$req_url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=$url";
 	$ret = drupal_http_request($req_url);
-	dpm($ret);
 	if ($ret->code == 200) {
 		$data = json_decode($ret->data, TRUE);
 		$url = $data['longUrl'];
@@ -236,7 +236,7 @@ function brdg_twitter_is_dallymotion($url) {
 		$url = $long_url;
 	}
 	$allow_video_urls = array(
-		'dailymotion.com',
+		'dailymotion.com/video',
 	);
 	$is_video = FALSE;
 	foreach ($allow_video_urls as $allow_video_url) {
@@ -248,15 +248,13 @@ function brdg_twitter_is_dallymotion($url) {
 }
 
 function brdg_twitter_get_dallymotion_thumb($url) {
-	if (strpos($url, "goo.gl") !== FALSE) {
-		$req_url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=$url";
-		$ret = drupal_http_request($req_url);
-		if ($ret->code == 200) {
-			$data = json_decode($ret->data, TRUE);
-			$url = $data['longUrl'];
-			$id = strtok(basename($url), '_');
-			//TODO:
-		}
+	$url = "http://www.dailymotion.com/video/xp7suf_more-on-the-holy-ghost_music";
+	$id = strtok(basename($url), '_');
+	$req_url =  "https://api.dailymotion.com/video/$id?fields=thumbnail_large_url";
+	$ret = drupal_http_request($req_url);
+	if ($ret->code == 200) {
+		$data = json_decode($ret->data, TRUE);
+		return $data['thumbnail_large_url'];
 	}
 }
 

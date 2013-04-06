@@ -118,12 +118,12 @@ function brdg_services_process_node($nodes) {
 		$tmp_node = new stdClass;
 		$tmp_node->nid = $node->nid;
 		$tmp_node->field_body = $node->body[LANGUAGE_NONE][0]['value'];
-		$tmp_node->field_user_name = $node->field_user_name[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_user_name = $node->field_from_user_name[LANGUAGE_NONE][0]['value'];
 		$tmp_node->field_user_profile_image = 
 			file_create_url($node->field_from_user_profile_image[LANGUAGE_NONE][0]['uri']);
 
 		$tmp_node->field_media_image = 
-			$node->field_media_image[LANGUAGE_NONE][0]['uri'];
+			file_create_url($node->field_media_image[LANGUAGE_NONE][0]['uri']);
 		$tmp_node->post_date = $node->field_post_date[LANGUAGE_NONE][0]['value'];
 		$tmp_node->field_sound = $node->field_sound[LANGUAGE_NONE][0]['value'];
 		$tmp_node->field_sound_thumbnail = 
