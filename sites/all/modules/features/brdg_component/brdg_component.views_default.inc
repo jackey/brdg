@@ -11,6 +11,80 @@ function brdg_component_views_default_views() {
   $export = array();
 
   $view = new view();
+  $view->name = 'admin_comment';
+  $view->description = '';
+  $view->tag = 'default';
+  $view->base_table = 'comment';
+  $view->human_name = 'admin comment';
+  $view->core = 7;
+  $view->api_version = '3.0';
+  $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+  /* Display: Master */
+  $handler = $view->new_display('default', 'Master', 'default');
+  $handler->display->display_options['title'] = 'admin comment';
+  $handler->display->display_options['use_more_always'] = FALSE;
+  $handler->display->display_options['access']['type'] = 'perm';
+  $handler->display->display_options['cache']['type'] = 'none';
+  $handler->display->display_options['query']['type'] = 'views_query';
+  $handler->display->display_options['exposed_form']['type'] = 'basic';
+  $handler->display->display_options['pager']['type'] = 'full';
+  $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+  $handler->display->display_options['style_plugin'] = 'default';
+  $handler->display->display_options['row_plugin'] = 'fields';
+  /* No results behavior: Global: Text area */
+  $handler->display->display_options['empty']['area']['id'] = 'area';
+  $handler->display->display_options['empty']['area']['table'] = 'views';
+  $handler->display->display_options['empty']['area']['field'] = 'area';
+  $handler->display->display_options['empty']['area']['empty'] = TRUE;
+  $handler->display->display_options['empty']['area']['content'] = 'There\'s no comment yet.';
+  $handler->display->display_options['empty']['area']['format'] = 'filtered_html';
+  /* Relationship: Comment: Content */
+  $handler->display->display_options['relationships']['nid']['id'] = 'nid';
+  $handler->display->display_options['relationships']['nid']['table'] = 'comment';
+  $handler->display->display_options['relationships']['nid']['field'] = 'nid';
+  $handler->display->display_options['relationships']['nid']['required'] = TRUE;
+  /* Field: Comment: Title */
+  $handler->display->display_options['fields']['subject']['id'] = 'subject';
+  $handler->display->display_options['fields']['subject']['table'] = 'comment';
+  $handler->display->display_options['fields']['subject']['field'] = 'subject';
+  $handler->display->display_options['fields']['subject']['label'] = '';
+  $handler->display->display_options['fields']['subject']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['subject']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: Body */
+  $handler->display->display_options['fields']['body']['id'] = 'body';
+  $handler->display->display_options['fields']['body']['table'] = 'field_data_body';
+  $handler->display->display_options['fields']['body']['field'] = 'body';
+  $handler->display->display_options['fields']['body']['relationship'] = 'nid';
+  $handler->display->display_options['fields']['body']['label'] = 'Node Body';
+  /* Field: Comment: Comment */
+  $handler->display->display_options['fields']['comment_body']['id'] = 'comment_body';
+  $handler->display->display_options['fields']['comment_body']['table'] = 'field_data_comment_body';
+  $handler->display->display_options['fields']['comment_body']['field'] = 'comment_body';
+  $handler->display->display_options['fields']['comment_body']['label'] = 'Comment Body';
+  /* Sort criterion: Comment: Post date */
+  $handler->display->display_options['sorts']['created']['id'] = 'created';
+  $handler->display->display_options['sorts']['created']['table'] = 'comment';
+  $handler->display->display_options['sorts']['created']['field'] = 'created';
+  $handler->display->display_options['sorts']['created']['order'] = 'DESC';
+  /* Contextual filter: Comment: Nid */
+  $handler->display->display_options['arguments']['nid']['id'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['table'] = 'comment';
+  $handler->display->display_options['arguments']['nid']['field'] = 'nid';
+  $handler->display->display_options['arguments']['nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['nid']['default_argument_type'] = 'raw';
+  $handler->display->display_options['arguments']['nid']['default_argument_options']['index'] = '1';
+  $handler->display->display_options['arguments']['nid']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['nid']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['nid']['summary_options']['items_per_page'] = '25';
+
+  /* Display: comment managment */
+  $handler = $view->new_display('page', 'comment managment', 'page');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['path'] = 'admin/content/admincomment/%';
+  $export['admin_comment'] = $view;
+
+  $view = new view();
   $view->name = 'admin_pages';
   $view->description = '';
   $view->tag = 'default';
@@ -189,6 +263,168 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;
+
+  /* Display: node managent */
+  $handler = $view->new_display('page', 'node managent', 'page_3');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['fields'] = FALSE;
+  /* Field: Content: Title */
+  $handler->display->display_options['fields']['title']['id'] = 'title';
+  $handler->display->display_options['fields']['title']['table'] = 'node';
+  $handler->display->display_options['fields']['title']['field'] = 'title';
+  $handler->display->display_options['fields']['title']['label'] = '';
+  $handler->display->display_options['fields']['title']['alter']['word_boundary'] = FALSE;
+  $handler->display->display_options['fields']['title']['alter']['ellipsis'] = FALSE;
+  /* Field: Content: From User Name */
+  $handler->display->display_options['fields']['field_from_user_name']['id'] = 'field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['table'] = 'field_data_field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['field'] = 'field_from_user_name';
+  $handler->display->display_options['fields']['field_from_user_name']['label'] = 'User Name';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid']['id'] = 'nid';
+  $handler->display->display_options['fields']['nid']['table'] = 'node';
+  $handler->display->display_options['fields']['nid']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid']['label'] = 'ID';
+  /* Field: Content: Post date */
+  $handler->display->display_options['fields']['created']['id'] = 'created';
+  $handler->display->display_options['fields']['created']['table'] = 'node';
+  $handler->display->display_options['fields']['created']['field'] = 'created';
+  $handler->display->display_options['fields']['created']['date_format'] = 'long';
+  /* Field: Content: Source Type */
+  $handler->display->display_options['fields']['field_source_type']['id'] = 'field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['table'] = 'field_data_field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['field'] = 'field_source_type';
+  $handler->display->display_options['fields']['field_source_type']['label'] = 'From';
+  $handler->display->display_options['fields']['field_source_type']['type'] = 'taxonomy_term_reference_plain';
+  /* Field: Content: Anonymous Flaged */
+  $handler->display->display_options['fields']['field_anonymous_flaged']['id'] = 'field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['table'] = 'field_data_field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['field'] = 'field_anonymous_flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['label'] = 'Flaged';
+  $handler->display->display_options['fields']['field_anonymous_flaged']['settings'] = array(
+    'thousand_separator' => ' ',
+    'prefix_suffix' => 1,
+  );
+  /* Field: Content: Comment count */
+  $handler->display->display_options['fields']['comment_count']['id'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['table'] = 'node_comment_statistics';
+  $handler->display->display_options['fields']['comment_count']['field'] = 'comment_count';
+  $handler->display->display_options['fields']['comment_count']['label'] = 'Comment';
+  $handler->display->display_options['fields']['comment_count']['separator'] = '';
+  /* Field: Content: Nid */
+  $handler->display->display_options['fields']['nid_1']['id'] = 'nid_1';
+  $handler->display->display_options['fields']['nid_1']['table'] = 'node';
+  $handler->display->display_options['fields']['nid_1']['field'] = 'nid';
+  $handler->display->display_options['fields']['nid_1']['label'] = 'Link To Comment';
+  $handler->display->display_options['fields']['nid_1']['alter']['alter_text'] = TRUE;
+  $handler->display->display_options['fields']['nid_1']['alter']['text'] = '<a href="/admin/content/admincomment/[nid_1]" target="_blank">Comments</a>';
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: Content: Published */
+  $handler->display->display_options['filters']['status']['id'] = 'status';
+  $handler->display->display_options['filters']['status']['table'] = 'node';
+  $handler->display->display_options['filters']['status']['field'] = 'status';
+  $handler->display->display_options['filters']['status']['value'] = 1;
+  $handler->display->display_options['filters']['status']['group'] = 1;
+  $handler->display->display_options['filters']['status']['expose']['operator'] = FALSE;
+  /* Filter criterion: Content: Body (body) */
+  $handler->display->display_options['filters']['body_value']['id'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['table'] = 'field_data_body';
+  $handler->display->display_options['filters']['body_value']['field'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['body_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['body_value']['expose']['operator_id'] = 'body_value_op';
+  $handler->display->display_options['filters']['body_value']['expose']['label'] = 'Keyword';
+  $handler->display->display_options['filters']['body_value']['expose']['operator'] = 'body_value_op';
+  $handler->display->display_options['filters']['body_value']['expose']['identifier'] = 'body_value';
+  $handler->display->display_options['filters']['body_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Field: User City (field_user_city) */
+  $handler->display->display_options['filters']['field_user_city_value']['id'] = 'field_user_city_value';
+  $handler->display->display_options['filters']['field_user_city_value']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['filters']['field_user_city_value']['field'] = 'field_user_city_value';
+  $handler->display->display_options['filters']['field_user_city_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['operator_id'] = 'field_user_city_value_op';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['label'] = 'City Location';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['operator'] = 'field_user_city_value_op';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['identifier'] = 'field_user_city_value';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Post Date (field_post_date) */
+  $handler->display->display_options['filters']['field_post_date_value']['id'] = 'field_post_date_value';
+  $handler->display->display_options['filters']['field_post_date_value']['table'] = 'field_data_field_post_date';
+  $handler->display->display_options['filters']['field_post_date_value']['field'] = 'field_post_date_value';
+  $handler->display->display_options['filters']['field_post_date_value']['operator'] = '>=';
+  $handler->display->display_options['filters']['field_post_date_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_post_date_value']['expose']['operator_id'] = 'field_post_date_value_op';
+  $handler->display->display_options['filters']['field_post_date_value']['expose']['label'] = 'Date';
+  $handler->display->display_options['filters']['field_post_date_value']['expose']['operator'] = 'field_post_date_value_op';
+  $handler->display->display_options['filters']['field_post_date_value']['expose']['identifier'] = 'field_post_date_value';
+  $handler->display->display_options['filters']['field_post_date_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['filters']['field_post_date_value']['form_type'] = 'date_popup';
+  /* Filter criterion: Content: Source Type (field_source_type) */
+  $handler->display->display_options['filters']['field_source_type_tid']['id'] = 'field_source_type_tid';
+  $handler->display->display_options['filters']['field_source_type_tid']['table'] = 'field_data_field_source_type';
+  $handler->display->display_options['filters']['field_source_type_tid']['field'] = 'field_source_type_tid';
+  $handler->display->display_options['filters']['field_source_type_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_source_type_tid']['expose']['operator_id'] = 'field_source_type_tid_op';
+  $handler->display->display_options['filters']['field_source_type_tid']['expose']['label'] = 'From';
+  $handler->display->display_options['filters']['field_source_type_tid']['expose']['operator'] = 'field_source_type_tid_op';
+  $handler->display->display_options['filters']['field_source_type_tid']['expose']['identifier'] = 'field_source_type_tid';
+  $handler->display->display_options['filters']['field_source_type_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['filters']['field_source_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_source_type_tid']['vocabulary'] = 'data_source';
+  /* Filter criterion: Content: From User Name (field_from_user_name) */
+  $handler->display->display_options['filters']['field_from_user_name_value']['id'] = 'field_from_user_name_value';
+  $handler->display->display_options['filters']['field_from_user_name_value']['table'] = 'field_data_field_from_user_name';
+  $handler->display->display_options['filters']['field_from_user_name_value']['field'] = 'field_from_user_name_value';
+  $handler->display->display_options['filters']['field_from_user_name_value']['operator'] = 'contains';
+  $handler->display->display_options['filters']['field_from_user_name_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_from_user_name_value']['expose']['operator_id'] = 'field_from_user_name_value_op';
+  $handler->display->display_options['filters']['field_from_user_name_value']['expose']['label'] = 'User Name';
+  $handler->display->display_options['filters']['field_from_user_name_value']['expose']['operator'] = 'field_from_user_name_value_op';
+  $handler->display->display_options['filters']['field_from_user_name_value']['expose']['identifier'] = 'field_from_user_name_value';
+  $handler->display->display_options['filters']['field_from_user_name_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Content: Media Type (field_media_type) */
+  $handler->display->display_options['filters']['field_media_type_tid']['id'] = 'field_media_type_tid';
+  $handler->display->display_options['filters']['field_media_type_tid']['table'] = 'field_data_field_media_type';
+  $handler->display->display_options['filters']['field_media_type_tid']['field'] = 'field_media_type_tid';
+  $handler->display->display_options['filters']['field_media_type_tid']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_media_type_tid']['expose']['operator_id'] = 'field_media_type_tid_op';
+  $handler->display->display_options['filters']['field_media_type_tid']['expose']['label'] = 'Media Type';
+  $handler->display->display_options['filters']['field_media_type_tid']['expose']['operator'] = 'field_media_type_tid_op';
+  $handler->display->display_options['filters']['field_media_type_tid']['expose']['identifier'] = 'field_media_type_tid';
+  $handler->display->display_options['filters']['field_media_type_tid']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  $handler->display->display_options['filters']['field_media_type_tid']['type'] = 'select';
+  $handler->display->display_options['filters']['field_media_type_tid']['vocabulary'] = 'media_type';
+  $handler->display->display_options['path'] = 'admin/content/sourcemanage';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Manage Content';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
   $export['admin_pages'] = $view;
 
   $view = new view();
@@ -288,7 +524,6 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['filters']['status_1']['table'] = 'users';
   $handler->display->display_options['filters']['status_1']['field'] = 'status';
   $handler->display->display_options['filters']['status_1']['value'] = '1';
-  $handler->display->display_options['filters']['status_1']['exposed'] = TRUE;
   $handler->display->display_options['filters']['status_1']['expose']['operator_id'] = '';
   $handler->display->display_options['filters']['status_1']['expose']['label'] = 'Enabled';
   $handler->display->display_options['filters']['status_1']['expose']['operator'] = 'status_1_op';
@@ -328,6 +563,12 @@ function brdg_component_views_default_views() {
     1 => 0,
     3 => 0,
   );
+  /* Filter criterion: User: The user ID */
+  $handler->display->display_options['filters']['uid_raw']['id'] = 'uid_raw';
+  $handler->display->display_options['filters']['uid_raw']['table'] = 'users';
+  $handler->display->display_options['filters']['uid_raw']['field'] = 'uid_raw';
+  $handler->display->display_options['filters']['uid_raw']['operator'] = '!=';
+  $handler->display->display_options['filters']['uid_raw']['value']['value'] = '0';
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page');
@@ -335,6 +576,68 @@ function brdg_component_views_default_views() {
   $handler->display->display_options['path'] = 'admin/people/user-list';
   $handler->display->display_options['menu']['type'] = 'normal';
   $handler->display->display_options['menu']['title'] = 'Manage People';
+  $handler->display->display_options['menu']['weight'] = '0';
+  $handler->display->display_options['menu']['name'] = 'management';
+  $handler->display->display_options['menu']['context'] = 0;
+
+  /* Display: Page */
+  $handler = $view->new_display('page', 'Page', 'page_1');
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['defaults']['filter_groups'] = FALSE;
+  $handler->display->display_options['defaults']['filters'] = FALSE;
+  /* Filter criterion: User: Active */
+  $handler->display->display_options['filters']['status_1']['id'] = 'status_1';
+  $handler->display->display_options['filters']['status_1']['table'] = 'users';
+  $handler->display->display_options['filters']['status_1']['field'] = 'status';
+  $handler->display->display_options['filters']['status_1']['value'] = '0';
+  $handler->display->display_options['filters']['status_1']['expose']['operator_id'] = '';
+  $handler->display->display_options['filters']['status_1']['expose']['label'] = 'Enabled';
+  $handler->display->display_options['filters']['status_1']['expose']['operator'] = 'status_1_op';
+  $handler->display->display_options['filters']['status_1']['expose']['identifier'] = 'status_1';
+  $handler->display->display_options['filters']['status_1']['expose']['required'] = TRUE;
+  $handler->display->display_options['filters']['status_1']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: User: Name (raw) */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'users';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['operator'] = 'contains';
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'User Name';
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  $handler->display->display_options['filters']['name']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: Field: User City (field_user_city) */
+  $handler->display->display_options['filters']['field_user_city_value']['id'] = 'field_user_city_value';
+  $handler->display->display_options['filters']['field_user_city_value']['table'] = 'field_data_field_user_city';
+  $handler->display->display_options['filters']['field_user_city_value']['field'] = 'field_user_city_value';
+  $handler->display->display_options['filters']['field_user_city_value']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['operator_id'] = 'field_user_city_value_op';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['label'] = 'City Location';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['operator'] = 'field_user_city_value_op';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['identifier'] = 'field_user_city_value';
+  $handler->display->display_options['filters']['field_user_city_value']['expose']['remember_roles'] = array(
+    2 => '2',
+    1 => 0,
+    3 => 0,
+  );
+  /* Filter criterion: User: The user ID */
+  $handler->display->display_options['filters']['uid_raw']['id'] = 'uid_raw';
+  $handler->display->display_options['filters']['uid_raw']['table'] = 'users';
+  $handler->display->display_options['filters']['uid_raw']['field'] = 'uid_raw';
+  $handler->display->display_options['filters']['uid_raw']['operator'] = '!=';
+  $handler->display->display_options['filters']['uid_raw']['value']['value'] = '0';
+  $handler->display->display_options['path'] = 'admin/people/user-list/blocked';
+  $handler->display->display_options['menu']['type'] = 'normal';
+  $handler->display->display_options['menu']['title'] = 'Manage Disabled User';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'management';
   $handler->display->display_options['menu']['context'] = 0;

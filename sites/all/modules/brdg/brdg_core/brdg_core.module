@@ -225,7 +225,7 @@ function brdg_core_flag($op, $flag, $content_id, $account, $fcid) {
  * Implements  hook_views_pre_build()
  */
 function brdg_core_views_pre_build(&$view) {
-    if ($_GET["perpage"]) {
+    if (isset($_GET["perpage"])) {
         $perpage = intval(check_plain($_GET["perpage"]));
         if ($perpage > 1) {
           $view->display_handler->options['pager']['options']["items_per_page"] = $perpage;
@@ -237,3 +237,39 @@ function brdg_core_views_pre_build(&$view) {
     }
 }
 
+/**
+ * Implements hook_node_presave.
+ */
+function brdg_core_node_presave($node) {
+    // when node presave 
+    // we set default media type for it.
+    if ($node->type == 'content_from_source' && empty($node->nid)) {
+        if (!empty($node->field_media_image)) {
+            $media_type = brdg_core_get_media_type("Image");
+        }
+        elseif (!empty($node->field_video)) {
+            $media_type = brdg_core_get_media_type("Video");
+        }
+        elseif (!empty($node->field_sound)) {
+            $media_type = brdg_core_get_media_type("Sound");
+        }
+
+        $node->field_media_type[LANGUAGE_NONE][0]['tid'] = $media_type->tid;
+    }
+}
+
+// helper function to get media type tid
+function brdg_core_get_media_type($media_type_name) {
+    $vocabulary_name = 'media_type';
+    $vocabulary = taxonomy_vocabulary_machine_name_load($vocabulary_name);
+    $query = new EntityFieldQuery;
+    $query->entityCondition('entity_type', 'taxonomy_term')
+        ->propertyCondition('vid', $vocabulary->vid)
+        ->propertyCondition('name', $media_type_name, 'LIKE');
+    $result = $query->execute();
+
+    if ($result) {
+        $term = array_shift($result['taxonomy_term']);
+        return taxonomy_term_load($term->tid);
+    }
+}
