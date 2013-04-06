@@ -56,9 +56,31 @@ function brdg_user_block_menu() {
 		'access arguments' => array('admin allowed email'),
 	);
 	$items['user/%user/block'] = array(
-		'page callback' => 'brdg_user',
+		'page callback' => 'brdg_user_status_operation',
+		'page arguments' => array(1, 'block'),
+		'access arguments' => array('admin block account'),
+	);
+	$items['user/%user/unblock'] = array(
+		'page callback' => 'brdg_user_status_operation',
+		'page arguments' => array(1, 'unblock'),
+		'access arguments' => array('admin block account'),
 	);
 	return $items;
+}
+
+// Block user account
+function brdg_user_status_operation($user, $op = 'block') {
+	if ($op == 'block') {
+		$user->status = 0;
+	}
+	else if ($op == 'unblock') {
+		$user->status = 1;
+	}
+
+	user_save($user);
+
+	$back_url = $_SERVER['HTTP_REFERER'];
+	drupal_goto($back_url);
 }
 
 // Allowed email
@@ -92,6 +114,9 @@ function brdg_user_block_permission() {
 				'title' => t('Append user into blackuser list'),
 			'admin allowed email' => array(
 				'title' => t('Allowed Email'),
+			),
+			'admin block account' => array(
+				'title' => t("Block account"),
 			),
 		),
 	);

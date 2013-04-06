@@ -428,16 +428,18 @@ function brdg_twitter_check_screen_name($form, $form_state) {
  */
 function brdg_twitter_user_update($edit, $account) {
 	$screen_name = $edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'];
-	$api = brdg_twitter_connect();
-	$twitter_account = $api->users_show($screen_name);
-	if ($twitter_account->id != NULL) {
-		// Save the new Twitter account and set the user's uid who added it.
-		// global $user;
-		// $twitter_account->uid = $user->uid;
-		$twitter_account->uid = $account->uid;
-		twitter_account_save($twitter_account, TRUE);
-	}
-	else {
-		drupal_set_message(t("Your twitter screen name maybe wrong."), 'warning');
+	if ($screen_name) {
+		$api = brdg_twitter_connect();
+		$twitter_account = $api->users_show($screen_name);
+		if ($twitter_account->id != NULL) {
+			// Save the new Twitter account and set the user's uid who added it.
+			// global $user;
+			// $twitter_account->uid = $user->uid;
+			$twitter_account->uid = $account->uid;
+			twitter_account_save($twitter_account, TRUE);
+		}
+		else {
+			drupal_set_message(t("Your twitter screen name maybe wrong."), 'warning');
+		}
 	}
 }

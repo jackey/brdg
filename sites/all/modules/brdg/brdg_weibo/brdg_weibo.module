@@ -247,18 +247,20 @@ function brdg_weibo_check_screen_name($form, $form_state) {
  */
 function brdg_weibo_user_update($edit, $account) {
 	$screen_name = $edit['field_weibo_screen_name'][LANGUAGE_NONE][0]['value'];
-	$api = brdg_weibo_connect();
-	$ret = $api->show_user_by_name($screen_name);
-	if (!brdg_weibo_load_account_with_weibo_uid($ret['idstr'])) {
-		db_insert('weibo_account')
-			->fields(array(
-				'weibo_uid' => $ret['idstr'],
-				'uid' => $account->uid,
-				'screen_name' => $screen_name,
-				'oauth_token' => '',
-				'name' => $ret['name'],
-			))
-			->execute();
+	if ($screen_name) {
+		$api = brdg_weibo_connect();
+		$ret = $api->show_user_by_name($screen_name);
+		if (!brdg_weibo_load_account_with_weibo_uid($ret['idstr'])) {
+			db_insert('weibo_account')
+				->fields(array(
+					'weibo_uid' => $ret['idstr'],
+					'uid' => $account->uid,
+					'screen_name' => $screen_name,
+					'oauth_token' => '',
+					'name' => $ret['name'],
+				))
+				->execute();
+		}
 	}
 }
 

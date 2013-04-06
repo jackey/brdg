@@ -174,13 +174,15 @@ function brdg_instagram_check_screen_name($form, $form_state) {
  */
 function brdg_instagram_user_update($edit, $account) {
 	$screen_name = $edit['field_instagram_screen_name'][LANGUAGE_NONE][0]['value'];
-	$api = brdg_instagram_connect();
-	$ret = $api->user_lookup($screen_name);
-	$instagram_user = array_shift($ret);
-	$id = $instagram_user->id;
-	$ret = $api->user_info($id);
-	$instagram_user = array_shift($ret);
-	drupagram_account_save($instagram_user, TRUE, $account);
+	if ($screen_name) {
+		$api = brdg_instagram_connect();
+		$ret = $api->user_lookup($screen_name);
+		$instagram_user = array_shift($ret);
+		$id = $instagram_user->id;
+		$ret = $api->user_info($id);
+		$instagram_user = array_shift($ret);
+		drupagram_account_save($instagram_user, TRUE, $account);
+	}
 }
 
 // Helper function
