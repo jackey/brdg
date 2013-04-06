@@ -67,7 +67,7 @@ Drupal.behaviors.RestServicesTest = {
 			// Test like services example
 			// Test like
 			function FlagAPI(flag_name) {
-				var api_path = "/third_content/flag/";
+				var api_path = "third_content/flag/";
 				var interface = function (flag_name) {
 					this.flag_name = flag_name;
 				}
@@ -120,7 +120,7 @@ Drupal.behaviors.RestServicesTest = {
 				// 	}
 				// });
 
-				api.flag(802, 0, function(status) {
+				api.flag(856, 0, function(status) {
 					var args = Array.prototype.slice.call(arguments, 0);
 					if (status == 'success') {
 						var data = JSON.parse(args[1]);

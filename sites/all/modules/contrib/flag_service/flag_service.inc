@@ -60,7 +60,7 @@ function flag_service_flag_content_access($data) {
  */
 function flag_service_flag_content($data) {
   global $user;
-  $account = empty($data['uid']) ? $user : user_load($data['uid']);
+  $account = !isset($data['uid']) ? $user : user_load($data['uid']);
   $flag = flag_get_flag($data['flag_name']);
   $skip_permission_check = (boolean) $data['skip_permission_check'];
   if (!$flag) {

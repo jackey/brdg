@@ -111,6 +111,9 @@ function brdg_core_services_view_alter(&$output, $views) {
     if (!isset($output_item->field_flag_counter)) {
         $output_item->field_flag_counter = 0;
     }
+    if (isset($output_item->field_anonymous_flaged)) {
+        $output_item->field_anonymous_flaged = intval($output_item->field_anonymous_flaged);
+    }
   }
 }
 

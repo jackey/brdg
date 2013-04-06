@@ -55,6 +55,9 @@ function brdg_user_block_menu() {
 		'page arguments' => array('brdg_user_allowed_email_page'),
 		'access arguments' => array('admin allowed email'),
 	);
+	$items['user/%user/block'] = array(
+		'page callback' => 'brdg_user',
+	);
 	return $items;
 }
 
