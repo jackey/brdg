@@ -26,6 +26,24 @@ function brdg_user_block_form_alter(&$form, &$form_state, $form_id) {
 	if ($form_id == 'user_register_form' || $form_id == "user_profile_form") {
 		$form['#validate'][] = 'brgd_user_block_validate_email';
 	}
+	if ($form_id == 'brdg_user_allowed_email_page') {
+		$form['#submit'][] = 'auto_add_black_word_for_comment';
+	}
+}
+
+function auto_add_black_word_for_comment($form, $form_state) {
+	$word = $form_state['values']['disallowed_word'];
+	$query = db_query(
+		"SELECT * FROM {field_validation_rule} WHERE name = :name AND field_name = :field_name", 
+		array(":name" => "word_blacklist", ":field_name" => "comment_body"));
+	foreach ($query as $item) {
+		$settings = unserialize($item->settings);			
+		$disallowed_word = explode("\r\n", $word);
+		$words = implode(',', $disallowed_word);
+		$settings['data'] = $words;
+		$item->settings = $settings;
+		drupal_write_record("field_validation_rule", $item, 'ruleid');
+	}
 }
 
 // Validate user email
@@ -54,6 +72,7 @@ function brdg_user_block_menu() {
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('brdg_user_allowed_email_page'),
 		'access arguments' => array('admin allowed email'),
+		'title' => 'Swearing filter And Allowed Email',
 	);
 	$items['user/%user/block'] = array(
 		'page callback' => 'brdg_user_status_operation',
@@ -92,7 +111,27 @@ function brdg_user_allowed_email_page() {
 		'#default_value' => variable_get('allowed_email', ""),
 	);
 
+	$form['disallowed_word'] = array(
+		"#type" => 'textarea',
+		'#title' => t("Disallowed Words"),
+		'#description' => '.',
+		'#default_value' => variable_get('disallowed_word', ""),
+	);
+
 	return system_settings_form($form);
+}
+
+/**
+ * Implements hook_services_view_alter()
+ */
+function brdg_user_block_services_view_alter(&$output, $views) {
+	$disallowed_word = variable_get('disallowed_word', "");
+	$disallowed_word = explode("\r\n", $disallowed_word);
+	foreach ($output as &$output_item) {
+		$body = $output_item->field_body;
+		$filted_body = str_replace($disallowed_word, "***", $body);
+		$output_item->field_body = $filted_body;
+	}
 }
 
 // append user into blackuser list
