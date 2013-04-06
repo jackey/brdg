@@ -82,7 +82,7 @@ function _node_pre_next_index_node($data) {
 	$next_nids =  array_keys($query_results['node']);
 	$next_nodes = node_load_multiple($next_nids);
 
-	return array('pre' => $pre_nodes, 'next' => $next_nodes);
+	return array('pre' => $pre_nodes, 'next' => $next_nodes, 'current' => $node);
 }
 
 function static_true() {
