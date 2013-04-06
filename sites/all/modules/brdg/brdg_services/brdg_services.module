@@ -102,7 +102,51 @@ function _node_pre_next_index_node($data) {
 	$next_nids =  array_keys($query_results['node']);
 	$next_nodes = node_load_multiple($next_nids);
 
-	return array('pre' => $pre_nodes, 'next' => $next_nodes, 'current' => $node);
+	return (array('pre' => brdg_services_process_node($pre_nodes), 'next' => brdg_services_process_node($next_nodes), 'current' => brdg_services_process_node($node)));
+}
+
+// Process return of pre_next_node services
+function brdg_services_process_node($nodes) {
+	if (!is_array($nodes)) {
+		$processing_nodes = array($nodes);
+	}
+	else {
+		$processing_nodes = $nodes;
+	}
+	$tmp_nodes = array();
+	foreach ($processing_nodes as $node) {
+		$tmp_node = new stdClass;
+		$tmp_node->nid = $node->nid;
+		$tmp_node->field_body = $node->body[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_user_name = $node->field_user_name[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_user_profile_image = 
+			file_create_url($node->field_from_user_profile_image[LANGUAGE_NONE][0]['uri']);
+
+		$tmp_node->field_media_image = 
+			$node->field_media_image[LANGUAGE_NONE][0]['uri'];
+		$tmp_node->post_date = $node->field_post_date[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_sound = $node->field_sound[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_sound_thumbnail = 
+			file_create_url($node->field_sound_thumbnail[LANGUAGE_NONE][0]['uri']);
+
+		$source_type = taxonomy_term_load($node->field_source_type[LANGUAGE_NONE][0]['tid']);
+		$tmp_node->source_type = $source_type->name;
+		$tmp_node->field_video = $node->field_video[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_video_thumbnail = file_create_url($node->field_video_thumbnail[LANGUAGE_NONE][0]['uri']);
+		// flag
+		$flag = flag_get_flag('like');
+		$record = $flag->get_count($node->nid);
+		$tmp_node->field_flag_counter = $record;
+
+		$tmp_node->field_user_city = $node->field_user_city[LANGUAGE_NONE][0]['value'];
+		$tmp_node->field_anonymous_flaged = $node->field_anonymous_flaged[LANGUAGE_NONE][0]['value'];
+		array_push($tmp_nodes, $tmp_node);
+	}
+
+	if (!is_array($nodes)) {
+		return array_shift($tmp_nodes);
+	}
+	return $tmp_nodes;
 }
 
 function static_true() {

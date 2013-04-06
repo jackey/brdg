@@ -26,6 +26,9 @@ function brdg_twitter_menu() {
 
 //not support pager.
 function test_fetch_twitter() {
+	$url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=http://goo.gl/T4R3X";
+	
+	return 'hello world';
 	// $user = brdg_twitter_load_drupal_user_with_screen_name('rsarver', 'twitter');
 	// dpm($user);
 	// return 'hello world';
@@ -215,7 +218,23 @@ function save_twitter_into_node($twitter_entity) {
 	}
 }
 
+// Helper function to expand url of google short url.
+function expand_googl_short_url($url) {
+	$req_url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=$url";
+	$ret = drupal_http_request($req_url);
+	dpm($ret);
+	if ($ret->code == 200) {
+		$data = json_decode($ret->data, TRUE);
+		$url = $data['longUrl'];
+		return $url;
+	}
+}
+
 function brdg_twitter_is_dallymotion($url) {
+	$long_url = expand_googl_short_url($url);
+	if ($long_url) {
+		$url = $long_url;
+	}
 	$allow_video_urls = array(
 		'dailymotion.com',
 	);
@@ -223,21 +242,6 @@ function brdg_twitter_is_dallymotion($url) {
 	foreach ($allow_video_urls as $allow_video_url) {
 		if (strpos($url, $allow_video_url) !== FALSE) {
 			$is_video = TRUE;
-		}
-	}
-	// Maybe short url
-	if (!$is_video) {
-		if (strpos($url, "goo.gl") !== FALSE) {
-			$req_url = "https://www.googleapis.com/urlshortener/v1/url?shortUrl=$url";
-			$file = file_get_contents($req_url);
-			dpm($file);
-			$ret = drupal_http_request($req_url);
-			dpm($ret);
-			if ($ret->code == 200) {
-				$data = json_decode($ret->data, TRUE);
-				$url = $data['longUrl'];
-				return brdg_twitter_is_dallymotion($url);
-			}
 		}
 	}
 	return $is_video;
