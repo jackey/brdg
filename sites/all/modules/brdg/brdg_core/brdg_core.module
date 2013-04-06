@@ -108,6 +108,9 @@ function brdg_core_services_view_alter(&$output, $views) {
       preg_match( '@src="([^"]+)"@' , $html , $match);
       $output_item->field_media_image = $match[1];
     }
+    if (!isset($output_item->field_flag_counter)) {
+        $output_item->field_flag_counter = 0;
+    }
   }
 }
 
