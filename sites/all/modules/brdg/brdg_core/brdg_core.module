@@ -4,6 +4,28 @@
  * @file
  */
 
+function brdg_core_menu() {
+    $items['brdg-user'] = array(
+        'title' => 'User account',
+        'title callback' => 'user_menu_title',
+        'page callback' => 'brdg_user_page',
+        'access callback' => TRUE,
+    );
+    return $items;
+}
+
+function brdg_user_page() {
+  global $user;
+  if ($user->uid) {
+    menu_set_active_item('user/' . $user->uid);
+    return menu_execute_active_handler(NULL, FALSE);
+  }
+  else {
+    return drupal_get_form('user_login');
+  }
+}
+
+
 // Load source type.
 function brdg_core_get_source_with_name($name) {
 	$vocabulary_name = 'data_source';
@@ -63,9 +85,37 @@ function add_image_from_url($image_url, $location = 'third_content') {
     $file = brdg_soundcloud_save_url_file($image_url, $directory, TRUE);
   }
   else {
-    $file = system_retrieve_file($image_url, $directory, TRUE, FILE_EXISTS_REPLACE);
+    $file = brdg_core_retrieve_file($image_url, $directory, TRUE, FILE_EXISTS_REPLACE);
   }
   return $file;
+}
+
+function brdg_core_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FILE_EXISTS_RENAME) {
+    $parsed_url = parse_url($url);
+    $file_name = str_replace("/", "_", $parsed_url['path']);
+      if (!isset($destination)) {
+        $path = file_build_uri($file_name);
+      }
+      else {
+        if (is_dir(drupal_realpath($destination))) {
+          // Prevent URIs with triple slashes when glueing parts together.
+          $path = str_replace('///', '//', "$destination/") .$file_name;
+        }
+        else {
+          $path = $destination;
+        }
+      }
+      $result = drupal_http_request($url);
+      if ($result->code != 200) {
+        drupal_set_message(t('HTTP error @errorcode occurred when trying to fetch @remote.', array('@errorcode' => $result->code, '@remote' => $url)), 'error');
+        return FALSE;
+      }
+      $local = $managed ? file_save_data($result->data, $path, $replace) : file_unmanaged_save_data($result->data, $path, $replace);
+      if (!$local) {
+        drupal_set_message(t('@remote could not be saved to @path.', array('@remote' => $url, '@path' => $path)), 'error');
+      }
+
+      return $local;
 }
 
 // Check weather post is insert into our system

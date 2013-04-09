@@ -19,7 +19,7 @@ Drupal.behaviors.RestServicesTest = {
 			};
 
 			var uid = 1;
-			var apipath = "/third_content";
+			var apipath = "/brdg/data/third_content";
 
 			// Simple example.
 			// of calling user update services
@@ -67,7 +67,7 @@ Drupal.behaviors.RestServicesTest = {
 			// Test like services example
 			// Test like
 			function FlagAPI(flag_name) {
-				var api_path = "/third_content/flag/";
+				var api_path = "/brdg/data/third_content/flag/";
 				var interface = function (flag_name) {
 					this.flag_name = flag_name;
 				}
@@ -120,7 +120,7 @@ Drupal.behaviors.RestServicesTest = {
 				// 	}
 				// });
 
-				api.flag(856, 0, function(status) {
+				api.flag(1374, 0, function(status) {
 					var args = Array.prototype.slice.call(arguments, 0);
 					if (status == 'success') {
 						var data = JSON.parse(args[1]);
@@ -131,31 +131,31 @@ Drupal.behaviors.RestServicesTest = {
 
 			// Test comment services
 			var comment = {
-				nid: 581,
+				nid: 979,
 				comment_body: {und: [{value: "body from js", summary: "summary from js"}]},
 				field_email: {und: [{value: "jziwenchen@gmail.com"}]}
 			};
-			$.ajax({
-				url: apipath + "/comment",
-				dataType: "JSON",
-				type: "POST",
-				data: JSON.stringify(comment),
-				contentType: "application/json",
-				success: function (data) {
-					console.log(data);
-				}
-			});
+			// $.ajax({
+			// 	url: apipath + "/comment",
+			// 	dataType: "JSON",
+			// 	type: "POST",
+			// 	data: JSON.stringify(comment),
+			// 	contentType: "application/json",
+			// 	success: function (data) {
+			// 		console.log(data);
+			// 	}
+			// });
 
-			$.ajax({
-				url: apipath + "/node/pre_next_node",
-				dataType: "JSON",
-				type: "POST",
-				data: JSON.stringify({nid: 847}),
-				contentType: "application/json",
-				success: function (data) {
-					console.log(data);
-				}
-			});
+			// $.ajax({
+			// 	url: apipath + "/node/pre_next_node",
+			// 	dataType: "JSON",
+			// 	type: "POST",
+			// 	data: JSON.stringify({nid: 847}),
+			// 	contentType: "application/json",
+			// 	success: function (data) {
+			// 		console.log(data);
+			// 	}
+			// });
 
 		// test comment list
 		// $.ajax({
@@ -170,4 +170,11 @@ Drupal.behaviors.RestServicesTest = {
 		// });
 		})(jQuery);
 	}
+}
+
+function ValidateEmail(e_mail) {
+	if (/^\w+([\.-]?\w+)*@(gamil\.com|qq\.com)+$/.test(e_mail)) {
+		return (true);
+	}
+	return (false);
 }

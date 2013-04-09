@@ -7,7 +7,7 @@ $settings = array(
 	'access_token_secret' => '',
 	'weibo_uid' => '1790417857',
 	'search_tag' => array(
-		'上海'
+		'youku'
 	),
 	'source_type' => 'Weibo',
 	'max_num' => 10,

@@ -193,6 +193,7 @@ function save_twitter_into_node($twitter_entity) {
 			}
 		}
 	}
+
 	// set media source type
 	if ($source = brdg_twitter_source_type()) {
 		$node->field_source_type[LANGUAGE_NONE][0]['tid'] = $source->tid;
@@ -248,7 +249,7 @@ function brdg_twitter_is_dallymotion($url) {
 }
 
 function brdg_twitter_get_dallymotion_thumb($url) {
-	$url = "http://www.dailymotion.com/video/xp7suf_more-on-the-holy-ghost_music";
+	//$url = "http://www.dailymotion.com/video/xp7suf_more-on-the-holy-ghost_music";
 	$id = strtok(basename($url), '_');
 	$req_url =  "https://api.dailymotion.com/video/$id?fields=thumbnail_large_url";
 	$ret = drupal_http_request($req_url);
@@ -261,11 +262,13 @@ function brdg_twitter_get_dallymotion_thumb($url) {
 // Check video link is vimeo video
 function brdg_twitter_is_vimeo($url) {
 	$allow_video_urls = array(
-		'vimeo.com',
+		'/vimeo.com\/([\d]+)/',
 	);
 	$is_video = FALSE;
 	foreach ($allow_video_urls as $allow_video_url) {
-		if (strpos($url, $allow_video_url) !== FALSE) {
+		$matches = array();
+		preg_match($allow_video_url, $url, $matches);
+		if (count($matches) > 1) {
 			$is_video = TRUE;
 		}
 	}
@@ -298,8 +301,8 @@ function brdg_twitter_source_type() {
 // Helper function to check url is video.
 function brdg_twitter_check_video($url) {
 	$allow_video_urls = array(
-		'youtube.com',
-		'	youtu.be'
+		'youtube.com/watch',
+		'	youtu.be/watch'
 	);
 	$is_video = FALSE;
 	foreach ($allow_video_urls as $allow_video_url) {

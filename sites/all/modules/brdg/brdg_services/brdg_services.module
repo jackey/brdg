@@ -113,8 +113,12 @@ function brdg_services_process_node($nodes) {
 	else {
 		$processing_nodes = $nodes;
 	}
+	if (!is_array($processing_nodes)) {
+		return $nodes;
+	}
 	$tmp_nodes = array();
 	foreach ($processing_nodes as $node) {
+		if (!is_object($node)) continue;
 		$tmp_node = new stdClass;
 		$tmp_node->nid = $node->nid;
 		$tmp_node->field_body = $node->body[LANGUAGE_NONE][0]['value'];
@@ -256,11 +260,11 @@ function brdg_services_comment_insert($comment) {
 	$email = $comment->field_email[LANGUAGE_NONE][0]['value'];
 	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		// send email to poster to prevent spam
-		pet_send_mail(EMAIL_COMMENT_APPROVE, 
-			array('uid' => 0, 'mail' => $email, 'cid' => $comment->cid), 
-			array(
-			'nid' => $comment->nid,
-			'cid' => $comment->cid)
+		$ret = pet_send_mail(EMAIL_COMMENT_APPROVE, array(
+				array('mail' => $email, 'uid' => 0),
+				array('mail' => "xxx@xxx.com", 'uid' => 0, 'cid' => $comment->cid),
+			),
+			array('nid' => $comment->nid, 'uid' => 0)
 		);
 	}
 }
@@ -269,5 +273,5 @@ function brdg_services_comment_insert($comment) {
  * Implements hook_pet_substitutions_alter()
  */
 function brdg_services_pet_substitutions_alter(&$substitutions, $params) {
-	$substitutions['comment'] = comment_load($params['pet_recipients']['cid']);
+	$substitutions['comment'] = comment_load($params['pet_recipients'][1]['cid']);
 }
