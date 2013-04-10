@@ -7,7 +7,8 @@ $settings = array(
 	'access_token_secret' => '',
 	'instagram_uid' => '323113616',
 	'search_tag' => array(
-		'9263'
+		'9263',
+		'abcd'
 	),
 	'source_type' => 'Instagram',
 	'max_num' => 50,

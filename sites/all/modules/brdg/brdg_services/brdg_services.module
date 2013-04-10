@@ -102,12 +102,15 @@ function _node_pre_next_index_node($data) {
 	$next_nids =  array_keys($query_results['node']);
 	$next_nodes = node_load_multiple($next_nids);
 
-	return (array('pre' => brdg_services_process_node($pre_nodes), 'next' => brdg_services_process_node($next_nodes), 'current' => brdg_services_process_node($node)));
+	return (array('pre' => brdg_services_helper_process_node($pre_nodes), 'next' => brdg_services_helper_process_node($next_nodes), 'current' => brdg_services_helper_process_node($node)));
 }
 
 // Process return of pre_next_node services
-function brdg_services_process_node($nodes) {
-	if (!is_array($nodes)) {
+function brdg_services_helper_process_node($nodes) {
+	if ($nodes['nid']) {
+		$nodes = (object)$nodes;
+	}
+	if (is_object($nodes) && isset($nodes->nid)) {
 		$processing_nodes = array($nodes);
 	}
 	else {

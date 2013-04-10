@@ -31,6 +31,11 @@ function brdg_instagram_entity($sort = 'field_source_id', $order = "ASC") {
 	return array_keys($ret['node']);
 }
 
+// Helper function get get max source id of instagram
+function brdg_instagram_max_source_id() {
+	$nids = brdg_instagram_entity();
+}
+
 // Memu callback
 function instagram_test_fetch() {
 	$nids = brdg_instagram_entity();
