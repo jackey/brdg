@@ -57,9 +57,9 @@ function brdg_user_profiles_field_default_fields() {
       'entity_type' => 'user',
       'field_name' => 'field_user_city',
       'label' => 'User City',
-      'required' => 0,
+      'required' => 1,
       'settings' => array(
-        'user_register_form' => 0,
+        'user_register_form' => 1,
       ),
       'widget' => array(
         'active' => 1,

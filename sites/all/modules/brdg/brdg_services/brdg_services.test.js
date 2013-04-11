@@ -19,13 +19,13 @@ Drupal.behaviors.RestServicesTest = {
 			};
 
 			var uid = 1;
-			var apipath = "/brdg/data/third_content";
+			var apipath = "/third_content";
 
 			// Simple example.
 			// of calling user update services
 			// var account = {
 			// 	uid: uid,
-			// 	mail: 'asd@a.com',
+			// 	mail: 'asdd@gmail.com',
 			// 	pass: '123456',
 			// 	name: 'admin',
 			// 	current_pass: 'admin'
@@ -67,7 +67,8 @@ Drupal.behaviors.RestServicesTest = {
 			// Test like services example
 			// Test like
 			function FlagAPI(flag_name) {
-				var api_path = "/brdg/data/third_content/flag/";
+				var api_path = "/third_content/flag/";
+				console.log(api_path);
 				var interface = function (flag_name) {
 					this.flag_name = flag_name;
 				}
@@ -119,22 +120,24 @@ Drupal.behaviors.RestServicesTest = {
 				// 		}
 				// 	}
 				// });
-
-				api.flag(1374, 0, function(status) {
-					var args = Array.prototype.slice.call(arguments, 0);
-					if (status == 'success') {
-						var data = JSON.parse(args[1]);
-						console.log(data);
-					}
-				} );
+				api.isFlaged(931, 0, function (data) {
+					console.log(data);
+				});
+				// api.flag(931, 0, function(status) {
+				// 	var args = Array.prototype.slice.call(arguments, 0);
+				// 	if (status == 'success') {
+				// 		var data = JSON.parse(args[1]);
+				// 		console.log(data);
+				// 	}
+				// } );
 			});
 
 			// Test comment services
-			var comment = {
-				nid: 979,
-				comment_body: {und: [{value: "body from js", summary: "summary from js"}]},
-				field_email: {und: [{value: "jziwenchen@gmail.com"}]}
-			};
+			// var comment = {
+			// 	nid: 976,
+			// 	comment_body: {und: [{value: "body from js", summary: "summary from js"}]},
+			// 	field_email: {und: [{value: "jziwenchen@gmail.com"}]}
+			// };
 			// $.ajax({
 			// 	url: apipath + "/comment",
 			// 	dataType: "JSON",
@@ -147,7 +150,7 @@ Drupal.behaviors.RestServicesTest = {
 			// });
 
 			// $.ajax({
-			// 	url: apipath + "/node/pre_next_node",
+			// 	url:  "third_content/node/pre_next_node",
 			// 	dataType: "JSON",
 			// 	type: "POST",
 			// 	data: JSON.stringify({nid: 847}),

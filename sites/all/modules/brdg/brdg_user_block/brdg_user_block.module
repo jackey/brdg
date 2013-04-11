@@ -29,6 +29,15 @@ function brdg_user_block_form_alter(&$form, &$form_state, $form_id) {
 	if ($form_id == 'brdg_user_allowed_email_page') {
 		$form['#submit'][] = 'auto_add_black_word_for_comment';
 	}
+
+	if ($form_id == 'user_register_form') {
+		//TODO:
+	}
+}
+
+// Implements hook_user_login()
+function brdg_user_block_user_login(&$edit, $account) {
+	 $_GET['destination'] =  "user/{$account->uid}/edit";
 }
 
 function auto_add_black_word_for_comment($form, $form_state) {
@@ -59,6 +68,17 @@ function brgd_user_block_validate_email($form, $form_state) {
 	form_set_error("mail", "Your email is not allowed by system");
 }
 
+function helper_brgd_user_block_validate_email($mail) {
+	$allowed_email = variable_get('allowed_email', "");
+	$allowed_emailes = explode("\r\n", $allowed_email);
+	foreach ($allowed_emailes as $allowed_email) {
+		if (strpos($mail, $allowed_email) !== FALSE) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
 /**
  * Implements hook_menu()
  */
@@ -84,7 +104,22 @@ function brdg_user_block_menu() {
 		'page arguments' => array(1, 'unblock'),
 		'access arguments' => array('admin block account'),
 	);
+	$items['user/%user/validate-email'] = array(
+		'page callback' => 'brdg_user_validate_self_email',
+		'page arguments' => array(1),
+		'access callback' => TRUE,
+	);
 	return $items;
+}
+
+// User register validate email
+function brdg_user_validate_self_email($account) {
+	if ($account && isset($account->uid)) {
+		$account->field_email_validated[LANGUAGE_NONE][0]['value'] = 1;
+	}
+	user_save($account);
+
+	drupal_goto("<front>");
 }
 
 // Block user account

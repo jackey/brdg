@@ -39,7 +39,7 @@ function test_fetch_twitter() {
 	    	save_twitter_into_node($item);
 	    }
 	}
-	return 'hello world';
+	return 'Done.';
 }
 
 // Help function to load twitter api class instance.

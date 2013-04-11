@@ -107,9 +107,6 @@ function _node_pre_next_index_node($data) {
 
 // Process return of pre_next_node services
 function brdg_services_helper_process_node($nodes) {
-	if ($nodes['nid']) {
-		$nodes = (object)$nodes;
-	}
 	if (is_object($nodes) && isset($nodes->nid)) {
 		$processing_nodes = array($nodes);
 	}
@@ -195,7 +192,7 @@ function update_comment_status($comment, $token = '') {
 	$comment->field_published[LANGUAGE_NONE][0]['value'] = 1;
 	$comment->status = 1; // publish this comment.
 	comment_save($comment);
-	drupal_goto('node/'. $comment->nid);
+	drupal_goto("http://64.207.184.106/brdg/#/{$comment->nid}");
 }
 
 // Services callback for update user picture

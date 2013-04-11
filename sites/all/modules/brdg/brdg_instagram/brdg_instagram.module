@@ -31,13 +31,19 @@ function brdg_instagram_entity($sort = 'field_source_id', $order = "ASC") {
 	return array_keys($ret['node']);
 }
 
-// Helper function get get max source id of instagram
-function brdg_instagram_max_source_id() {
-	$nids = brdg_instagram_entity();
+// Menu callback
+function instagram_test_fetch() {
+	set_time_limit(1000 * 60); // 60 seconds
+ 	$settings = brdg_instagram_get_app_settings();
+ 	foreach ($settings['search_tag'] as $search_tag) {
+ 		instagram_fetch($search_tag);
+ 	}
+
+ 	return 'done';
 }
 
-// Memu callback
-function instagram_test_fetch() {
+// Fetch one tag
+function instagram_fetch($search_tag) {
 	$nids = brdg_instagram_entity();
 	$min_nid = array_shift($nids);
 	$min_node = node_load($min_nid);
@@ -54,8 +60,10 @@ function instagram_test_fetch() {
 	// Load object of API
 	$drupagram = drupagram_connect(drupagram_account_load($instagram_uid));
 	$results = $drupagram->fetch('tags_recent', 
-		array('!tag_name' => $settings['search_tag'][0], 
-			'!count' => $settings['max_num'])
+		array(
+			'!tag_name' => $search_tag, 
+			'!count' => $settings['max_num'],
+		)
 	);
 
 	foreach ($results as $result) {

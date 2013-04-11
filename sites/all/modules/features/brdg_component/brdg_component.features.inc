@@ -34,7 +34,7 @@ function brdg_component_flag_default_flags() {
   $flags['like'] = array(
     'content_type' => 'node',
     'title' => 'Like',
-    'global' => '1',
+    'global' => '0',
     'types' => array(
       0 => 'content_from_source',
     ),
