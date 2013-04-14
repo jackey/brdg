@@ -98,6 +98,9 @@ function brdg_twitter_query_entity($q = '', $page = 1) {
  * Helper function to insert twitters tweets into drupal content_from_source.
  */
 function save_twitter_into_node($twitter_entity) {
+	if (isset($twitter_entity['in_reply_to_status_id'])) {
+		return FALSE;
+	}
 	$node_type = 'content_from_source';
 	$id = $twitter_entity['id'];
 	$query = new EntityFieldQuery();
@@ -402,7 +405,7 @@ function brdg_twitter_brdg_core_filter(&$node, $from) {
  * Implements hook_form_alter()
  */
 function brdg_twitter_form_alter(&$form, $form_state, $form_id) {
-	if ($form_id == 'user_profile_form') {
+	if ($form_id == 'user_profile_form' || $form_id == 'user_register_form') {
 		$form['#validate'][] = 'brdg_twitter_check_screen_name';
 	}
 }
@@ -416,13 +419,13 @@ function brdg_twitter_check_screen_name($form, $form_state) {
 	if (isset($form_state['user']) && $form_state['user']->uid) {
 		$user = $form_state['user'];
 		if ($drupal_account && $user->uid != $drupal_account->uid) {
-			form_set_error('field_twitter_screen_name', t("Your screen_name is be registered already"));
+			form_set_error('field_twitter_screen_name', t("Your twitter screen_name is be registered already"));
 		}
 	}
 	// Insert new account
 	else {
 		if ($drupal_account) {
-			form_set_error('field_twitter_screen_name', t("Your screen_name is be registered already"));
+			form_set_error('field_twitter_screen_name', t("Your twitter screen_name is be registered already"));
 		}
 	}
 }
@@ -432,7 +435,8 @@ function brdg_twitter_check_screen_name($form, $form_state) {
  * Update third content profiles with drupal account
  */
 function brdg_twitter_user_update($edit, $account) {
-	$screen_name = $edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'];
+	$screen_name = isset($edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'])
+		? $edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'] : 0;
 	if ($screen_name) {
 		$api = brdg_twitter_connect();
 		$twitter_account = $api->users_show($screen_name);

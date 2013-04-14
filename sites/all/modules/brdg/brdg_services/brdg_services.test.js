@@ -120,16 +120,16 @@ Drupal.behaviors.RestServicesTest = {
 				// 		}
 				// 	}
 				// });
-				api.isFlaged(931, 0, function (data) {
-					console.log(data);
+				// api.isFlaged(931, 0, function (data) {
+				// 	console.log(data);
+				// });
+				api.flag(932, 0, function(status) {
+					var args = Array.prototype.slice.call(arguments, 0);
+					if (status == 'success') {
+						var data = JSON.parse(args[1]);
+						console.log(data);
+					}
 				});
-				// api.flag(931, 0, function(status) {
-				// 	var args = Array.prototype.slice.call(arguments, 0);
-				// 	if (status == 'success') {
-				// 		var data = JSON.parse(args[1]);
-				// 		console.log(data);
-				// 	}
-				// } );
 			});
 
 			// Test comment services
@@ -150,13 +150,13 @@ Drupal.behaviors.RestServicesTest = {
 			// });
 
 			// $.ajax({
-			// 	url:  "third_content/node/pre_next_node",
+			// 	url:  "/third_content/node/pre_next_node",
 			// 	dataType: "JSON",
 			// 	type: "POST",
-			// 	data: JSON.stringify({nid: 847}),
+			// 	data: JSON.stringify({nid: 926, resource_type: 3}),
 			// 	contentType: "application/json",
 			// 	success: function (data) {
-			// 		console.log(data);
+			// 		console.log(JSON.parse(data));
 			// 	}
 			// });
 
@@ -171,6 +171,17 @@ Drupal.behaviors.RestServicesTest = {
 		// 		console.log(data);
 		// 	}
 		// });
+
+		// test all resouces request
+		// $.ajax({
+		// 	url: "/third_content/all_resources?perpage=35&page=0&city_id=1",
+		// 	dataType: "JSON",
+		// 	method: 'GET',
+		// 	contentType: "application/json",
+		// 	success: function(data) {
+		// 		console.log(JSON.parse(data));
+		// 	}
+		// });
 		})(jQuery);
 	}
 }
@@ -181,3 +192,43 @@ function ValidateEmail(e_mail) {
 	}
 	return (false);
 }
+
+// Node publish/unpublish API 
+(function ($) {
+	$.Node = function (nid) {
+		var path = "/third_content/node/" + nid;
+		var ajax = function (data, cb) {
+			data['node']['nid'] = nid;
+			$.ajax({
+				url: path,
+				dataType: "json",
+				type: "PUT",
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				success: cb
+			});
+		}
+		return {
+			publish: function (cb) {
+				var data = {node: {status: 1}};
+				ajax(data, cb);
+			},
+			unpublish: function (cb) {
+				var data = {node: {status: 0}};
+				ajax(data, cb);
+			}
+		};
+	}
+	$(document).ready(function () {
+		// // Call me example.
+		// // publish
+		// $.Node(931).publish(function (data) {
+		// 	console.log(data);
+		// });
+
+		// // unpublish
+		// $.Node(930).publish(function (data) {
+		// 	console.log(data);
+		// });
+	});
+})(jQuery);

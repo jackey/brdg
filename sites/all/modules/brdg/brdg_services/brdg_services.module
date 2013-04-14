@@ -76,6 +76,7 @@ function _node_pre_next_index_node($data) {
 	$query = new EntityFieldQuery();
 	$query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
+		->propertyCondition('status', 1)
 		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '<')
 		->fieldOrderBy('field_post_date', 'value', 'DESC');
 	if (isset($allowed_media)) {
@@ -91,6 +92,7 @@ function _node_pre_next_index_node($data) {
 	$query = new EntityFieldQuery();
 	$query->entityCondition('entity_type', 'node')
 		->entityCondition('bundle', 'content_from_source')
+		->propertyCondition('status', 1)
 		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '>')
 		->fieldOrderBy('field_post_date', 'value', 'ASC');
 	if (isset($allowed_media)) {

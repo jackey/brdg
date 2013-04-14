@@ -48,6 +48,7 @@ features[field][] = user-user-field_instagram_screen_name
 features[field][] = user-user-field_twitter_screen_name
 features[field][] = user-user-field_weibo_screen_name
 features[flag][] = like
+features[image][] = 150_150
 features[image][] = 300_300
 features[image][] = 400_400
 features[image][] = home_slideshow

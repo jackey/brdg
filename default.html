@@ -1,0 +1,104 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
+  "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" version="XHTML+RDFa 1.0" dir="ltr"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:og="http://ogp.me/ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:sioc="http://rdfs.org/sioc/ns#"
+  xmlns:sioct="http://rdfs.org/sioc/types#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+<head profile="http://www.w3.org/1999/xhtml/vocab">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="http://brdg.local:81/misc/favicon.ico" type="image/vnd.microsoft.icon" />
+<meta name="Generator" content="Drupal 7 (http://drupal.org)" />
+<link rel="alternate" type="application/rss+xml" title="brdg.local RSS" href="http://brdg.local:81/rss.xml" />
+  <title>brdg.local</title>
+  <script type="text/javascript" src="http://brdg.local/misc/jquery.js?v=1.4.4"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // $.ajax({
+      //   url: "/index.php",
+      //   method: "get",
+      //   success: function (data, status, xhrRsp) {
+      //     console.log(xhrRsp.getResponseHeader('Set-Cookie'));
+      //   }
+      // });
+      // Test like services example
+      // Test like
+        function FlagAPI(flag_name) {
+          var api_path = "/third_content/flag/";
+          console.log(api_path);
+          var interface = function (flag_name) {
+            this.flag_name = flag_name;
+          }
+
+          interface.prototype.isFlaged = function (nid, uid, callback) {
+            var data = {content_id: nid, flag_name: this.flag_name, uid: uid};
+            var url = api_path + "is_flagged";
+            this._request(url, data, "POST", callback);
+          }
+
+          interface.prototype.flag = function (nid, uid, callback) {
+            var data = {content_id: nid, flag_name: this.flag_name, uid: uid, action: "flag"};
+            var url = api_path + "flag";
+            this._request(url, data, "POST", callback);
+          }
+
+          interface.prototype._request = function (url, data, method, callback) {
+            Array.prototype.insert = function (index, item) {
+              this.splice(index, 0, item);
+            };
+            $.ajax({
+              type: method,
+              url: url,
+              dataType: "json",
+              data: JSON.stringify(data),
+              contentType: "application/json",
+              success: function (ret) {
+                var args = Array.prototype.slice.call(arguments, 0);
+                args.insert(0, 'success');
+                callback.apply(this, args);
+              }
+            });
+          }
+
+          return new interface(flag_name);
+        }
+
+          var api = FlagAPI('like');
+          // api.isFlaged(722, 1, function(status) {
+          //  var args = Array.prototype.slice.call(arguments, 0);
+          //  if (status == 'success') {
+          //    var data = JSON.parse(args[1]);
+          //    console.log(data);
+          //    if (!data) {
+          //      alert('not flag yet');
+          //    }
+          //    else {
+          //      alert('flagged');
+          //    }
+          //  }
+          // });
+
+          api.flag(931, 0, function(status) {
+            var args = Array.prototype.slice.call(arguments, 0);
+            if (status == 'success') {
+              var data = JSON.parse(args[1]);
+              console.log(data);
+            }
+          });
+    });
+  </script>
+
+
+</head>
+<iframe src="/index.php"></iframe>
+<body class="html front not-logged-in one-sidebar sidebar-first page-node" >
+    hello world
+  </body>
+</html>

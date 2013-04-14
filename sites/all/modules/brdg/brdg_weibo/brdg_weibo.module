@@ -219,7 +219,7 @@ function brdg_weibo_get_youku_thumbnail_from_url() {
  * Implements hook_form_alter()
  */
 function brdg_weibo_form_alter(&$form, $form_state, $form_id) {
-	if ($form_id == 'user_profile_form') {
+	if ($form_id == 'user_profile_form' || $form_id == 'user_register_form') {
 		$form['#validate'][] = 'brdg_weibo_check_screen_name';
 	}
 }
@@ -232,13 +232,13 @@ function brdg_weibo_check_screen_name($form, $form_state) {
 	if (isset($form_state['user']) && $form_state['user']->uid) {
 		$user = $form_state['user'];
 		if ($drupal_account && $user->uid != $drupal_account->uid) {
-			form_set_error('field_weibo_screen_name', t("Your screen_name is be registered already"));
+			form_set_error('field_weibo_screen_name', t("Your weibo screen_name is be registered already"));
 		}
 	}
 	// Insert new account
 	else {
 		if ($drupal_account) {
-			form_set_error('field_weibo_screen_name', t("Your screen_name is be registered already"));
+			form_set_error('field_weibo_screen_name', t("Your weibo screen_name is be registered already"));
 		}
 	}
 }
@@ -247,7 +247,8 @@ function brdg_weibo_check_screen_name($form, $form_state) {
  * Add weibo profiles data when user update profile
  */
 function brdg_weibo_user_update($edit, $account) {
-	$screen_name = $edit['field_weibo_screen_name'][LANGUAGE_NONE][0]['value'];
+	$screen_name = isset($edit['field_weibo_screen_name'][LANGUAGE_NONE][0]['value']) ? 
+	$edit['field_weibo_screen_name'][LANGUAGE_NONE][0]['value'] : 0;
 	if ($screen_name) {
 		$api = brdg_weibo_connect();
 		$ret = $api->show_user_by_name($screen_name);

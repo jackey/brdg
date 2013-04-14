@@ -158,7 +158,7 @@ function brdg_instagram_brdg_core_filter(&$node, $from) {
  * Implements hook_form_alter()
  */
 function brdg_instagram_form_alter(&$form, $form_state, $form_id) {
-	if ($form_id == 'user_profile_form') {
+	if ($form_id == 'user_profile_form' || $form_id == 'user_register_form') {
 		$form['#validate'][] = 'brdg_instagram_check_screen_name';
 	}
 }
@@ -171,13 +171,13 @@ function brdg_instagram_check_screen_name($form, $form_state) {
 	if (isset($form_state['user']) && $form_state['user']->uid) {
 		$user = $form_state['user'];
 		if ($drupal_account && $user->uid != $drupal_account->uid) {
-			form_set_error('field_instagram_screen_name', t("Your screen_name is be registered already"));
+			form_set_error('field_instagram_screen_name', t("Your instagram screen_name is be registered already"));
 		}
 	}
 	// Insert new account
 	else {
 		if ($drupal_account) {
-			form_set_error('field_instagram_screen_name', t("Your screen_name is be registered already"));
+			form_set_error('field_instagram_screen_name', t("Your instagram screen_name is be registered already"));
 		}
 	}
 }
@@ -186,7 +186,7 @@ function brdg_instagram_check_screen_name($form, $form_state) {
  * Implements hook_user_update()
  */
 function brdg_instagram_user_update($edit, $account) {
-	$screen_name = $edit['field_instagram_screen_name'][LANGUAGE_NONE][0]['value'];
+	$screen_name = isset($edit['field_instagram_screen_name'][LANGUAGE_NONE][0]['value']) ? $edit['field_instagram_screen_name'][LANGUAGE_NONE][0]['value'] : 0;
 	if ($screen_name) {
 		$api = brdg_instagram_connect();
 		$ret = $api->user_lookup($screen_name);

@@ -709,7 +709,7 @@ class flag_flag {
     }
 
     // Added by jackey
-    if ($flagged && $uid == 0) {
+    if ($uid == 0) {
       module_invoke_all('flag', 'flag', $this, $content_id, $account, $fcid);
     }
 

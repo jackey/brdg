@@ -8,4 +8,5 @@ dependencies[] = features
 dependencies[] = list
 dependencies[] = options
 features[features_api][] = api:1
+features[field][] = user-user-field_email_validated
 features[field][] = user-user-field_user_city

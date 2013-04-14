@@ -4,6 +4,9 @@
  * @file
  */
 
+/**
+ * Implements hook_menu()
+ */
 function brdg_core_menu() {
     $items['brdg-user'] = array(
         'title' => 'User account',
@@ -11,7 +14,23 @@ function brdg_core_menu() {
         'page callback' => 'brdg_user_page',
         'access callback' => TRUE,
     );
+    $items['brdgfront'] = array(
+      'title' => 'BRDG',
+      'page callback' => 'brdg_front_page',
+      'access callback' => TRUE,
+    );
     return $items;
+}
+
+function brdg_front_page() {
+  return '';
+}
+
+/**
+ * implements HOOKNAME_process_THEMENAME().
+ */
+function brdg_core_process_html(&$vars) {
+  //
 }
 
 function brdg_user_page() {
@@ -322,4 +341,45 @@ function brdg_core_get_media_type($media_type_name) {
         $term = array_shift($result['taxonomy_term']);
         return taxonomy_term_load($term->tid);
     }
+}
+
+/**
+ * Implements hook_views_query_alter()
+ */
+function brdg_core_views_query_alter(&$view, &$query) {
+  if ($view->name == 'admin_pages') {
+    $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : "";
+    if ($sort_by == 'comment_flag') {
+      $order = $_GET['sort_order'];
+      $order_comment = $query->field_aliases['node_comment_statistics']['comment_count'];
+      $order_flag = $query->field_aliases['field_data_field_anonymous_flaged']['field_anonymous_flaged_value'];
+
+      $query->orderby[] = array(
+        'field' => "($order_comment + $order_flag)/2",
+        'direction' => $order
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function brdg_core_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    $view = $form_state['view'];
+    if ($view->name == 'admin_pages' && isset($form['sort_by'])) {
+      $form['sort_by']['#options'] += array('comment_flag' => t("Comment/Flag"));
+    }
+  }
+  if ($form_id == 'comment_admin_overview') {
+    $form['comments']['#header']['author'] = array(
+      'data' => t('Email'),
+      'field' => 'email',
+    );
+    foreach ($form['comments']['#options'] as $comment_id => &$options) {
+      $comment = comment_load($comment_id);
+      $options['author'] = $comment->field_email[LANGUAGE_NONE][0]['value'];
+    }
+  }
 }
