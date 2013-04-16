@@ -7,11 +7,10 @@ $settings = array(
 	'access_token_secret' => '',
 	'instagram_uid' => '323113616',
 	'search_tag' => array(
-		'9263',
-		'abcd'
+		'snow',
 	),
 	'source_type' => 'Instagram',
-	'max_num' => 10,
+	'max_num' => 50,
 );
 
 return $settings;

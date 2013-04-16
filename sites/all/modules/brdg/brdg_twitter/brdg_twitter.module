@@ -111,6 +111,7 @@ function save_twitter_into_node($twitter_entity) {
 	if ($result) {
 		return NULL;
 	}
+
 	$twitter_user_profile_image = add_image_from_url($twitter_entity['profile_image_url']);
 	$node = (Object)null;
 	$node->type = $node_type;
@@ -137,6 +138,15 @@ function save_twitter_into_node($twitter_entity) {
 		$media_array = $twitter_entity['entities']['media'];
 		foreach ($media_array as $media) {
 			$media_url = $media['media_url'];
+			// If have same media, we should ignore it.
+			$query = new EntityFieldQuery();
+			$result = $query->entityCondition('entity_type', 'node')
+				->entityCondition('bundle', $node_type)
+				->fieldCondition('field_media_source_url', 'value', $media_url, "LIKE")
+				->execute();
+			if ($result) {
+				return NULL;
+			}
 			$media_file = add_image_from_url($media_url);
 			if ($media_file) {
 				$has_media = TRUE;

@@ -1478,7 +1478,8 @@ class views_plugin_query_default extends views_plugin_query {
           $offset = intval(!empty($this->offset) ? $this->offset : 0);
           $query->range($offset, $limit);
         }
-
+        $sql = (string)$query;
+        
         $result = $query->execute();
 
         $view->result = array();

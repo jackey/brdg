@@ -196,7 +196,7 @@ function ValidateEmail(e_mail) {
 // Node publish/unpublish API 
 (function ($) {
 	$.Node = function (nid) {
-		var path = "/third_content/node/" + nid;
+		var path = "/brdg/dev/data/third_content/node/" + nid;
 		var ajax = function (data, cb) {
 			data['node']['nid'] = nid;
 			$.ajax({
@@ -220,15 +220,15 @@ function ValidateEmail(e_mail) {
 		};
 	}
 	$(document).ready(function () {
-		// // Call me example.
-		// // publish
-		// $.Node(931).publish(function (data) {
-		// 	console.log(data);
-		// });
+		// Call me example.
+		// publish
+		$.Node(1640).publish(function (data) {
+			console.log(data);
+		});
 
-		// // unpublish
-		// $.Node(930).publish(function (data) {
-		// 	console.log(data);
-		// });
+		// unpublish
+		$.Node(1573).publish(function (data) {
+			console.log(data);
+		});
 	});
 })(jQuery);

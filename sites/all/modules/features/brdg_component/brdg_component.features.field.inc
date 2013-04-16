@@ -638,6 +638,73 @@ function brdg_component_field_default_fields() {
     ),
   );
 
+  // Exported field: 'node-content_from_source-field_media_source_url'.
+  $fields['node-content_from_source-field_media_source_url'] = array(
+    'field_config' => array(
+      'active' => '1',
+      'cardinality' => '1',
+      'deleted' => '0',
+      'entity_types' => array(),
+      'field_name' => 'field_media_source_url',
+      'foreign keys' => array(
+        'format' => array(
+          'columns' => array(
+            'format' => 'format',
+          ),
+          'table' => 'filter_format',
+        ),
+      ),
+      'indexes' => array(
+        'format' => array(
+          0 => 'format',
+        ),
+      ),
+      'locked' => '0',
+      'module' => 'text',
+      'settings' => array(
+        'max_length' => '255',
+      ),
+      'translatable' => '0',
+      'type' => 'text',
+    ),
+    'field_instance' => array(
+      'bundle' => 'content_from_source',
+      'default_value' => NULL,
+      'deleted' => '0',
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'module' => 'text',
+          'settings' => array(),
+          'type' => 'text_default',
+          'weight' => 18,
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 0,
+        ),
+      ),
+      'entity_type' => 'node',
+      'field_name' => 'field_media_source_url',
+      'label' => 'Media Source URL',
+      'required' => 0,
+      'settings' => array(
+        'text_processing' => '0',
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 0,
+        'module' => 'hidden_field',
+        'settings' => array(),
+        'type' => 'hidden_hidden',
+        'weight' => '35',
+      ),
+    ),
+  );
+
   // Exported field: 'node-content_from_source-field_media_type'.
   $fields['node-content_from_source-field_media_type'] = array(
     'field_config' => array(
@@ -1573,6 +1640,7 @@ function brdg_component_field_default_fields() {
   t('From User Profile Image');
   t('Instagram Screen Name');
   t('Media Image');
+  t('Media Source URL');
   t('Media Type');
   t('Post Date');
   t('Post Owed User');

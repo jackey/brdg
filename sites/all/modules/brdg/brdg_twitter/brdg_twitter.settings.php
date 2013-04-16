@@ -7,7 +7,7 @@ $settings = array(
 	'access_token_secret' => '',
 	'twitter_uid' => '568873580',
 	'search_tag' => array(
-		'youtube'
+		'9263'
 	),
 	'source_type' => 'Twitter Tweets',
 	'max_num' => 10,

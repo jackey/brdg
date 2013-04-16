@@ -191,10 +191,13 @@ function brdg_services_menu() {
  * Menu callback
  */
 function update_comment_status($comment, $token = '') {
+	$token = @$_GET['token'];
 	$comment->field_published[LANGUAGE_NONE][0]['value'] = 1;
 	$comment->status = 1; // publish this comment.
 	comment_save($comment);
-	drupal_goto("http://64.207.184.106/brdg/#/{$comment->nid}");
+	drupal_goto("http://64.207.184.106/brdg/dev", array(
+		"fragment" => "/". $comment->nid. "?ap=1",
+	));
 }
 
 // Services callback for update user picture

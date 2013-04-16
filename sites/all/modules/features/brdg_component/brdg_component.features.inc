@@ -83,20 +83,20 @@ function brdg_component_image_default_styles() {
   $styles['150_150'] = array(
     'name' => '150_150',
     'effects' => array(
-      3 => array(
-        'label' => 'Resize',
-        'help' => 'Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.',
-        'effect callback' => 'image_resize_effect',
+      5 => array(
+        'label' => 'Scale and crop',
+        'help' => 'Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.',
+        'effect callback' => 'image_scale_and_crop_effect',
         'dimensions callback' => 'image_resize_dimensions',
         'form callback' => 'image_resize_form',
         'summary theme' => 'image_resize_summary',
         'module' => 'image',
-        'name' => 'image_resize',
+        'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '150',
-          'height' => '150',
+          'width' => '400',
+          'height' => '400',
         ),
-        'weight' => '1',
+        'weight' => '2',
       ),
     ),
   );
@@ -127,20 +127,20 @@ function brdg_component_image_default_styles() {
   $styles['400_400'] = array(
     'name' => '400_400',
     'effects' => array(
-      2 => array(
-        'label' => 'Resize',
-        'help' => 'Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.',
-        'effect callback' => 'image_resize_effect',
+      4 => array(
+        'label' => 'Scale and crop',
+        'help' => 'Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.',
+        'effect callback' => 'image_scale_and_crop_effect',
         'dimensions callback' => 'image_resize_dimensions',
         'form callback' => 'image_resize_form',
         'summary theme' => 'image_resize_summary',
         'module' => 'image',
-        'name' => 'image_resize',
+        'name' => 'image_scale_and_crop',
         'data' => array(
           'width' => '400',
           'height' => '400',
         ),
-        'weight' => '1',
+        'weight' => '2',
       ),
     ),
   );
@@ -196,7 +196,7 @@ function brdg_component_default_pet() {
     "name" : "comment_approve_email",
     "title" : "comment approve email",
     "subject" : "Approve Your Email",
-    "mail_body" : "Approve your email \\r\\n\\r\\n\\r\\n\\r\\n\\u003Ca href=\\u0022[site:url]\\/brdg_comment\\/approve\\/[comment:cid]\\u0022\\u003EApprove It by clicking me\\u003C\\/a\\u003E\\r\\n",
+    "mail_body" : "Approve your email \\r\\n\\r\\n\\r\\n\\r\\n\\u003Ca href=\\u0022[site:url]\\/brdg_comment\\/approve\\/[comment:cid]?token=[random:hash:sha512]\\u0022\\u003EApprove It by clicking me\\u003C\\/a\\u003E",
     "mail_body_plain" : null,
     "send_plain" : "0",
     "from_override" : "",

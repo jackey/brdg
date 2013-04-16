@@ -353,11 +353,13 @@ function brdg_core_views_query_alter(&$view, &$query) {
       $order = $_GET['sort_order'];
       $order_comment = $query->field_aliases['node_comment_statistics']['comment_count'];
       $order_flag = $query->field_aliases['field_data_field_anonymous_flaged']['field_anonymous_flaged_value'];
-
       $query->orderby[] = array(
         'field' => "($order_comment + $order_flag)/2",
         'direction' => $order
       );
+      foreach ($query->orderby as &$order_field) {
+        $order_field['direction'] = $order;
+      }
     }
   }
 }
