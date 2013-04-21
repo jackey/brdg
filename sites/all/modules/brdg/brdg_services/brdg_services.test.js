@@ -196,7 +196,7 @@ function ValidateEmail(e_mail) {
 // Node publish/unpublish API 
 (function ($) {
 	$.Node = function (nid) {
-		var path = "/brdg/dev/data/third_content/node/" + nid;
+		var path = "/brdg/data/third_content/node/" + nid;
 		var ajax = function (data, cb) {
 			data['node']['nid'] = nid;
 			$.ajax({
@@ -219,15 +219,52 @@ function ValidateEmail(e_mail) {
 			}
 		};
 	}
+
+	$.User = function (uid) {
+		var data = {};
+		data['uid'] = uid;
+		var path = "/brdg/data/third_content/user/" + uid;
+		var ajax = function (data, cb, method) {
+			if (typeof method == 'undefined') {
+				method = "PUT";
+			}
+			$.ajax({
+				url: path,
+				dataType: "json",
+				type: method,
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				success: cb
+			});
+		}
+		return {
+			block: function (cb) {
+				data['status'] = 0;
+				ajax(data, cb);
+			},
+			unblock: function (cb) {
+				data['status'] = 1;
+				ajax(data, cb);
+			}
+		};
+	}
 	$(document).ready(function () {
 		// Call me example.
 		// publish
-		$.Node(1640).publish(function (data) {
-			console.log(data);
-		});
+		// $.Node(1640).publish(function (data) {
+		// 	console.log(data);
+		// });
 
-		// unpublish
-		$.Node(1573).publish(function (data) {
+		// // unpublish
+		// $.Node(1573).publish(function (data) {
+		// 	console.log(data);
+		// });
+
+		// $.User(21).block(function (data) {
+		// 	console.log(data);
+		// })
+
+		$.User(21).unblock(function (data) {
 			console.log(data);
 		});
 	});

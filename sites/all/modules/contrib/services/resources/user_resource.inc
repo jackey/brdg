@@ -262,6 +262,7 @@ function _user_resource_create($account) {
  *   The modified user object.
  */
 function _user_resource_update($uid, $account) {
+
   // Adds backwards compatability with regression fixed in #1083242
   $account = _services_arg_value($account, 'data');
 

@@ -174,7 +174,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '0',
+          'weight' => 0,
         ),
         'teaser' => array(
           'label' => 'hidden',
@@ -311,7 +311,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '11',
+          'weight' => 11,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -380,7 +380,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '3',
+          'weight' => 3,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -449,7 +449,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '2',
+          'weight' => 2,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -521,7 +521,7 @@ function brdg_component_field_default_fields() {
             'image_style' => '',
           ),
           'type' => 'image',
-          'weight' => '4',
+          'weight' => 4,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -634,73 +634,6 @@ function brdg_component_field_default_fields() {
         ),
         'type' => 'image_image',
         'weight' => '3',
-      ),
-    ),
-  );
-
-  // Exported field: 'node-content_from_source-field_media_source_url'.
-  $fields['node-content_from_source-field_media_source_url'] = array(
-    'field_config' => array(
-      'active' => '1',
-      'cardinality' => '1',
-      'deleted' => '0',
-      'entity_types' => array(),
-      'field_name' => 'field_media_source_url',
-      'foreign keys' => array(
-        'format' => array(
-          'columns' => array(
-            'format' => 'format',
-          ),
-          'table' => 'filter_format',
-        ),
-      ),
-      'indexes' => array(
-        'format' => array(
-          0 => 'format',
-        ),
-      ),
-      'locked' => '0',
-      'module' => 'text',
-      'settings' => array(
-        'max_length' => '255',
-      ),
-      'translatable' => '0',
-      'type' => 'text',
-    ),
-    'field_instance' => array(
-      'bundle' => 'content_from_source',
-      'default_value' => NULL,
-      'deleted' => '0',
-      'description' => '',
-      'display' => array(
-        'default' => array(
-          'label' => 'above',
-          'module' => 'text',
-          'settings' => array(),
-          'type' => 'text_default',
-          'weight' => 18,
-        ),
-        'teaser' => array(
-          'label' => 'above',
-          'settings' => array(),
-          'type' => 'hidden',
-          'weight' => 0,
-        ),
-      ),
-      'entity_type' => 'node',
-      'field_name' => 'field_media_source_url',
-      'label' => 'Media Source URL',
-      'required' => 0,
-      'settings' => array(
-        'text_processing' => '0',
-        'user_register_form' => FALSE,
-      ),
-      'widget' => array(
-        'active' => 0,
-        'module' => 'hidden_field',
-        'settings' => array(),
-        'type' => 'hidden_hidden',
-        'weight' => '35',
       ),
     ),
   );
@@ -913,7 +846,7 @@ function brdg_component_field_default_fields() {
             'link' => FALSE,
           ),
           'type' => 'entityreference_label',
-          'weight' => '12',
+          'weight' => 12,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -979,7 +912,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '10',
+          'weight' => 10,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -1128,7 +1061,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '1',
+          'weight' => 1,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -1202,7 +1135,7 @@ function brdg_component_field_default_fields() {
           'module' => 'taxonomy',
           'settings' => array(),
           'type' => 'taxonomy_term_reference_link',
-          'weight' => '8',
+          'weight' => 8,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -1331,7 +1264,7 @@ function brdg_component_field_default_fields() {
           'module' => 'text',
           'settings' => array(),
           'type' => 'text_default',
-          'weight' => '9',
+          'weight' => 9,
         ),
         'teaser' => array(
           'label' => 'above',
@@ -1640,7 +1573,6 @@ function brdg_component_field_default_fields() {
   t('From User Profile Image');
   t('Instagram Screen Name');
   t('Media Image');
-  t('Media Source URL');
   t('Media Type');
   t('Post Date');
   t('Post Owed User');

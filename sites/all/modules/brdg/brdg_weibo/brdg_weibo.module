@@ -252,7 +252,7 @@ function brdg_weibo_user_update($edit, $account) {
 	if ($screen_name) {
 		$api = brdg_weibo_connect();
 		$ret = $api->show_user_by_name($screen_name);
-		if (!brdg_weibo_load_account_with_weibo_uid($ret['idstr'])) {
+		if (!brdg_weibo_load_account_with_weibo_uid($ret['idstr']) && empty($ret['error'])) {
 			db_insert('weibo_account')
 				->fields(array(
 					'weibo_uid' => $ret['idstr'],

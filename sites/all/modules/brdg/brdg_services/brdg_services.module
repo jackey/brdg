@@ -78,6 +78,7 @@ function _node_pre_next_index_node($data) {
 		->entityCondition('bundle', 'content_from_source')
 		->propertyCondition('status', 1)
 		->fieldCondition('field_post_date', 'value', $node->field_post_date[LANGUAGE_NONE][0]['value'], '<')
+		->fieldCondition('body', 'value', '%RT @%', 'not like')
 		->fieldOrderBy('field_post_date', 'value', 'DESC');
 	if (isset($allowed_media)) {
 		$query->fieldCondition("field_media_type", 'tid', $media_type->tid);
@@ -195,7 +196,7 @@ function update_comment_status($comment, $token = '') {
 	$comment->field_published[LANGUAGE_NONE][0]['value'] = 1;
 	$comment->status = 1; // publish this comment.
 	comment_save($comment);
-	drupal_goto("http://64.207.184.106/brdg/dev", array(
+	drupal_goto("http://64.207.184.106/brdg", array(
 		"fragment" => "/". $comment->nid. "?ap=1",
 	));
 }

@@ -63,11 +63,11 @@ function brdg_component_flag_default_flags() {
     'show_on_teaser' => 0,
     'show_contextual_link' => 0,
     'i18n' => 0,
+    'api_version' => 2,
     'module' => 'brdg_component',
     'locked' => array(
       0 => 'name',
     ),
-    'api_version' => 2,
   );
   return $flags;
 
@@ -83,7 +83,7 @@ function brdg_component_image_default_styles() {
   $styles['150_150'] = array(
     'name' => '150_150',
     'effects' => array(
-      5 => array(
+      3 => array(
         'label' => 'Scale and crop',
         'help' => 'Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.',
         'effect callback' => 'image_scale_and_crop_effect',
@@ -93,8 +93,8 @@ function brdg_component_image_default_styles() {
         'module' => 'image',
         'name' => 'image_scale_and_crop',
         'data' => array(
-          'width' => '400',
-          'height' => '400',
+          'width' => '150',
+          'height' => '150',
         ),
         'weight' => '2',
       ),
@@ -202,8 +202,7 @@ function brdg_component_default_pet() {
     "from_override" : "",
     "cc_default" : "",
     "bcc_default" : "",
-    "recipient_callback" : "",
-    "rdf_mapping" : []
+    "recipient_callback" : ""
   }');
   return $items;
 }

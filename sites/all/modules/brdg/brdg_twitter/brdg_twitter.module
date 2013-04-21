@@ -111,7 +111,6 @@ function save_twitter_into_node($twitter_entity) {
 	if ($result) {
 		return NULL;
 	}
-
 	$twitter_user_profile_image = add_image_from_url($twitter_entity['profile_image_url']);
 	$node = (Object)null;
 	$node->type = $node_type;
@@ -138,15 +137,6 @@ function save_twitter_into_node($twitter_entity) {
 		$media_array = $twitter_entity['entities']['media'];
 		foreach ($media_array as $media) {
 			$media_url = $media['media_url'];
-			// If have same media, we should ignore it.
-			$query = new EntityFieldQuery();
-			$result = $query->entityCondition('entity_type', 'node')
-				->entityCondition('bundle', $node_type)
-				->fieldCondition('field_media_source_url', 'value', $media_url, "LIKE")
-				->execute();
-			if ($result) {
-				return NULL;
-			}
 			$media_file = add_image_from_url($media_url);
 			if ($media_file) {
 				$has_media = TRUE;
@@ -415,7 +405,7 @@ function brdg_twitter_brdg_core_filter(&$node, $from) {
  * Implements hook_form_alter()
  */
 function brdg_twitter_form_alter(&$form, $form_state, $form_id) {
-	if ($form_id == 'user_profile_form' || $form_id == 'user_register_form') {
+	if ($form_id == 'user_profile_form') {
 		$form['#validate'][] = 'brdg_twitter_check_screen_name';
 	}
 }
@@ -429,13 +419,13 @@ function brdg_twitter_check_screen_name($form, $form_state) {
 	if (isset($form_state['user']) && $form_state['user']->uid) {
 		$user = $form_state['user'];
 		if ($drupal_account && $user->uid != $drupal_account->uid) {
-			form_set_error('field_twitter_screen_name', t("Your twitter screen_name is be registered already"));
+			form_set_error('field_twitter_screen_name', t("Your screen_name is be registered already"));
 		}
 	}
 	// Insert new account
 	else {
 		if ($drupal_account) {
-			form_set_error('field_twitter_screen_name', t("Your twitter screen_name is be registered already"));
+			form_set_error('field_twitter_screen_name', t("Your screen_name is be registered already"));
 		}
 	}
 }
@@ -445,8 +435,7 @@ function brdg_twitter_check_screen_name($form, $form_state) {
  * Update third content profiles with drupal account
  */
 function brdg_twitter_user_update($edit, $account) {
-	$screen_name = isset($edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'])
-		? $edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'] : 0;
+	$screen_name = $edit['field_twitter_screen_name'][LANGUAGE_NONE][0]['value'];
 	if ($screen_name) {
 		$api = brdg_twitter_connect();
 		$twitter_account = $api->users_show($screen_name);

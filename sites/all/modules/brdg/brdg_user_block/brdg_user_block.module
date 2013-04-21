@@ -11,16 +11,16 @@ function brdg_user_block_form_alter(&$form, &$form_state, $form_id) {
 	if ($form_id == 'user_admin_account') {
 		$account_options = &$form['accounts']['#options'];
 		foreach ($account_options as &$account_option) {
-			// $data = $account_option['operations']['data'];
-			// $href = explode('/', $data['#href']);
-			// $uid = $href[1];
-			// $blacklist = array(
-			// 	'#type' => 'link',
-			// 	'#title' => t('Add into blacklist'),
-			// 	'#href' => 'admin/people/'.$uid.'/black',
-			// 	'#options' => array('query' => array('destination' => 'admin/people'))
-			// );
-			// $account_option['operations'] = array('data' => array($data, $blacklist));
+			$data = $account_option['operations']['data'];
+			$href = explode('/', $data['#href']);
+			$uid = $href[1];
+			$blacklist = array(
+				'#type' => 'link',
+				'#title' => t('Add into blacklist'),
+				'#href' => 'admin/people/'.$uid.'/black',
+				'#options' => array('query' => array('destination' => 'admin/people'))
+			);
+			$account_option['operations'] = array('data' => array($data, $blacklist));
 		}
 	}
 	if ($form_id == 'user_register_form' || $form_id == "user_profile_form") {
@@ -37,13 +37,7 @@ function brdg_user_block_form_alter(&$form, &$form_state, $form_id) {
 
 // Implements hook_user_login()
 function brdg_user_block_user_login(&$edit, $account) {
-	// By login-onetime-link
-	if (empty($edit)) {
-		$_GET['destination'] =  "user/{$account->uid}/editpassword";
-	}
-	else {
-		$_GET['destination'] =  "user/{$account->uid}/edit";
-	}
+	 //$_GET['destination'] =  "user/{$account->uid}/edit";
 }
 
 function auto_add_black_word_for_comment($form, $form_state) {
@@ -115,45 +109,7 @@ function brdg_user_block_menu() {
 		'page arguments' => array(1),
 		'access callback' => TRUE,
 	);
-	$items['user/%user/editpassword'] = array(
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('brgd_user_change_own_password_page', 1),
-		'access arguments' => array('user change own password without current password'),
-	);
 	return $items;
-}
-
-// Form that change user own password without current password
-function brgd_user_change_own_password_page($form, &$form_state, $user = array()) {
-    if ($user) {
-    	$form_state['#user'] = $user;
-    }
-    else {
-    	drupal_goto("user");
-    }
-    $form['account']['pass'] = array(
-      '#type' => 'password_confirm',
-      '#size' => 25,
-      '#description' => t('To change the current user password, enter the new password in both fields.'),
-    );
-    $form['account']['submit'] = array(
-    	'#type' => 'submit',
-    	'#value' => t('Submit')
-    );
-
-	return $form;
-}
-
-// Submit handler for brdg password change form
-function brgd_user_change_own_password_page_submit($form, &$form_state) {
-	$account = $form_state['#user'];
-	$new_pass = $form_state['values']['pass'];
-	$account->pass = $new_pass;
-	// Save it
-	user_save($account);
-
-	// Tell user
-	drupal_set_message(t("Your password is changed"));
 }
 
 // User register validate email
@@ -235,10 +191,6 @@ function brdg_user_block_permission() {
 			),
 			'admin block account' => array(
 				'title' => t("Block account"),
-			),
-			'user change own password without current password' => array(
-				'title' => t('User change own password without current password'),
-				'restrict access' => TRUE,
 			),
 		),
 	);
