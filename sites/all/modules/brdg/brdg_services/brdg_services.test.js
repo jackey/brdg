@@ -196,7 +196,7 @@ function ValidateEmail(e_mail) {
 // Node publish/unpublish API 
 (function ($) {
 	$.Node = function (nid) {
-		var path = "/brdg/data/third_content/node/" + nid;
+		var path = "/third_content/node/" + nid;
 		var ajax = function (data, cb) {
 			data['node']['nid'] = nid;
 			$.ajax({
@@ -215,6 +215,12 @@ function ValidateEmail(e_mail) {
 			},
 			unpublish: function (cb) {
 				var data = {node: {status: 0}};
+				ajax(data, cb);
+			},
+			changeCity: function (cityName, cb) {
+				if (cityName == "shanghai") cityId = 0;
+				if (cityName == "paris") cityId = 1;
+				var data = {node: {field_user_city: {und: {value: cityId}}}};
 				ajax(data, cb);
 			}
 		};
@@ -264,7 +270,11 @@ function ValidateEmail(e_mail) {
 		// 	console.log(data);
 		// })
 
-		$.User(21).unblock(function (data) {
+		// $.User(21).unblock(function (data) {
+		// 	console.log(data);
+		// });
+
+		$.Node(4635).changeCity("shanghai", function (data) {
 			console.log(data);
 		});
 	});
