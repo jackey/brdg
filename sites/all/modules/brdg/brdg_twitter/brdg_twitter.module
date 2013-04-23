@@ -212,7 +212,7 @@ function save_twitter_into_node($twitter_entity) {
 	}
 	else {
 		//TODO:: If not found drupal account then we ignore this twitter entity.
-		//return;
+		if (process_not_allowed_entity()) return;
 	}
 	// If doesn't include any media, we don't need insert into our system.
 	if ($has_media) {

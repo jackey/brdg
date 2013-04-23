@@ -152,7 +152,7 @@ function brdg_core_node_save($node, $from, $entity = NULL) {
     $source_id = $node->field_source_id[LANGUAGE_NONE][0]['value'];
     if ($source_id && brdg_core_media_is_inserted($source_id)) {
         return FALSE;
-    } 
+    }
     $modules = module_list();
     $filters = array();
     foreach ($modules as $module) {
@@ -384,4 +384,9 @@ function brdg_core_form_alter(&$form, $form_state, $form_id) {
       $options['author'] = $comment->field_email[LANGUAGE_NONE][0]['value'];
     }
   }
+}
+
+// Helper function to process entity that creator not in our system
+function process_not_allowed_entity($node) {
+  return FALSE;
 }
