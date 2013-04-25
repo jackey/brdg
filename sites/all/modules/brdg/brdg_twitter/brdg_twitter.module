@@ -98,6 +98,7 @@ function brdg_twitter_query_entity($q = '', $page = 1) {
  * Helper function to insert twitters tweets into drupal content_from_source.
  */
 function save_twitter_into_node($twitter_entity) {
+	dpm($twitter_entity);
 	if (isset($twitter_entity['in_reply_to_status_id'])) {
 		return FALSE;
 	}
