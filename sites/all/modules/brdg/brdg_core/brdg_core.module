@@ -254,8 +254,10 @@ function brdg_core_load_drupal_user_with_screen_name($screen_name, $source_type)
   if (!isset($ret['user'])) {
     return;
   }
-  $uid = array_shift($ret['user']);
-  return user_load($uid->uid);
+  $uid = array_pop($ret['user']);
+  $uid = $uid->uid;
+  $user = user_load($uid);
+  return $user;
 }
 
 /**
