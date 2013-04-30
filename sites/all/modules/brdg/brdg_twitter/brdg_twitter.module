@@ -98,10 +98,10 @@ function brdg_twitter_query_entity($q = '', $page = 1) {
  * Helper function to insert twitters tweets into drupal content_from_source.
  */
 function save_twitter_into_node($twitter_entity) {
-	dpm($twitter_entity);
 	if (isset($twitter_entity['in_reply_to_status_id'])) {
 		return FALSE;
 	}
+
 	$node_type = 'content_from_source';
 	$id = $twitter_entity['id'];
 	$query = new EntityFieldQuery();
@@ -180,6 +180,18 @@ function save_twitter_into_node($twitter_entity) {
 					}
 				}
 			}
+			if (brdg_twitter_is_vine($url['expanded_url'])) {
+				$long_url = expand_googl_short_url($url['expanded_url']);
+				$thumbnail_file_url = brdg_twitter_get_vine_thumb($url['expanded_url']);
+				$node->field_video[LANGUAGE_NONE][] = array('value' => $long_url);
+				if ($thumbnail_file_url) {
+					$thumbnail_file = add_image_from_url($thumbnail_file_url, 'vine_thumbnail');
+				}
+				if ($thumbnail_file) {
+					$node->field_video_thumbnail[LANGUAGE_NONE][] = 
+						(array)$thumbnail_file;
+				}
+			}
 		}
 	}
 
@@ -233,6 +245,36 @@ function expand_googl_short_url($url) {
 		$url = $data['longUrl'];
 		return $url;
 	}
+}
+
+function brdg_twitter_is_vine($url) {
+	//vine.co/v/bxE6VdMFWmw
+	$allow_video_urls = array(
+		'/vine.co\/v\/([\w]+)/',
+	);
+	$is_vine = FALSE;
+	foreach ($allow_video_urls as $allow_video_url) {
+		$matches = array();
+		preg_match($allow_video_url, $url, $matches);
+		if (count($matches) > 1) {
+			$is_vine = TRUE;
+		}
+	}
+	return $is_vine;
+}
+
+function brdg_twitter_get_vine_thumb($url) {
+	//vine.co/v/bxEplBXVgYO
+	preg_match("/vine.co\/v\/([\w]+)/", $url, $matches);
+	$id = isset($matches['1']) ? $matches[1] : NULL;
+	$vine = file_get_contents("http://vine.co/v/{$id}");
+	$matches = array();
+	preg_match('/property="og:image" content="(.*?)"/', $vine, $matches);
+	$thumbnail = ($matches[1]) ? $matches[1] : false;
+	if ($thumbnail) {
+		return $thumbnail;
+	}
+	return FALSE;
 }
 
 function brdg_twitter_is_dallymotion($url) {
