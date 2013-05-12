@@ -132,6 +132,32 @@ Drupal.behaviors.RestServicesTest = {
 				});
 			});
 
+			// Get user list
+			function OrderUser () {
+				var api_path = "/third_content/node";
+				function interface() {
+
+				}
+
+				interface.prototype.loadUser = function (page, order, pagenum) {
+					if (typeof page == 'undefined') throw new Exception("page is required");
+					if (typeof order == 'undefined') order = 1;
+					if (typeof pagenum == 'undefined')  pagenum = 10;
+					$.ajax({
+						url: apipath + "/statistics_list",
+						dataType: "JSON",
+						type: "POST",
+						data: JSON.stringify({order: order, page: page, pagenum: pagenum}),
+						contentType: "application/json",
+						success: function (data) {
+							console.log(data);
+						}
+					});
+				}
+
+				return new interface();
+			}
+
 			// Test comment services
 			// var comment = {
 			// 	nid: 976,

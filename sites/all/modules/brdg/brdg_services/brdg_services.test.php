@@ -11,6 +11,7 @@ function json_post($url, $data, $files = array(), $method = "POST") {
 	else {
 		$data = json_encode($data);
 	}
+
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
 	curl_setopt($ch, CURLOPT_HEADER, FALSE);
@@ -25,12 +26,16 @@ function json_post($url, $data, $files = array(), $method = "POST") {
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array($content_type));
+
 	$ret_data = curl_exec($ch);
+	// print_r($ret_data);
+	// print "\r\n";
 	if (!curl_errno($ch)) {
 		$info = curl_getinfo($ch);
 	}
 	else {
 		//error.
+		print_r('error'. "\r\n");
 	}
 	curl_close($ch);
 	return $ret_data;
@@ -42,11 +47,11 @@ function get_url($api) {
 }
 
 // pre_next_node test
-$api = 'node/pre_next_node';
+// $api = 'node/pre_next_node';
 
-$response = json_post(get_url($api), array('nid' => 698));
+// $response = json_post(get_url($api), array('nid' => 698));
 
-print_r($response);
+// print_r($response);
 
 // // Update user object
 // $api = 'user/update'. '/1';
@@ -60,3 +65,7 @@ print_r($response);
 // $response = json_post($url, array('data' =>$account), array(), 'PUT');
 
 // print_r($response);
+
+$api = "node/statistics_list";
+$response = json_post(get_url($api), array('order' => 1));
+print_r($response);

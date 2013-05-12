@@ -1,0 +1,463 @@
+userArray
+(
+    [actions] => Array
+        (
+            [statistics_list] => Array
+                (
+                    [help] => .
+                    [callback] => _user_statistics_list
+                    [access callback] => static_true
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [order] => Array
+                                        (
+                                            [name] => order
+                                            [type] => int
+                                            [optional] => 1
+                                            [source] => data
+                                        )
+
+                                )
+
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [login] => Array
+                (
+                    [help] => Login a user for a new session
+                    [callback] => _user_resource_login
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => username
+                                    [type] => string
+                                    [description] => A valid username
+                                    [source] => Array
+                                        (
+                                            [data] => username
+                                        )
+
+                                    [optional] => 
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => password
+                                    [type] => string
+                                    [description] => A valid password
+                                    [source] => Array
+                                        (
+                                            [data] => password
+                                        )
+
+                                    [optional] => 
+                                )
+
+                        )
+
+                    [access callback] => services_access_menu
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [logout] => Array
+                (
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [help] => Logout a user session
+                    [callback] => _user_resource_logout
+                    [access callback] => services_access_menu
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [register] => Array
+                (
+                    [help] => Register a user
+                    [callback] => _user_resource_create
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [access callback] => _user_resource_access
+                    [access arguments] => Array
+                        (
+                            [0] => create
+                        )
+
+                    [access arguments append] => 
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => account
+                                    [type] => array
+                                    [description] => The user object
+                                    [source] => data
+                                    [optional] => 
+                                )
+
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [operations] => Array
+        (
+            [retrieve] => Array
+                (
+                    [help] => Retrieves a user
+                    [callback] => _user_resource_retrieve
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [access callback] => _user_resource_access
+                    [access arguments] => Array
+                        (
+                            [0] => view
+                        )
+
+                    [access arguments append] => 1
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => uid
+                                    [type] => int
+                                    [description] => The uid of the user to retrieve.
+                                    [source] => Array
+                                        (
+                                            [path] => 0
+                                        )
+
+                                    [optional] => 
+                                )
+
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [create] => Array
+                (
+                    [help] => Creates a user
+                    [callback] => _user_resource_create
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [access callback] => _user_resource_access
+                    [access arguments] => Array
+                        (
+                            [0] => create
+                        )
+
+                    [access arguments append] => 
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => account
+                                    [type] => array
+                                    [description] => The user object
+                                    [source] => data
+                                    [optional] => 
+                                )
+
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [update] => Array
+                (
+                    [help] => Updates a user
+                    [callback] => _user_resource_update
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [access callback] => _user_resource_access
+                    [access arguments] => Array
+                        (
+                            [0] => update
+                        )
+
+                    [access arguments append] => 1
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => uid
+                                    [type] => int
+                                    [description] => Unique identifier for this user
+                                    [source] => Array
+                                        (
+                                            [path] => 0
+                                        )
+
+                                    [optional] => 
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => data
+                                    [type] => array
+                                    [description] => The user object with updated information
+                                    [source] => data
+                                    [optional] => 
+                                )
+
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [delete] => Array
+                (
+                    [help] => Deletes a user
+                    [callback] => _user_resource_delete
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [access callback] => _user_resource_access
+                    [access arguments] => Array
+                        (
+                            [0] => delete
+                        )
+
+                    [access arguments append] => 1
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => uid
+                                    [type] => int
+                                    [description] => The id of the user to delete
+                                    [source] => Array
+                                        (
+                                            [path] => 0
+                                        )
+
+                                    [optional] => 
+                                )
+
+                        )
+
+                    [endpoint] => Array
+                        (
+                        )
+
+                )
+
+            [index] => Array
+                (
+                    [file] => Array
+                        (
+                            [type] => inc
+                            [module] => services
+                            [name] => resources/user_resource
+                        )
+
+                    [callback] => _user_resource_index
+                    [args] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => page
+                                    [optional] => 1
+                                    [type] => int
+                                    [description] => The zero-based index of the page to get, defaults to 0.
+                                    [default value] => 0
+                                    [source] => Array
+                                        (
+                                            [param] => page
+                                        )
+
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => fields
+                                    [optional] => 1
+                                    [type] => string
+                                    [description] => The fields to get.
+                                    [default value] => *
+                                    [source] => Array
+                                        (
+                                            [param] => fields
+                                        )
+
+                                )
+
+                            [2] => Array
+                                (
+                                    [name] => parameters
+                                    [optional] => 1
+                                    [type] => array
+                                    [description] => Parameters
+                                    [default value] => Array
+                                        (
+                                        )
+
+                                    [source] => Array
+                                        (
+                                            [param] => parameters
+                                        )
+
+                                )
+
+                            [3] => Array
+                                (
+                                    [name] => pagesize
+                                    [optional] => 1
+                                    [type] => int
+                                    [description] => Number of records to get per page.
+                                    [default value] => 20
+                                    [source] => Array
+                                        (
+                                            [param] => pagesize
+                                        )
+
+                                )
+
+                        )
+
+                    [access arguments] => Array
+                        (
+                            [0] => access user profiles
+                        )
+
+                    [access arguments append] => 
+                    [endpoint] => Array
+                        (
+                        )
+
+                    [access callback] => user_access
+                )
+
+        )
+
+    [endpoint] => Array
+        (
+            [operations] => Array
+                (
+                    [retrieve] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                    [create] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                    [update] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                    [delete] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                    [index] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                )
+
+            [actions] => Array
+                (
+                    [statistics_list] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                    [login] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                    [logout] => Array
+                        (
+                            [enabled] => 1
+                            [settings] => Array
+                                (
+                                    [services] => Array
+                                        (
+                                            [resource_api_version] => 1.0
+                                        )
+
+                                )
+
+                        )
+
+                    [register] => Array
+                        (
+                            [enabled] => 1
+                        )
+
+                )
+
+        )
+
+    [key] => user
+)

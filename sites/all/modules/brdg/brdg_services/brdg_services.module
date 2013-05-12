@@ -7,6 +7,10 @@ define('RESOURCE_PICTURE', 1);
 define('RESOURCE_SOUND', 2);
 define('RESOURCE_VIDEO', 3);
 
+define("ORDER_DESC", 1);
+define("ORDER_ACS", 2);
+define("ORDER_BY_WEIBO", 1);
+
 // Email template name
 define("EMAIL_COMMENT_APPROVE", 'comment_approve_email');
 
@@ -43,6 +47,34 @@ function brdg_services_services_resources() {
 						),
 					),
 				),
+				'statistics_list' => array(
+					'help' => '.',
+					'callback' => '_user_statistics_list',
+					'access callback' => 'static_true',
+					'args' => array(
+						array(
+							'name' => 'order',
+							'type' => 'int',
+							'optional' => TRUE,
+							'source' => 'data',
+							'default' => ORDER_DESC,
+						),
+						array(
+							'name' => 'page',
+							'type' => 'int',
+							'optional' => TRUE,
+							'source' => 'data',
+							'default' => 1,
+						),
+						array(
+							'name' => 'pagenum',
+							'type' => 'int',
+							'optional' => TRUE,
+							'source' => 'data',
+							'default' => 10,
+						),
+					),
+				),
 			),
 		),
 	);
@@ -50,6 +82,30 @@ function brdg_services_services_resources() {
 	$definitions['comment'] = array();
 
 	return $definitions;
+}
+
+/**
+ * Services resource callback for "statistics_list"
+ */
+function _user_statistics_list($params) {
+	$order = isset($params['order'])? $params['order']: 1;
+	$page = isset($params['page'])? $params['page']: 1;
+	$pagenum = isset($params['pagenum'])? $params['pagenum']: 10;
+	if ($order == 1) {
+		$order_str = "DESC";
+	}
+	else{
+		$order_str = "ASC";
+	}
+	$query = db_query("select field_post_owed_user_target_id as uid from field_data_field_post_owed_user group by uid order by uid $order_str limit $page, $pagenum");
+	$uids = array();
+	while ($row = $query->fetchAssoc()) {
+		if ($row['uid']) {
+			$uids[] = $row['uid'];
+		}
+	}
+
+	return array('users' => user_load_multiple($uids));
 }
 
 /**
@@ -183,6 +239,9 @@ function brdg_services_menu() {
 		'page callback' => 'update_comment_status',
 		'page arguments' => array(2),
 		'access callback' => TRUE,
+	);
+	$items['user/statistics'] = array(
+		'page callback' => '',
 	);
 
 	return $items;
