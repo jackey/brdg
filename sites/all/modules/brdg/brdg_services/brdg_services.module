@@ -104,8 +104,8 @@ function _user_statistics_list($params) {
 
 	$uids = array();
 	foreach ($query as $result) {
-		if ($result["uid"]) {
-			$uids[] = $result["uid"];
+		if ($result->uid) {
+			$uids[] = $result->uid;
 		}
 	}
 	$start = ($page - 1) * $pagenum;
