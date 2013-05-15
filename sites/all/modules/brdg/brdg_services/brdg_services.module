@@ -98,19 +98,21 @@ function _user_statistics_list($params) {
 		FROM node 
 		left join field_data_field_post_owed_user as user_id on user_id.entity_id = node.nid 
 		WHERE node.created > :ts_s
-		GROUP BY uid 
+		GROUP BY user_id.field_post_owed_user_target_id as uid
 		ORDER BY count $order";
 	$query = db_query($sql, array(":ts_s" => $ts_s));
 
 	$uids = array();
+	$node_counts = array();
 	foreach ($query as $result) {
 		if ($result->uid) {
 			$uids[] = $result->uid;
+			$node_counts[$result->uid] = $result->count;
 		}
 	}
 	$start = ($page - 1) * $pagenum;
 	$ret_uids = array_slice($uids, $start, $pagenum);
-	return array('users' => user_load_multiple($ret_uids), 'total' => count($uids));
+	return array('users' => user_load_multiple($ret_uids), 'total' => count($uids), 'node_statictis' => $node_counts);
 }
 
 /**
