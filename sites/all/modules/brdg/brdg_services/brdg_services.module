@@ -98,7 +98,7 @@ function _user_statistics_list($params) {
 		FROM node 
 		left join field_data_field_post_owed_user as user_id on user_id.entity_id = node.nid 
 		WHERE node.created > :ts_s
-		GROUP BY user_id.field_post_owed_user_target_id as uid
+		GROUP BY field_post_owed_user_target_id
 		ORDER BY count $order";
 	$query = db_query($sql, array(":ts_s" => $ts_s));
 
