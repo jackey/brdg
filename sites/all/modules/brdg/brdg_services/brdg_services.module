@@ -91,21 +91,26 @@ function _user_statistics_list($params) {
 	$order = isset($params['order'])? $params['order']: 1;
 	$page = isset($params['page'])? $params['page']: 1;
 	$pagenum = isset($params['pagenum'])? $params['pagenum']: 10;
-	if ($order == 1) {
-		$order_str = "DESC";
-	}
-	else{
-		$order_str = "ASC";
-	}
-	$query = db_query("select field_post_owed_user_target_id as uid from field_data_field_post_owed_user group by uid order by uid $order_str limit $page, $pagenum");
+	$ts_s = isset($params['ts_s']) ? $params['ts_s']: 0;
+	$ts_e = isset($params['ts_e']) ? $params['ts_e']: 0;
+
+	$sql = "SELECT count(node.nid) as count, user_id.field_post_owed_user_target_id as uid 
+		FROM node 
+		left join field_data_field_post_owed_user as user_id on user_id.entity_id = node.nid 
+		WHERE node.created > :ts_s
+		GROUP BY uid 
+		ORDER BY count $order";
+	$query = db_query($sql, array(":ts_s" => $ts_s));
+
 	$uids = array();
-	while ($row = $query->fetchAssoc()) {
-		if ($row['uid']) {
-			$uids[] = $row['uid'];
+	foreach ($query as $result) {
+		if ($result["uid"]) {
+			$uids[] = $result["uid"];
 		}
 	}
-
-	return array('users' => user_load_multiple($uids));
+	$start = ($page - 1) * $pagenum;
+	$ret_uids = array_slice($uids, $start, $pagenum);
+	return array('users' => user_load_multiple($ret_uids));
 }
 
 /**
