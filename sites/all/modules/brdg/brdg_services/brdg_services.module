@@ -110,7 +110,7 @@ function _user_statistics_list($params) {
 	}
 	$start = ($page - 1) * $pagenum;
 	$ret_uids = array_slice($uids, $start, $pagenum);
-	return array('users' => user_load_multiple($ret_uids));
+	return array('users' => user_load_multiple($ret_uids), 'total' => count($uids));
 }
 
 /**
